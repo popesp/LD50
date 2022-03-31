@@ -1,0 +1,11 @@
+{
+	"name": "ld50",
+	"version": "0.0.1",
+	"scripts": {
+		"start": "nodemon server/webserver.js",
+		"bundle": "sh scripts/bundle.sh"
+	},
+	"devDependencies": {
+		"eslint": "^7.24.0"
+	}
+}
