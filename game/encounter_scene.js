@@ -16,11 +16,9 @@ const DEFAULT_ENERGY_MAX = 1;
 
 let gameObjects = [];
 
-
-
 const state = {
 	needs_update: true,
-	source_deck: [...new Array(2).fill(CARD_DATA[0]), ...new Array(2).fill(CARD_DATA[1]), ...new Array(2).fill(CARD_DATA[2]), ...new Array(4).fill(CARD_DATA[3])],
+	source_deck: [...new Array(2).fill(CARD_DATA.restore_sanity), ...new Array(5).fill(CARD_DATA.mind_blast), ...new Array(1).fill(CARD_DATA.taste_of_flesh), ...new Array(2).fill(CARD_DATA.submit_to_madness)],
 	current_caster: null,
 	player: {
 		name: 'Player',
@@ -40,8 +38,17 @@ const state = {
 		energy: 1,
 		energy_max: DEFAULT_ENERGY_MAX
 	},
-	triggers: {}
+	triggers: {},
+	winner: false
 };
+
+function determineWinner(caster)
+{
+	if(caster === state.enemy)
+		state.winner = state.player;
+	else
+		state.winner = state.enemy;
+}
 
 function shuffleDeck(deck)
 {
@@ -96,19 +103,8 @@ function startEncounter()
 
 function discardCard(caster, card)
 {
-	caster.discard_pile.push(card);
-
-	state.needs_update = true;
-}
-
-function drawCard(caster)
-{
-	const card = getTopCard(caster);
-
-	if(caster.handlimit === caster.hand.length)
-		discardCard(caster, card);
-	else
-		caster.hand.push(card);
+	if(card !== undefined)
+		caster.discard_pile.push(card);
 
 	state.needs_update = true;
 }
@@ -118,10 +114,22 @@ function getTopCard(caster)
 	const card = caster.deck.pop();
 	if(card === undefined)
 	{
-		// Determine_Winner();
+		determineWinner(caster);
 	}
 
 	return card;
+}
+
+function drawCard(caster)
+{
+	const card = getTopCard(caster);
+
+	if(caster.handlimit === caster.hand.length && card !== undefined)
+		discardCard(caster, card);
+	else if(card !== undefined)
+		caster.hand.push(card);
+
+	state.needs_update = true;
 }
 
 function playCard(caster, card)
@@ -277,8 +285,18 @@ function redrawBoard(scene)
 	enemy_energy_text.setOrigin(0, 0.5);
 	const enemy_energy_container = scene.add.container(WIDTH_CANVAS - PADDING_CANVAS - 50, HEIGHT_CANVAS/2 - 50, [enemy_energy_icon, enemy_energy_text]);
 	gameObjects.push(enemy_energy_container);
-	
 
+	if(state.winner)
+		if(state.winner === state.player)
+		{
+			console.log('Player Wins!');
+			scene.add.text(WIDTH_CANVAS/2, HEIGHT_CANVAS/2, 'Encounter Complete', {color: "white", fontSize: "12px", align: "center"});
+		}
+		else
+		{
+			console.log('You Lose');
+			scene.add.text(WIDTH_CANVAS/2, HEIGHT_CANVAS/2, 'You Lose', {color: "white", fontSize: "12px", align: "center"});
+		}
 }
 
 
@@ -308,7 +326,10 @@ const encounter_scene = new Phaser.Class({
 	update: function()
 	{
 		if(state.needs_update)
+		{
+			console.log(state.player.discard_pile)
 			redrawBoard(this);
+		}
 
 	}
 });
