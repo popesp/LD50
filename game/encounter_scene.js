@@ -23,7 +23,7 @@ const state = {
 	source_deck: [...new Array(2).fill(CARD_DATA[0]), ...new Array(2).fill(CARD_DATA[1]), ...new Array(2).fill(CARD_DATA[2]), ...new Array(4).fill(CARD_DATA[3])],
 	current_caster: null,
 	player: {
-		name: 'Player',
+		name: "Player",
 		hand: [],
 		handlimit: DEFAULT_HANDLIMIT,
 		deck: [],
@@ -32,7 +32,7 @@ const state = {
 		energy_max: DEFAULT_ENERGY_MAX
 	},
 	enemy: {
-		name: 'Enemy',
+		name: "Enemy",
 		hand: [],
 		handlimit: DEFAULT_HANDLIMIT,
 		deck: [],
@@ -66,18 +66,16 @@ function enemyTurnLogic()
 	{
 		playCard(state.enemy, state.enemy.hand[Math.floor(Math.random()*(state.enemy.hand.length))]);
 	}
-		
 
 	startTurn(state.player);
 }
 
 function startEncounter()
 {
-	console.log('Starting encounter...');
+	console.log("=== Starting encounter ===");
+
 	// player
 	state.player.deck = state.source_deck.map(createCard);
-
-
 	shuffleDeck(state.player.deck);
 
 	// enemy
@@ -129,7 +127,7 @@ function playCard(caster, card)
 	if(caster.energy === 0 || state.current_caster !== caster)
 		return;
 
-	console.log('Playing card:', card);
+	console.log(`${caster.name} played a ${card.name}`);
 	caster.energy = caster.energy + -1;
 	//Remove card from hand
 	caster.hand = caster.hand.filter(handcard => handcard !== card);
@@ -141,7 +139,7 @@ function playCard(caster, card)
 
 function startTurn(caster)
 {
-	console.log('Starting turn for ', caster.name);
+	console.log("Starting turn for ", caster.name);
 
 	state.current_caster = caster;
 	caster.energy = caster.energy_max;
@@ -149,7 +147,7 @@ function startTurn(caster)
 
 	// AI start
 	if(state.current_caster === state.enemy)
-		enemyTurnLogic() 
+		enemyTurnLogic();
 }
 
 function makeCardContainer(scene, card, x, y)
@@ -176,35 +174,29 @@ function redrawBoard(scene)
 		obj.destroy();
 	gameObjects = [];
 
-	// Render Decks
+	// player deck
 	if(state.player.deck.length)
-	{
-		const cardsprite = scene.add.image(0, 0, "player_back");
-		cardsprite.setDisplaySize(WIDTH_CARD, HEIGHT_CARD);
+		gameObjects.push(scene.add.container(
+			PADDING_CANVAS + WIDTH_CARD/2,
+			HEIGHT_CANVAS - PADDING_CANVAS - HEIGHT_CARD/2 - 0,
+			[
+				scene.add.image(0, 0, "player_back").setDisplaySize(WIDTH_CARD, HEIGHT_CARD),
+				scene.add.text(0, -PADDING_CARD - HEIGHT_CARD/2, state.player.deck.length, {color: "white", fontSize: "24px"}).setOrigin(0.5, 1)
+			]
+		));
 
-		const decksize = scene.add.text(0, -PADDING_CARD - HEIGHT_CARD/2, state.player.deck.length, {color: "white", fontSize: "24px"})
-		decksize.setOrigin(0.5, 1);
-
-		const cardcontainer = scene.add.container(0 + PADDING_CANVAS + 0 + WIDTH_CARD/2 + 0*0, HEIGHT_CANVAS - PADDING_CANVAS - HEIGHT_CARD/2 - 0, [cardsprite, decksize])
-
-		gameObjects.push(cardcontainer);
-	}
-
+	// enemy deck
 	if(state.enemy.deck.length)
-	{
-		const cardsprite = scene.add.image(0, 0, "enemy_back");
-		cardsprite.setDisplaySize(WIDTH_CARD, HEIGHT_CARD);
+		gameObjects.push(scene.add.container(
+			PADDING_CANVAS + WIDTH_CARD/2,
+			PADDING_CANVAS + HEIGHT_CARD/2,
+			[
+				scene.add.image(0, 0, "enemy_back").setDisplaySize(WIDTH_CARD, HEIGHT_CARD),
+				scene.add.text(0, PADDING_CARD + HEIGHT_CARD/2, state.enemy.deck.length, {color: "white", fontSize: "24px"}).setOrigin(0.5, 0)
+			]
+		));
 
-		const decksize = scene.add.text(0, PADDING_CARD + HEIGHT_CARD/2, state.enemy.deck.length, {color: "white", fontSize: "24px"})
-		decksize.setOrigin(0.5, 0);
-
-		const cardcontainer = scene.add.container(PADDING_CANVAS + WIDTH_CARD/2, PADDING_CANVAS + HEIGHT_CARD/2, [cardsprite, decksize])
-
-		gameObjects.push(cardcontainer);
-	}
-
-	// Render hands
-	// player
+	// player hand
 	const min_x_player = WIDTH_CANVAS/2 - (state.player.hand.length - 1)*(WIDTH_CARD/2 + SPACING_CARD/2);
 	for(let index_card = 0; index_card < state.player.hand.length; ++index_card)
 	{
@@ -214,34 +206,34 @@ function redrawBoard(scene)
 		const cardcontainer = makeCardContainer(scene, card, x, HEIGHT_CANVAS - HEIGHT_CARD/2 - PADDING_CANVAS);
 		cardcontainer.setSize(WIDTH_CARD, HEIGHT_CARD);
 		cardcontainer.setInteractive();
-		cardcontainer.on('pointerdown', () => playCard(state.player, card));
+		cardcontainer.on("pointerdown", () => playCard(state.player, card));
 
 		gameObjects.push(cardcontainer);
 	}
-	// enemy
+
+	// enemy hand
 	const min_x_enemy = WIDTH_CANVAS/2 - (state.enemy.hand.length - 1)*(WIDTH_CARD/2 + SPACING_CARD/2);
 	for(let index_card = 0; index_card < state.enemy.hand.length; ++index_card)
 	{
 		const x = min_x_enemy + index_card*(WIDTH_CARD + SPACING_CARD);
 
-		const cardsprite = scene.add.image(0, 0, "enemy_back");
-		cardsprite.setDisplaySize(WIDTH_CARD, HEIGHT_CARD);
-		const cardcontainer = scene.add.container(x, PADDING_CANVAS + HEIGHT_CARD/2, [cardsprite])
-
-		gameObjects.push(cardcontainer);
+		const cardsprite = scene.add.image(x, PADDING_CANVAS + HEIGHT_CARD/2, "enemy_back").setDisplaySize(WIDTH_CARD, HEIGHT_CARD);
+		gameObjects.push(cardsprite);
 	}
 
-	// Discard piles
+	// player discard
 	if(state.player.discard_pile.length)
 	{
 		const player_discarded_card = state.player.discard_pile[state.player.discard_pile.length - 1];
-		const cardcontainer = makeCardContainer(scene, player_discarded_card, WIDTH_CANVAS  - WIDTH_CARD/2 - PADDING_CANVAS, HEIGHT_CANVAS  - HEIGHT_CARD/2 - PADDING_CANVAS);
+		const cardcontainer = makeCardContainer(scene, player_discarded_card, WIDTH_CANVAS - WIDTH_CARD/2 - PADDING_CANVAS, HEIGHT_CANVAS - HEIGHT_CARD/2 - PADDING_CANVAS);
 		gameObjects.push(cardcontainer);
 	}
+
+	// enemy discard
 	if(state.enemy.discard_pile.length)
 	{
 		const enemy_discarded_card = state.enemy.discard_pile[state.enemy.discard_pile.length - 1];
-		const cardcontainer = makeCardContainer(scene, enemy_discarded_card, WIDTH_CANVAS  - WIDTH_CARD/2 - PADDING_CANVAS, HEIGHT_CARD/2 + PADDING_CANVAS);
+		const cardcontainer = makeCardContainer(scene, enemy_discarded_card, WIDTH_CANVAS - WIDTH_CARD/2 - PADDING_CANVAS, HEIGHT_CARD/2 + PADDING_CANVAS);
 		gameObjects.push(cardcontainer);
 	}
 
@@ -249,15 +241,15 @@ function redrawBoard(scene)
 	if(state.current_caster === state.player)
 	{
 		const end_turn_btn = scene.add.image(0, 0, "end_turn_btn");
-		end_turn_btn.setDisplaySize(WIDTH_END_BUTTON, HEIGHT_END_BUTTON)
+		end_turn_btn.setDisplaySize(WIDTH_END_BUTTON, HEIGHT_END_BUTTON);
 
-		const end_text = scene.add.text(0, 0, 'END TURN', {color: "white", fontSize: "18px"})
+		const end_text = scene.add.text(0, 0, "END TURN", {color: "white", fontSize: "18px"});
 		end_text.setOrigin(0.5);
 
-		const end_turn_btn_container = scene.add.container(WIDTH_CANVAS - PADDING_CANVAS - WIDTH_END_BUTTON/2, HEIGHT_CANVAS/2, [end_turn_btn, end_text])
+		const end_turn_btn_container = scene.add.container(WIDTH_CANVAS - PADDING_CANVAS - WIDTH_END_BUTTON/2, HEIGHT_CANVAS/2, [end_turn_btn, end_text]);
 		end_turn_btn_container.setSize(WIDTH_END_BUTTON, HEIGHT_END_BUTTON);
 		end_turn_btn_container.setInteractive();
-		end_turn_btn_container.on('pointerdown', () => startTurn(state.enemy));
+		end_turn_btn_container.on("pointerdown", () => startTurn(state.enemy));
 
 		gameObjects.push(end_turn_btn_container);
 	}
@@ -266,19 +258,17 @@ function redrawBoard(scene)
 	// player
 	const player_energy_icon = scene.add.image(0, 0, "energy");
 	player_energy_icon.setDisplaySize(25, 25);
-	const player_energy_text = scene.add.text(15,0, state.player.energy, {color: "white", fontSize: "18px"})
+	const player_energy_text = scene.add.text(15, 0, state.player.energy, {color: "white", fontSize: "18px"});
 	player_energy_text.setOrigin(0, 0.5);
 	const player_energy_container = scene.add.container(WIDTH_CANVAS - PADDING_CANVAS - 50, HEIGHT_CANVAS/2 + 50, [player_energy_icon, player_energy_text]);
 	gameObjects.push(player_energy_container);
 	// enemy
 	const enemy_energy_icon = scene.add.image(0, 0, "energy");
 	enemy_energy_icon.setDisplaySize(25, 25);
-	const enemy_energy_text = scene.add.text(15,0, state.enemy.energy, {color: "white", fontSize: "18px"})
+	const enemy_energy_text = scene.add.text(15, 0, state.enemy.energy, {color: "white", fontSize: "18px"});
 	enemy_energy_text.setOrigin(0, 0.5);
 	const enemy_energy_container = scene.add.container(WIDTH_CANVAS - PADDING_CANVAS - 50, HEIGHT_CANVAS/2 - 50, [enemy_energy_icon, enemy_energy_text]);
 	gameObjects.push(enemy_energy_container);
-	
-
 }
 
 
@@ -299,16 +289,10 @@ const encounter_scene = new Phaser.Class({
 	create: function()
 	{
 		startEncounter();
-
-		// this.add.line(WIDTH_CANVAS/2, HEIGHT_CANVAS/2, 0, 0, WIDTH_CANVAS, 0, "0xff0000");
-		// this.add.line(WIDTH_CANVAS/2, HEIGHT_CANVAS/2, 0, 0, 0, HEIGHT_CANVAS, "0xff0000");
-
-		// new Phaser.Line(min, handle1.y, min, handle2.y);
 	},
 	update: function()
 	{
 		if(state.needs_update)
 			redrawBoard(this);
-
 	}
 });

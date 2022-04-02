@@ -38,5 +38,4 @@ const CARD_DATA = [{
 		discardCard(caster, getTopCard(caster));
 		caster.energy += 2;
 	}
-}
-];
+}];
