@@ -133,6 +133,8 @@ function getTopCard(state, caster)
 function drawCard(state, caster)
 {
 	const card = getTopCard(state, caster);
+	if(card === undefined) // GAME IS OVER
+		return;
 
 	if(caster.handlimit === caster.hand.length && card !== undefined)
 		discardCard(state, caster, card);
