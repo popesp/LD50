@@ -1,4 +1,4 @@
-const CARD_DATA = {
+const CARD_DATA = Object.fromEntries(Object.entries({
 	restore_sanity: {
 		name: "Restore Sanity",
 		description: "Place two 'Self Reflection' cards on the bottom of your deck",
@@ -58,4 +58,4 @@ const CARD_DATA = {
 			addPassive(state, caster, PASSIVE_DATA.mind_worm);
 		}
 	}
-};
+}).map(([key, cardconfig]) => ([key, {...cardconfig, key}])));
