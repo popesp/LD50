@@ -69,7 +69,7 @@ function createCard(card_config)
 
 function enemyTurnLogic()
 {
-	while(state.enemy.energy > 0)
+	while(state.enemy.energy > 0 && state.enemy.hand.length > 0)
 	{
 		playCard(state.enemy, state.enemy.hand[Math.floor(Math.random()*(state.enemy.hand.length))]);
 	}
@@ -84,11 +84,11 @@ function startEncounter()
 	// player
 	state.player.deck = state.source_deck.map(createCard);
 
-
+	console.log(state)
 	shuffleDeck(state.player.deck);
 
 	// enemy
-	state.enemy.deck = [...new Array(4).fill(CARD_DATA[0]), ...new Array(4).fill(CARD_DATA[1]), ...new Array(4).fill(CARD_DATA[2])].map(createCard);
+	state.enemy.deck = [...new Array(4).fill(CARD_DATA.restore_sanity), ...new Array(4).fill(CARD_DATA.mind_blast), ...new Array(4).fill(CARD_DATA.submit_to_madness)].map(createCard);
 	shuffleDeck(state.enemy.deck);
 
 	// draw cards for players
@@ -134,6 +134,7 @@ function drawCard(caster)
 
 function playCard(caster, card)
 {
+	console.log(card)
 	if(caster.energy === 0 || state.current_caster !== caster)
 		return;
 
