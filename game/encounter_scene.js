@@ -1,5 +1,5 @@
 
-const PADDING_CANVAS = 20;
+
 
 const WIDTH_CARD = 150;
 const HEIGHT_CARD = 210;
@@ -238,7 +238,7 @@ function redrawBoard(scene)
 
 		const cardcontainer = makeCardContainer(scene, card, x, HEIGHT_CANVAS - HEIGHT_CARD/2 - PADDING_CANVAS);
 		cardcontainer.setSize(WIDTH_CARD, HEIGHT_CARD);
-		cardcontainer.setInteractive();
+		cardcontainer.setInteractive({useHandCursor: true});
 		cardcontainer.on("pointerdown", () => playCard(state.player, card));
 
 		gameObjects.push(cardcontainer);
@@ -281,7 +281,7 @@ function redrawBoard(scene)
 
 		const end_turn_btn_container = scene.add.container(WIDTH_CANVAS - PADDING_CANVAS - WIDTH_END_BUTTON/2, HEIGHT_CANVAS/2, [end_turn_btn, end_text]);
 		end_turn_btn_container.setSize(WIDTH_END_BUTTON, HEIGHT_END_BUTTON);
-		end_turn_btn_container.setInteractive();
+		end_turn_btn_container.setInteractive({useHandCursor: true});
 		end_turn_btn_container.on("pointerdown", () => startTurn(state.enemy));
 
 		gameObjects.push(end_turn_btn_container);
