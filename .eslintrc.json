@@ -53,5 +53,8 @@
 		"space-before-function-paren": ["error", "never"],
 		"space-in-parens": ["error", "never"],
 		"vars-on-top": "error"
+	},
+	"globals": {
+		"CARD_DATA": false
 	}
 }

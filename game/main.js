@@ -1,34 +1,27 @@
 const WIDTH_CANVAS = 1280;
 const HEIGHT_CANVAS = 720;
+const PADDING_CANVAS = 20;
 
 const WIDTH_CARD = 150;
 const HEIGHT_CARD = 210;
 
+const PADDING_CARD = 10;
+const OFFSET_DESCRIPTION = 20;
+const SPACING_CARD = 20;
 
-const CARD_DATA = [{
-	name: "Restore Sanity",
-	description: "Place this card on the bottom of your deck",
-	type: "Action",
-	effect: function(state, target)
-	{
-
-	}
-},
-{
-	name: "Mind Blast",
-	description: "Remove the top 2 cards from the enemy deck",
-	type: "Action",
-	effect: function(state, target)
-	{
-
-	}
-}];
 
 const state = {
-	effects: [],
-	hand: [CARD_DATA[0], CARD_DATA[0], CARD_DATA[0]],
-	deck: new Array(10).fill(CARD_DATA[0]),
-	energy: 1
+	deck: [...new Array(4).fill(CARD_DATA[0]), ...new Array(4).fill(CARD_DATA[1])],
+	player: {
+		hand: [],
+		deck: [],
+		energy: 1
+	},
+	enemy: {
+		hand: [],
+		deck: [],
+		energy: 1
+	}
 };
 
 const cardcontainers = [];
@@ -51,24 +44,23 @@ document.addEventListener("DOMContentLoaded", function()
 			},
 			create: function()
 			{
-				const min = WIDTH_CANVAS*0.25;
-				const max = WIDTH_CANVAS*0.75;
+				const min_x = WIDTH_CANVAS/2 - (state.hand.length - 1)*(WIDTH_CARD/2 + SPACING_CARD/2);
 
 				for(let index_card = 0; index_card < state.hand.length; ++index_card)
 				{
 					const card = state.hand[index_card];
-					const x = state.hand.length === 1 ? WIDTH_CANVAS/2 : min + index_card*(max - min)/(state.hand.length - 1);
+					const x = min_x + index_card*(WIDTH_CARD + SPACING_CARD);
 
 					const cardsprite = this.add.image(0, 0, "card");
 					cardsprite.setDisplaySize(WIDTH_CARD, HEIGHT_CARD);
 
-					const cardname = this.add.text(0, 10 - HEIGHT_CARD/2, card.name, {color: "black", fontSize: "14px"});
+					const cardname = this.add.text(0, PADDING_CARD - HEIGHT_CARD/2, card.name, {color: "black", fontSize: "14px"});
 					cardname.setOrigin(0.5, 0);
 
-					const carddescription = this.add.text(0, 20, card.description, {color: "black", fontSize: "12px", align: "center", wordWrap: {width: WIDTH_CARD - 20}});
+					const carddescription = this.add.text(0, OFFSET_DESCRIPTION, card.description, {color: "black", fontSize: "12px", align: "center", wordWrap: {width: WIDTH_CARD - PADDING_CARD*2}});
 					carddescription.setOrigin(0.5, 0);
 
-					cardcontainers.push(this.add.container(x, HEIGHT_CANVAS - 105, [cardsprite, cardname, carddescription]));
+					cardcontainers.push(this.add.container(x, HEIGHT_CANVAS - HEIGHT_CARD/2 - PADDING_CANVAS, [cardsprite, cardname, carddescription]));
 				}
 
 				this.add.line(WIDTH_CANVAS/2, HEIGHT_CANVAS/2, 0, 0, WIDTH_CANVAS, 0, "0xff0000");
