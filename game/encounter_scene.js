@@ -16,11 +16,23 @@ const DEFAULT_ENERGY_MAX = 1;
 
 let gameObjects = [];
 
-
+const ENCOUNTERS = [
+	{
+		name: "Grokthur's Demonic Embrace",
+		source_deck: [...new Array(4).fill(CARD_DATA.restore_sanity), ...new Array(4).fill(CARD_DATA.mind_blast), ...new Array(4).fill(CARD_DATA.submit_to_madness)],
+		starting_passives: []
+	},
+	{
+		name: "Demetrion's Horrid Palace",
+		source_deck: [...new Array(4).fill(CARD_DATA.restore_sanity), ...new Array(4).fill(CARD_DATA.mind_blast), ...new Array(4).fill(CARD_DATA.submit_to_madness)],
+		starting_passives: [PASSIVE_DATA.mind_worm]
+	}
+];
 
 const state = {
+	current_encounter: 0,
 	needs_update: true,
-	source_deck: [...new Array(2).fill(CARD_DATA[0]), ...new Array(2).fill(CARD_DATA[1]), ...new Array(2).fill(CARD_DATA[2]), ...new Array(4).fill(CARD_DATA[3])],
+	source_deck: [...new Array(5).fill(CARD_DATA.self_reflection), ...new Array(5).fill(CARD_DATA.mind_blast), ...new Array(2).fill(CARD_DATA.taste_of_flesh)],
 	current_caster: null,
 	player: {
 		name: "Player",
@@ -40,8 +52,23 @@ const state = {
 		energy: 1,
 		energy_max: DEFAULT_ENERGY_MAX
 	},
-	triggers: {}
+	triggers: {
+		draw: [],
+		discard: []
+	},
+	passives: [
+
+	],
+	winner: false
 };
+
+function determineWinner(caster)
+{
+	if(caster === state.enemy)
+		state.winner = state.player;
+	else
+		state.winner = state.enemy;
+}
 
 function shuffleDeck(deck)
 {
@@ -62,7 +89,7 @@ function createCard(card_config)
 
 function enemyTurnLogic()
 {
-	while(state.enemy.energy > 0)
+	while(state.enemy.energy > 0 && state.enemy.hand.length > 0)
 	{
 		playCard(state.enemy, state.enemy.hand[Math.floor(Math.random()*(state.enemy.hand.length))]);
 	}
@@ -70,7 +97,7 @@ function enemyTurnLogic()
 	startTurn(state.player);
 }
 
-function startEncounter()
+function startEncounter(encounter)
 {
 	console.log("=== Starting encounter ===");
 
@@ -79,7 +106,7 @@ function startEncounter()
 	shuffleDeck(state.player.deck);
 
 	// enemy
-	state.enemy.deck = [...new Array(4).fill(CARD_DATA[0]), ...new Array(4).fill(CARD_DATA[1]), ...new Array(4).fill(CARD_DATA[2])].map(createCard);
+	state.enemy.deck = encounter.source_deck.map(createCard);
 	shuffleDeck(state.enemy.deck);
 
 	// draw cards for players
@@ -89,24 +116,16 @@ function startEncounter()
 		drawCard(state.enemy);
 	}
 
+	for(const initial_passive of encounter.starting_passives)
+		addPassive(state, state.enemy, initial_passive);
+
 	startTurn(state.player);
 }
 
 function discardCard(caster, card)
 {
-	caster.discard_pile.push(card);
-
-	state.needs_update = true;
-}
-
-function drawCard(caster)
-{
-	const card = getTopCard(caster);
-
-	if(caster.handlimit === caster.hand.length)
-		discardCard(caster, card);
-	else
-		caster.hand.push(card);
+	if(card !== undefined)
+		caster.discard_pile.push(card);
 
 	state.needs_update = true;
 }
@@ -116,10 +135,24 @@ function getTopCard(caster)
 	const card = caster.deck.pop();
 	if(card === undefined)
 	{
-		// Determine_Winner();
+		determineWinner(caster);
 	}
 
 	return card;
+}
+
+function drawCard(caster)
+{
+	const card = getTopCard(caster);
+
+	if(caster.handlimit === caster.hand.length && card !== undefined)
+		discardCard(caster, card);
+	else if(card !== undefined)
+		caster.hand.push(card);
+
+	state.needs_update = true;
+	for(const trigger of state.triggers.draw)
+		trigger.effect(state, caster, trigger.owner);
 }
 
 function playCard(caster, card)
@@ -128,7 +161,7 @@ function playCard(caster, card)
 		return;
 
 	console.log(`${caster.name} played a ${card.name}`);
-	caster.energy = caster.energy + -1;
+	caster.energy--;
 	//Remove card from hand
 	caster.hand = caster.hand.filter(handcard => handcard !== card);
 
@@ -139,7 +172,7 @@ function playCard(caster, card)
 
 function startTurn(caster)
 {
-	console.log("Starting turn for ", caster.name);
+	console.log(`Starting ${caster.name}'s turn`);
 
 	state.current_caster = caster;
 	caster.energy = caster.energy_max;
@@ -269,6 +302,36 @@ function redrawBoard(scene)
 	enemy_energy_text.setOrigin(0, 0.5);
 	const enemy_energy_container = scene.add.container(WIDTH_CANVAS - PADDING_CANVAS - 50, HEIGHT_CANVAS/2 - 50, [enemy_energy_icon, enemy_energy_text]);
 	gameObjects.push(enemy_energy_container);
+
+	// Passive Display
+	const player_passive_start = {
+		x: WIDTH_CANVAS/2 + 300,
+		y: HEIGHT_CANVAS/2 + 50
+	};
+	const enemy_passive_start = {
+		x: WIDTH_CANVAS/2 + 300,
+		y: PADDING_CANVAS
+	};
+	for(let index_passive = 0; index_passive < state.passives.length; ++index_passive)
+	{
+		const passive = state.passives[index_passive];
+		if(passive.owner === state.enemy)
+			scene.add.text(enemy_passive_start.x, enemy_passive_start.y + (10 * index_passive), passive.config.name, {color: "white", fontSize: "12px", align: "center"});
+		else
+			scene.add.text(player_passive_start.x, player_passive_start.y + (10 * index_passive), passive.config.name, {color: "white", fontSize: "12px", align: "center"});
+	}
+
+	if(state.winner)
+		if(state.winner === state.player)
+		{
+			console.log('Player Wins!');
+			scene.add.text(WIDTH_CANVAS/2, HEIGHT_CANVAS/2, 'Encounter Complete', {color: "white", fontSize: "32px", align: "center"}).setOrigin(0.5);
+		}
+		else
+		{
+			console.log('You Lose');
+			scene.add.text(WIDTH_CANVAS/2, HEIGHT_CANVAS/2, 'You Lose', {color: "white", fontSize: "32px", align: "center"}).setOrigin(0.5);
+		}
 }
 
 
@@ -288,7 +351,7 @@ const encounter_scene = new Phaser.Class({
 	},
 	create: function()
 	{
-		startEncounter();
+		startEncounter(ENCOUNTERS[0]);
 	},
 	update: function()
 	{
