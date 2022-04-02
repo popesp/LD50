@@ -159,7 +159,20 @@ function redrawBoard(scene)
 		card.destroy();
 	cardcontainers = [];
 
-	// Render cards
+	if(state.player.deck.length)
+	{
+		const cardsprite = scene.add.image(0, 0, "player_back");
+		cardsprite.setDisplaySize(WIDTH_CARD, HEIGHT_CARD);
+
+		const decksize = scene.add.text(0, -PADDING_CARD - HEIGHT_CARD/2, state.player.deck.length, {color: "white", fontSize: "24px"})
+		decksize.setOrigin(0.5, 1);
+
+		const cardcontainer = scene.add.container(0 + PADDING_CANVAS + 0 + WIDTH_CARD/2 + 0*0, HEIGHT_CANVAS - PADDING_CANVAS - HEIGHT_CARD/2 - 0, [cardsprite, decksize])
+
+		cardcontainers.push(cardcontainer);
+	}
+
+	// Render hand
 	const min_x = WIDTH_CANVAS/2 - (state.player.hand.length - 1)*(WIDTH_CARD/2 + SPACING_CARD/2);
 	for(let index_card = 0; index_card < state.player.hand.length; ++index_card)
 	{
@@ -195,6 +208,7 @@ const encounter_scene = new Phaser.Class({
 	preload: function()
 	{
 		this.load.image("card", "assets/card.png");
+		this.load.image("player_back", "assets/player_back.png");
 	},
 	create: function()
 	{
