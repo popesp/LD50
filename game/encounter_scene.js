@@ -16,7 +16,16 @@ const DEFAULT_ENERGY_MAX = 1;
 
 let gameObjects = [];
 
+const ENCOUNTERS = [
+	{
+		name: 'Grokthurs Demonic Embrace',
+		source_deck: [...new Array(4).fill(CARD_DATA.restore_sanity), ...new Array(4).fill(CARD_DATA.mind_blast), ...new Array(4).fill(CARD_DATA.submit_to_madness)],
+		starting_passives: [PASSIVE_DATA.mind_worm]
+	}
+]
+
 const state = {
+	current_encounter: 0,
 	needs_update: true,
 	source_deck: [...new Array(2).fill(CARD_DATA.restore_sanity), ...new Array(5).fill(CARD_DATA.mind_blast), ...new Array(1).fill(CARD_DATA.taste_of_flesh), ...new Array(2).fill(CARD_DATA.submit_to_madness)],
 	current_caster: null,
@@ -38,7 +47,13 @@ const state = {
 		energy: 1,
 		energy_max: DEFAULT_ENERGY_MAX
 	},
-	triggers: {},
+	triggers: {
+		draw: [],
+		discard: []
+	},
+	passives: [
+
+	],
 	winner: false
 };
 
@@ -78,7 +93,7 @@ function enemyTurnLogic()
 	startTurn(state.player);
 }
 
-function startEncounter()
+function startEncounter(encounter)
 {
 	console.log('Starting encounter...');
 	// player
@@ -88,7 +103,7 @@ function startEncounter()
 	shuffleDeck(state.player.deck);
 
 	// enemy
-	state.enemy.deck = [...new Array(4).fill(CARD_DATA.restore_sanity), ...new Array(4).fill(CARD_DATA.mind_blast), ...new Array(4).fill(CARD_DATA.submit_to_madness)].map(createCard);
+	state.enemy.deck = encounter.source_deck.map(createCard);
 	shuffleDeck(state.enemy.deck);
 
 	// draw cards for players
@@ -97,6 +112,9 @@ function startEncounter()
 		drawCard(state.player);
 		drawCard(state.enemy);
 	}
+
+	for(const initial_passive of encounter.starting_passives)
+		addPassive(state, state.enemy, initial_passive);
 
 	startTurn(state.player);
 }
@@ -130,6 +148,8 @@ function drawCard(caster)
 		caster.hand.push(card);
 
 	state.needs_update = true;
+	for(const trigger of state.triggers.draw)
+		trigger.effect(state, caster, trigger.owner);
 }
 
 function playCard(caster, card)
@@ -287,6 +307,24 @@ function redrawBoard(scene)
 	const enemy_energy_container = scene.add.container(WIDTH_CANVAS - PADDING_CANVAS - 50, HEIGHT_CANVAS/2 - 50, [enemy_energy_icon, enemy_energy_text]);
 	gameObjects.push(enemy_energy_container);
 
+	// Passive Display
+	const player_passive_start = {
+		x: WIDTH_CANVAS/2 + 300,
+		y: HEIGHT_CANVAS/2 + 50
+	}
+	const enemy_passive_start = {
+		x: WIDTH_CANVAS/2 + 300,
+		y: PADDING_CANVAS
+	}
+	for(let index_passive = 0; index_passive < state.passives.length; ++index_passive)
+	{
+		const passive = state.passives[index_passive];
+		if(passive.owner === state.enemy)
+			scene.add.text(enemy_passive_start.x, enemy_passive_start.y + (10 * index_passive), passive.config.name, {color: "white", fontSize: "12px", align: "center"});
+		else
+			scene.add.text(player_passive_start.x, player_passive_start.y + (10 * index_passive), passive.config.name, {color: "white", fontSize: "12px", align: "center"});
+	}
+
 	if(state.winner)
 		if(state.winner === state.player)
 		{
@@ -317,7 +355,7 @@ const encounter_scene = new Phaser.Class({
 	},
 	create: function()
 	{
-		startEncounter();
+		startEncounter(ENCOUNTERS[0]);
 
 		// this.add.line(WIDTH_CANVAS/2, HEIGHT_CANVAS/2, 0, 0, WIDTH_CANVAS, 0, "0xff0000");
 		// this.add.line(WIDTH_CANVAS/2, HEIGHT_CANVAS/2, 0, 0, 0, HEIGHT_CANVAS, "0xff0000");

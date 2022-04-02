@@ -39,5 +39,14 @@ const CARD_DATA = {
 			discardCard(caster, getTopCard(caster));
 			caster.energy += 2;
 		}
+	},
+	mind_worm: {
+		name: "Mind Worm",
+		description: "Create a mind worm",
+		type: "Action",
+		effect: function(state, caster)
+		{
+			addPassive(state, caster, PASSIVE_DATA.mind_worm);
+		}
 	}
 };
