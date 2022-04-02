@@ -20,7 +20,7 @@ let gameObjects = [];
 
 const state = {
 	needs_update: true,
-	source_deck: [...new Array(4).fill(CARD_DATA[0]), ...new Array(4).fill(CARD_DATA[1]), ...new Array(4).fill(CARD_DATA[2])],
+	source_deck: [...new Array(2).fill(CARD_DATA[0]), ...new Array(2).fill(CARD_DATA[1]), ...new Array(2).fill(CARD_DATA[2]), ...new Array(4).fill(CARD_DATA[3])],
 	current_caster: null,
 	player: {
 		name: 'Player',
@@ -75,7 +75,7 @@ function startEncounter()
 	shuffleDeck(state.player.deck);
 
 	// enemy
-	state.enemy.deck = [...new Array(10).fill(CARD_DATA[0])];
+	state.enemy.deck = [...new Array(4).fill(CARD_DATA[0]), ...new Array(4).fill(CARD_DATA[1]), ...new Array(4).fill(CARD_DATA[2])];
 	shuffleDeck(state.enemy.deck);
 
 	// draw cards for players
@@ -258,6 +258,22 @@ function redrawBoard(scene)
 
 		gameObjects.push(end_turn_btn_container);
 	}
+
+	// Energy display
+	// player
+	const player_energy_icon = scene.add.image(0, 0, "energy");
+	player_energy_icon.setDisplaySize(25, 25);
+	const player_energy_text = scene.add.text(15,0, state.player.energy, {color: "white", fontSize: "18px"})
+	player_energy_text.setOrigin(0, 0.5);
+	const player_energy_container = scene.add.container(WIDTH_CANVAS - PADDING_CANVAS - 50, HEIGHT_CANVAS/2 + 50, [player_energy_icon, player_energy_text]);
+	gameObjects.push(player_energy_container);
+	// enemy
+	const enemy_energy_icon = scene.add.image(0, 0, "energy");
+	enemy_energy_icon.setDisplaySize(25, 25);
+	const enemy_energy_text = scene.add.text(15,0, state.enemy.energy, {color: "white", fontSize: "18px"})
+	enemy_energy_text.setOrigin(0, 0.5);
+	const enemy_energy_container = scene.add.container(WIDTH_CANVAS - PADDING_CANVAS - 50, HEIGHT_CANVAS/2 - 50, [enemy_energy_icon, enemy_energy_text]);
+	gameObjects.push(enemy_energy_container);
 	
 
 }
@@ -275,6 +291,7 @@ const encounter_scene = new Phaser.Class({
 		this.load.image("player_back", "assets/player_back.png");
 		this.load.image("enemy_back", "assets/enemy_back.png");
 		this.load.image("end_turn_btn", "assets/end_turn_btn.png");
+		this.load.image("energy", "assets/energy.png");
 	},
 	create: function()
 	{

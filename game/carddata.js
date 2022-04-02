@@ -24,10 +24,19 @@ const CARD_DATA = [{
 	type: "Action",
 	effect: function(state, caster)
 	{
-		console.log("Is this shit working???");
 		drawCard(caster);
 		drawCard(caster);
 		caster.energy++;
+	}
+},
+{
+	name: "Submit to Madness",
+	description: "Discard the top card of your deck and gain two energy",
+	type: "Action",
+	effect: function(state, caster)
+	{
+		discardCard(caster, getTopCard(caster));
+		caster.energy += 2;
 	}
 }
 ];
