@@ -9,10 +9,7 @@ const PASSIVE_DATA = {
 				effect: function(state, caster, owner)
 				{
 					if(caster !== owner)
-					{
-						console.log('GET MINDWORMED IDIOT')
-						discardCard(caster, getTopCard(caster));
-					}
+						discardCard(state, caster, getTopCard(state, caster));
 				}
 			}
 		]

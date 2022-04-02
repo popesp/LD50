@@ -12,7 +12,7 @@ const HEIGHT_END_BUTTON = 50;
 
 const DEFAULT_HANDLIMIT = 5;
 const DEFAULT_HANDSIZE = 2;
-const DEFAULT_ENERGY_MAX = 1;
+const DEFAULT_ENERGY = 1;
 
 let gameObjects = [];
 
@@ -29,45 +29,12 @@ const ENCOUNTERS = [
 	}
 ];
 
-const state = {
-	current_encounter: 0,
-	needs_update: true,
-	source_deck: [...new Array(5).fill(CARD_DATA.self_reflection), ...new Array(5).fill(CARD_DATA.mind_blast), ...new Array(2).fill(CARD_DATA.taste_of_flesh)],
-	current_caster: null,
-	player: {
-		name: "Player",
-		hand: [],
-		handlimit: DEFAULT_HANDLIMIT,
-		deck: [],
-		discard_pile: [],
-		energy: 1,
-		energy_max: DEFAULT_ENERGY_MAX
-	},
-	enemy: {
-		name: "Enemy",
-		hand: [],
-		handlimit: DEFAULT_HANDLIMIT,
-		deck: [],
-		discard_pile: [],
-		energy: 1,
-		energy_max: DEFAULT_ENERGY_MAX
-	},
-	triggers: {
-		draw: [],
-		discard: []
-	},
-	passives: [
-
-	],
-	winner: false
-};
-
-function determineWinner(caster)
+function determineWinner(state, caster)
 {
 	if(caster === state.enemy)
-		state.winner = state.player;
+		state.caster_winner = state.player;
 	else
-		state.winner = state.enemy;
+		state.caster_winner = state.enemy;
 }
 
 function shuffleDeck(deck)
@@ -87,42 +54,66 @@ function createCard(card_config)
 	return {...card_config};
 }
 
-function enemyTurnLogic()
+function enemyTurnLogic(state)
 {
 	while(state.enemy.energy > 0 && state.enemy.hand.length > 0)
 	{
-		playCard(state.enemy, state.enemy.hand[Math.floor(Math.random()*(state.enemy.hand.length))]);
+		playCard(state, state.enemy, state.enemy.hand[Math.floor(Math.random()*(state.enemy.hand.length))]);
 	}
 
-	startTurn(state.player);
+	startTurn(state, state.player);
 }
 
-function startEncounter(encounter)
+function startEncounter(state_run, encounter)
 {
+	const state = {
+		caster_current: null,
+		caster_winner: null,
+		needs_update: true,
+		player: {
+			name: "Player",
+			hand: [],
+			handlimit: DEFAULT_HANDLIMIT,
+			deck: state_run.source_deck.map(createCard),
+			discard_pile: [],
+			energy: 1
+		},
+		enemy: {
+			name: "Enemy",
+			hand: [],
+			handlimit: DEFAULT_HANDLIMIT,
+			deck: encounter.source_deck.map(createCard),
+			discard_pile: [],
+			energy: 1
+		},
+		triggers: {
+			draw: [],
+			discard: []
+		},
+		passives: []
+	};
+
 	console.log("=== Starting encounter ===");
 
-	// player
-	state.player.deck = state.source_deck.map(createCard);
 	shuffleDeck(state.player.deck);
-
-	// enemy
-	state.enemy.deck = encounter.source_deck.map(createCard);
 	shuffleDeck(state.enemy.deck);
 
 	// draw cards for players
 	for(let i = 0; i < DEFAULT_HANDSIZE; ++i)
 	{
-		drawCard(state.player);
-		drawCard(state.enemy);
+		drawCard(state, state.player);
+		drawCard(state, state.enemy);
 	}
 
 	for(const initial_passive of encounter.starting_passives)
 		addPassive(state, state.enemy, initial_passive);
 
-	startTurn(state.player);
+	startTurn(state, state.player);
+
+	return state;
 }
 
-function discardCard(caster, card)
+function discardCard(state, caster, card)
 {
 	if(card !== undefined)
 		caster.discard_pile.push(card);
@@ -130,34 +121,35 @@ function discardCard(caster, card)
 	state.needs_update = true;
 }
 
-function getTopCard(caster)
+function getTopCard(state, caster)
 {
 	const card = caster.deck.pop();
 	if(card === undefined)
-	{
-		determineWinner(caster);
-	}
+		determineWinner(state, caster);
 
 	return card;
 }
 
-function drawCard(caster)
+function drawCard(state, caster)
 {
-	const card = getTopCard(caster);
+	const card = getTopCard(state, caster);
 
 	if(caster.handlimit === caster.hand.length && card !== undefined)
-		discardCard(caster, card);
+		discardCard(state, caster, card);
 	else if(card !== undefined)
+	{
+		console.log(`${caster.name} drew a ${card.name}`);
 		caster.hand.push(card);
+	}
 
 	state.needs_update = true;
 	for(const trigger of state.triggers.draw)
 		trigger.effect(state, caster, trigger.owner);
 }
 
-function playCard(caster, card)
+function playCard(state, caster, card)
 {
-	if(caster.energy === 0 || state.current_caster !== caster)
+	if(caster.energy === 0 || state.caster_current !== caster)
 		return;
 
 	console.log(`${caster.name} played a ${card.name}`);
@@ -167,20 +159,20 @@ function playCard(caster, card)
 
 	card.effect.bind(card)(state, caster);
 
-	discardCard(caster, card);
+	discardCard(state, caster, card);
 }
 
-function startTurn(caster)
+function startTurn(state, caster)
 {
 	console.log(`Starting ${caster.name}'s turn`);
 
-	state.current_caster = caster;
-	caster.energy = caster.energy_max;
-	drawCard(caster);
+	state.caster_current = caster;
+	caster.energy = DEFAULT_ENERGY;
+	drawCard(state, caster);
 
 	// AI start
-	if(state.current_caster === state.enemy)
-		enemyTurnLogic();
+	if(state.caster_current === state.enemy)
+		enemyTurnLogic(state);
 }
 
 function makeCardContainer(scene, card, x, y)
@@ -199,8 +191,10 @@ function makeCardContainer(scene, card, x, y)
 	return cardcontainer;
 }
 
-function redrawBoard(scene)
+function redrawBoard(state_run, scene)
 {
+	const state = state_run.state_encounter;
+
 	state.needs_update = false;
 	// Clean up game objects
 	for(const obj of gameObjects)
@@ -239,7 +233,7 @@ function redrawBoard(scene)
 		const cardcontainer = makeCardContainer(scene, card, x, HEIGHT_CANVAS - HEIGHT_CARD/2 - PADDING_CANVAS);
 		cardcontainer.setSize(WIDTH_CARD, HEIGHT_CARD);
 		cardcontainer.setInteractive({useHandCursor: true});
-		cardcontainer.on("pointerdown", () => playCard(state.player, card));
+		cardcontainer.on("pointerdown", () => playCard(state, state.player, card));
 
 		gameObjects.push(cardcontainer);
 	}
@@ -271,7 +265,7 @@ function redrawBoard(scene)
 	}
 
 	// End Turn button
-	if(state.current_caster === state.player)
+	if(state.caster_current === state.player)
 	{
 		const end_turn_btn = scene.add.image(0, 0, "end_turn_btn");
 		end_turn_btn.setDisplaySize(WIDTH_END_BUTTON, HEIGHT_END_BUTTON);
@@ -282,7 +276,7 @@ function redrawBoard(scene)
 		const end_turn_btn_container = scene.add.container(WIDTH_CANVAS - PADDING_CANVAS - WIDTH_END_BUTTON/2, HEIGHT_CANVAS/2, [end_turn_btn, end_text]);
 		end_turn_btn_container.setSize(WIDTH_END_BUTTON, HEIGHT_END_BUTTON);
 		end_turn_btn_container.setInteractive({useHandCursor: true});
-		end_turn_btn_container.on("pointerdown", () => startTurn(state.enemy));
+		end_turn_btn_container.on("pointerdown", () => startTurn(state, state.enemy));
 
 		gameObjects.push(end_turn_btn_container);
 	}
@@ -321,16 +315,44 @@ function redrawBoard(scene)
 			scene.add.text(player_passive_start.x, player_passive_start.y + (10 * index_passive), passive.config.name, {color: "white", fontSize: "12px", align: "center"});
 	}
 
-	if(state.winner)
-		if(state.winner === state.player)
+	if(state.caster_winner !== null)
+		if(state.caster_winner === state.player)
 		{
-			console.log('Player Wins!');
-			scene.add.text(WIDTH_CANVAS/2, HEIGHT_CANVAS/2, 'Encounter Complete', {color: "white", fontSize: "32px", align: "center"}).setOrigin(0.5);
+			scene.add.text(WIDTH_CANVAS/2, HEIGHT_CANVAS/2, "Encounter Complete", {color: "white", fontSize: "32px", align: "center"}).setOrigin(0.5);
+
+			const btn_next = scene.add.image(0, 0, "end_turn_btn");
+			btn_next.setDisplaySize(WIDTH_END_BUTTON, HEIGHT_END_BUTTON);
+
+			const text_next = scene.add.text(0, 0, "Next", {color: "white", fontSize: "18px"});
+			text_next.setOrigin(0.5);
+
+			const btn_next_container = scene.add.container(WIDTH_CANVAS/2, HEIGHT_CANVAS/2 + 50, [btn_next, text_next]);
+			btn_next_container.setSize(WIDTH_END_BUTTON, HEIGHT_END_BUTTON);
+			btn_next_container.setInteractive({useHandCursor: true});
+			btn_next_container.on("pointerdown", function()
+			{
+				state_run.index_encounter++;
+				startEncounter(state_run, ENCOUNTERS[state_run.index_encounter]);
+			});
+
+			gameObjects.push(btn_next_container);
 		}
 		else
 		{
-			console.log('You Lose');
-			scene.add.text(WIDTH_CANVAS/2, HEIGHT_CANVAS/2, 'You Lose', {color: "white", fontSize: "32px", align: "center"}).setOrigin(0.5);
+			scene.add.text(WIDTH_CANVAS/2, HEIGHT_CANVAS/2, "You Lose", {color: "white", fontSize: "32px", align: "center"}).setOrigin(0.5);
+
+			const btn_menu = scene.add.image(0, 0, "end_turn_btn");
+			btn_menu.setDisplaySize(WIDTH_END_BUTTON, HEIGHT_END_BUTTON);
+
+			const text_menu = scene.add.text(0, 0, "Main Menu", {color: "white", fontSize: "18px"});
+			text_menu.setOrigin(0.5);
+
+			const btn_menu_container = scene.add.container(WIDTH_CANVAS/2, HEIGHT_CANVAS/2 + 50, [btn_menu, text_menu]);
+			btn_menu_container.setSize(WIDTH_END_BUTTON, HEIGHT_END_BUTTON);
+			btn_menu_container.setInteractive({useHandCursor: true});
+			btn_menu_container.on("pointerdown", () => scene.scene.start("main_menu"));
+
+			gameObjects.push(btn_menu_container);
 		}
 }
 
@@ -351,11 +373,11 @@ const encounter_scene = new Phaser.Class({
 	},
 	create: function()
 	{
-		startEncounter(ENCOUNTERS[0]);
+		GameState.state_run.state_encounter = startEncounter(GameState.state_run, ENCOUNTERS[GameState.state_run.index_encounter]);
 	},
 	update: function()
 	{
-		if(state.needs_update)
-			redrawBoard(this);
+		if(GameState.state_run.state_encounter.needs_update)
+			redrawBoard(GameState.state_run, this);
 	}
 });

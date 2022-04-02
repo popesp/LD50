@@ -24,8 +24,8 @@ const CARD_DATA = {
 		effect: function(state, caster)
 		{
 			const target = state.player === caster ? state.enemy : state.player;
-			discardCard(target, getTopCard(target));
-			discardCard(target, getTopCard(target));
+			discardCard(state, target, getTopCard(state, target));
+			discardCard(state, target, getTopCard(state, target));
 		}
 	},
 	taste_of_flesh: {
@@ -34,8 +34,8 @@ const CARD_DATA = {
 		type: "Action",
 		effect: function(state, caster)
 		{
-			drawCard(caster);
-			drawCard(caster);
+			drawCard(state, caster);
+			drawCard(state, caster);
 			caster.energy++;
 		}
 	},
@@ -45,7 +45,7 @@ const CARD_DATA = {
 		type: "Action",
 		effect: function(state, caster)
 		{
-			discardCard(caster, getTopCard(caster));
+			discardCard(state, caster, getTopCard(state, caster));
 			caster.energy += 2;
 		}
 	},

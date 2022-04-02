@@ -1,8 +1,8 @@
 const SHOP_DATA = [
 	{
-		name: BASIC_PASSIVE_DATA.mind_worm.name,
+		name: PASSIVE_DATA.mind_worm.name,
 		type: "Passive",
-		data: BASIC_PASSIVE_DATA.mind_worm,
+		data: PASSIVE_DATA.mind_worm,
 		cost: 1,
 		bought: false
 	},

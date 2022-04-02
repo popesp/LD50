@@ -3,6 +3,13 @@ const HEIGHT_CANVAS = 720;
 const PADDING_CANVAS = 20;
 
 
+const GameState = {
+	unlocks: [],
+	currency: 0,
+	state_run: null
+};
+
+
 document.addEventListener("DOMContentLoaded", function()
 {
 	const dom_container = document.getElementById("container");
