@@ -174,6 +174,8 @@ function startTurn(state, caster)
 	state.caster_current = caster;
 	caster.energy = DEFAULT_ENERGY;
 	drawCard(state, caster);
+	if(state.caster_winner !== null) // Winner has been determined
+		return;
 
 	// AI start
 	if(state.caster_current === state.enemy)
