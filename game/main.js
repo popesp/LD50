@@ -13,6 +13,15 @@ const CARD_DATA = [{
 	{
 
 	}
+},
+{
+	name: "Mind Blast",
+	description: "Remove the top 2 cards from the enemy deck",
+	type: "Action",
+	effect: function(state, target)
+	{
+
+	}
 }];
 
 const state = {
