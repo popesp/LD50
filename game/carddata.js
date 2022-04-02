@@ -1,4 +1,24 @@
 const CARD_DATA = Object.fromEntries(Object.entries({
+	i_win: {
+		name: "I Win Button",
+		description: "Devs hold all the power",
+		type: "Action",
+		effect: function(state, caster)
+		{
+			const target = state.player === caster ? state.enemy : state.player;
+			discardCard(state, target, getTopCard(state, target));
+			discardCard(state, target, getTopCard(state, target));
+			discardCard(state, target, getTopCard(state, target));
+			discardCard(state, target, getTopCard(state, target));
+			discardCard(state, target, getTopCard(state, target));
+			discardCard(state, target, getTopCard(state, target));
+			discardCard(state, target, getTopCard(state, target));
+			discardCard(state, target, getTopCard(state, target));
+			discardCard(state, target, getTopCard(state, target));
+			discardCard(state, target, getTopCard(state, target));
+			discardCard(state, target, getTopCard(state, target));
+		}
+	},
 	restore_sanity: {
 		name: "Restore Sanity",
 		description: "Place two 'Self Reflection' cards on the bottom of your deck",

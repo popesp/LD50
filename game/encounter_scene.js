@@ -342,7 +342,7 @@ function redrawBoard(state_run, scene)
 			btn_next_container.on("pointerdown", function()
 			{
 				state_run.index_encounter++;
-				startEncounter(state_run, ENCOUNTERS[state_run.index_encounter]);
+				GameState.state_run.state_encounter = startEncounter(state_run, ENCOUNTERS[state_run.index_encounter]);
 			});
 
 			gameObjects.push(btn_next_container);
