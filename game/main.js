@@ -1,5 +1,20 @@
-const WIDTH_CANVAS = 800;
-const HEIGHT_CANVAS = 600;
+const WIDTH_CANVAS = 1280;
+const HEIGHT_CANVAS = 720;
+
+
+const CARD_DATA = [{
+	name: "Fray Sanity",
+	description: "",
+	effect: function(state, target)
+	{
+
+	}
+}];
+
+const cards = [];
+const state = {
+	effects: []
+};
 
 
 document.addEventListener("DOMContentLoaded", function()
@@ -12,6 +27,20 @@ document.addEventListener("DOMContentLoaded", function()
 		parent: dom_container,
 		width: WIDTH_CANVAS/2,
 		height: HEIGHT_CANVAS/2,
+		scene: {
+			preload: function()
+			{
+				this.load.image("card", "assets/card.png");
+			},
+			create: function()
+			{
+				this.add.image(400, 300, "card");
+			},
+			update: function()
+			{
+
+			}
+		},
 		resolution: 5,
 		backgroundColor: 0x0a0808
 	});
