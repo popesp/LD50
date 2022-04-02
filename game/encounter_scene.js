@@ -38,6 +38,9 @@ function determineWinner(state, caster)
 		state.caster_winner = state.player;
 	else
 		state.caster_winner = state.enemy;
+
+	state.needs_update = true;
+	console.log(`${state.caster_winner.name} won the game.`);
 }
 
 function shuffleDeck(deck)
@@ -138,6 +141,7 @@ function drawCard(state, caster)
 	const card = getTopCard(state, caster);
 	if(card === undefined) // GAME IS OVER
 		return;
+
 
 	if(caster.handlimit === caster.hand.length && card !== undefined)
 		discardCard(state, caster, card);
@@ -285,8 +289,11 @@ function redrawBoard(state_run, scene)
 
 		const end_turn_btn_container = scene.add.container(WIDTH_CANVAS - PADDING_CANVAS - WIDTH_END_BUTTON/2, HEIGHT_CANVAS/2, [end_turn_btn, end_text]);
 		end_turn_btn_container.setSize(WIDTH_END_BUTTON, HEIGHT_END_BUTTON);
-		end_turn_btn_container.setInteractive({useHandCursor: true});
-		end_turn_btn_container.on("pointerdown", () => startTurn(state, state.enemy));
+		if(!state.caster_winner)
+		{
+			end_turn_btn_container.setInteractive({useHandCursor: true});
+			end_turn_btn_container.on("pointerdown", () => startTurn(state, state.enemy));
+		}
 
 		gameObjects.push(end_turn_btn_container);
 	}
