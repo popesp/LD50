@@ -5,7 +5,7 @@ const WIDTH_CARD = 150;
 const HEIGHT_CARD = 210;
 const PADDING_CARD = 10;
 const OFFSET_DESCRIPTION = 20;
-const SPACING_CARD = 20;
+const SPACING_CARD = 10;
 
 const WIDTH_END_BUTTON = 100;
 const HEIGHT_END_BUTTON = 50;
@@ -60,6 +60,11 @@ function createCard(card_config)
 	return {...card_config};
 }
 
+function enemyTurnLogic()
+{
+	startTurn(state.player)
+}
+
 function startEncounter()
 {
 	console.log('Starting encounter...');
@@ -70,7 +75,7 @@ function startEncounter()
 	shuffleDeck(state.player.deck);
 
 	// enemy
-	state.enemy.deck = [];
+	state.enemy.deck = [...new Array(10).fill(CARD_DATA[0])];
 	shuffleDeck(state.enemy.deck);
 
 	// draw cards for players
@@ -118,7 +123,7 @@ function getTopCard(caster)
 
 function playCard(caster, card)
 {
-	if(caster.energy === 0)
+	if(caster.energy === 0 || state.current_caster !== caster)
 		return;
 
 	console.log('Playing card:', card);
@@ -138,6 +143,10 @@ function startTurn(caster)
 	state.current_caster = caster;
 	caster.energy = caster.energy_max;
 	drawCard(caster);
+
+	// AI start
+	if(state.current_caster === state.enemy)
+		enemyTurnLogic() 
 }
 
 function makeCardContainer(scene, card, x, y)
@@ -164,6 +173,7 @@ function redrawBoard(scene)
 		obj.destroy();
 	gameObjects = [];
 
+	// Render Decks
 	if(state.player.deck.length)
 	{
 		const cardsprite = scene.add.image(0, 0, "player_back");
@@ -177,17 +187,43 @@ function redrawBoard(scene)
 		gameObjects.push(cardcontainer);
 	}
 
-	// Render hand
-	const min_x = WIDTH_CANVAS/2 - (state.player.hand.length - 1)*(WIDTH_CARD/2 + SPACING_CARD/2);
+	if(state.enemy.deck.length)
+	{
+		const cardsprite = scene.add.image(0, 0, "enemy_back");
+		cardsprite.setDisplaySize(WIDTH_CARD, HEIGHT_CARD);
+
+		const decksize = scene.add.text(0, PADDING_CARD + HEIGHT_CARD/2, state.enemy.deck.length, {color: "white", fontSize: "24px"})
+		decksize.setOrigin(0.5, 0);
+
+		const cardcontainer = scene.add.container(PADDING_CANVAS + WIDTH_CARD/2, PADDING_CANVAS + HEIGHT_CARD/2, [cardsprite, decksize])
+
+		gameObjects.push(cardcontainer);
+	}
+
+	// Render hands
+	// player
+	const min_x_player = WIDTH_CANVAS/2 - (state.player.hand.length - 1)*(WIDTH_CARD/2 + SPACING_CARD/2);
 	for(let index_card = 0; index_card < state.player.hand.length; ++index_card)
 	{
 		const card = state.player.hand[index_card];
-		const x = min_x + index_card*(WIDTH_CARD + SPACING_CARD);
+		const x = min_x_player + index_card*(WIDTH_CARD + SPACING_CARD);
 
 		const cardcontainer = makeCardContainer(scene, card, x, HEIGHT_CANVAS - HEIGHT_CARD/2 - PADDING_CANVAS);
 		cardcontainer.setSize(WIDTH_CARD, HEIGHT_CARD);
 		cardcontainer.setInteractive();
 		cardcontainer.on('pointerdown', () => playCard(state.player, card));
+
+		gameObjects.push(cardcontainer);
+	}
+	// enemy
+	const min_x_enemy = WIDTH_CANVAS/2 - (state.enemy.hand.length - 1)*(WIDTH_CARD/2 + SPACING_CARD/2);
+	for(let index_card = 0; index_card < state.enemy.hand.length; ++index_card)
+	{
+		const x = min_x_enemy + index_card*(WIDTH_CARD + SPACING_CARD);
+
+		const cardsprite = scene.add.image(0, 0, "enemy_back");
+		cardsprite.setDisplaySize(WIDTH_CARD, HEIGHT_CARD);
+		const cardcontainer = scene.add.container(x, PADDING_CANVAS + HEIGHT_CARD/2, [cardsprite])
 
 		gameObjects.push(cardcontainer);
 	}
@@ -197,6 +233,12 @@ function redrawBoard(scene)
 	{
 		const player_discarded_card = state.player.discard_pile[state.player.discard_pile.length - 1];
 		const cardcontainer = makeCardContainer(scene, player_discarded_card, WIDTH_CANVAS  - WIDTH_CARD/2 - PADDING_CANVAS, HEIGHT_CANVAS  - HEIGHT_CARD/2 - PADDING_CANVAS);
+		gameObjects.push(cardcontainer);
+	}
+	if(state.enemy.discard_pile.length)
+	{
+		const enemy_discarded_card = state.enemy.discard_pile[state.enemy.discard_pile.length - 1];
+		const cardcontainer = makeCardContainer(scene, enemy_discarded_card, WIDTH_CANVAS  - WIDTH_CARD/2 - PADDING_CANVAS, HEIGHT_CARD/2 + PADDING_CANVAS);
 		gameObjects.push(cardcontainer);
 	}
 
@@ -231,6 +273,7 @@ const encounter_scene = new Phaser.Class({
 	{
 		this.load.image("card", "assets/card.png");
 		this.load.image("player_back", "assets/player_back.png");
+		this.load.image("enemy_back", "assets/enemy_back.png");
 		this.load.image("end_turn_btn", "assets/end_turn_btn.png");
 	},
 	create: function()
