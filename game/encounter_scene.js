@@ -3,6 +3,8 @@
 
 const WIDTH_CARD = 150;
 const HEIGHT_CARD = 210;
+const WIDTH_CARDIMAGE = 94;
+const HEIGHT_CARDIMAGE = 56;
 const PADDING_CARD = 10;
 const OFFSET_DESCRIPTION = 20;
 const SPACING_CARD = 10;
@@ -31,6 +33,7 @@ const ENCOUNTERS = [
 
 function determineWinner(state, caster)
 {
+	console.log(caster);
 	if(caster === state.enemy)
 		state.caster_winner = state.player;
 	else
@@ -182,13 +185,16 @@ function makeCardContainer(scene, card, x, y)
 	const cardsprite = scene.add.image(0, 0, "card");
 	cardsprite.setDisplaySize(WIDTH_CARD, HEIGHT_CARD);
 
+	const cardimage = scene.add.image(0, -20, `card_${card.key}`);
+	cardimage.setDisplaySize(WIDTH_CARDIMAGE, HEIGHT_CARDIMAGE);
+
 	const cardname = scene.add.text(0, PADDING_CARD - HEIGHT_CARD/2, card.name, {color: "black", fontSize: "14px"});
 	cardname.setOrigin(0.5, 0);
 
 	const carddescription = scene.add.text(0, OFFSET_DESCRIPTION, card.description, {color: "black", fontSize: "12px", align: "center", wordWrap: {width: WIDTH_CARD - PADDING_CARD*2}});
 	carddescription.setOrigin(0.5, 0);
 
-	const cardcontainer = scene.add.container(x, y, [cardsprite, cardname, carddescription]);
+	const cardcontainer = scene.add.container(x, y, [cardsprite, cardimage, cardname, carddescription]);
 
 	return cardcontainer;
 }
@@ -372,6 +378,8 @@ const encounter_scene = new Phaser.Class({
 		this.load.image("enemy_back", "assets/enemy_back.png");
 		this.load.image("end_turn_btn", "assets/end_turn_btn.png");
 		this.load.image("energy", "assets/energy.png");
+		this.load.image("card_mind_blast", "assets/card-art/mind-blast.png");
+		this.load.image("card_restore_sanity", "assets/card-art/restore-sanity.png");
 	},
 	create: function()
 	{
