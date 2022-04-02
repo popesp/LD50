@@ -1,5 +1,6 @@
 const WIDTH_CANVAS = 1280;
 const HEIGHT_CANVAS = 720;
+const PADDING_CANVAS = 20;
 
 
 document.addEventListener("DOMContentLoaded", function()
@@ -12,7 +13,7 @@ document.addEventListener("DOMContentLoaded", function()
 		parent: dom_container,
 		width: WIDTH_CANVAS,
 		height: HEIGHT_CANVAS,
-		scene: [encounter_scene],
+		scene: [main_menu, encounter_scene, upgrade_shop],
 		backgroundColor: 0x0a0808
 	});
 
