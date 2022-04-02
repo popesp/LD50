@@ -62,7 +62,10 @@ function createCard(card_config)
 
 function enemyTurnLogic()
 {
-	startTurn(state.player)
+	while(state.enemy.energy > 0)
+		playCard(state.enemy, state.enemy.hand[Math.floor(Math.random()*(state.enemy.hand.length))]);
+
+	startTurn(state.player);
 }
 
 function startEncounter()
@@ -75,7 +78,7 @@ function startEncounter()
 	shuffleDeck(state.player.deck);
 
 	// enemy
-	state.enemy.deck = [...new Array(4).fill(CARD_DATA[0]), ...new Array(4).fill(CARD_DATA[1]), ...new Array(4).fill(CARD_DATA[2])];
+	state.enemy.deck = [...new Array(4).fill(CARD_DATA[0]), ...new Array(4).fill(CARD_DATA[1]), ...new Array(4).fill(CARD_DATA[2])].map(createCard);
 	shuffleDeck(state.enemy.deck);
 
 	// draw cards for players
