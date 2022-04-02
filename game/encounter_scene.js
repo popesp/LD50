@@ -3,22 +3,25 @@ const PADDING_CANVAS = 20;
 
 const WIDTH_CARD = 150;
 const HEIGHT_CARD = 210;
-
 const PADDING_CARD = 10;
 const OFFSET_DESCRIPTION = 20;
 const SPACING_CARD = 20;
+
+const WIDTH_END_BUTTON = 100;
+const HEIGHT_END_BUTTON = 50;
 
 const DEFAULT_HANDLIMIT = 5;
 const DEFAULT_HANDSIZE = 2;
 const DEFAULT_ENERGY_MAX = 1;
 
-let cardcontainers = [];
+let gameObjects = [];
 
 
 
 const state = {
 	needs_update: true,
 	source_deck: [...new Array(4).fill(CARD_DATA[0]), ...new Array(4).fill(CARD_DATA[1]), ...new Array(4).fill(CARD_DATA[2])],
+	current_caster: null,
 	player: {
 		name: 'Player',
 		hand: [],
@@ -131,6 +134,8 @@ function playCard(caster, card)
 function startTurn(caster)
 {
 	console.log('Starting turn for ', caster.name);
+
+	state.current_caster = caster;
 	caster.energy = caster.energy_max;
 	drawCard(caster);
 }
@@ -155,9 +160,9 @@ function redrawBoard(scene)
 {
 	state.needs_update = false;
 	// Clean up game objects
-	for(const card of cardcontainers)
-		card.destroy();
-	cardcontainers = [];
+	for(const obj of gameObjects)
+		obj.destroy();
+	gameObjects = [];
 
 	if(state.player.deck.length)
 	{
@@ -169,7 +174,7 @@ function redrawBoard(scene)
 
 		const cardcontainer = scene.add.container(0 + PADDING_CANVAS + 0 + WIDTH_CARD/2 + 0*0, HEIGHT_CANVAS - PADDING_CANVAS - HEIGHT_CARD/2 - 0, [cardsprite, decksize])
 
-		cardcontainers.push(cardcontainer);
+		gameObjects.push(cardcontainer);
 	}
 
 	// Render hand
@@ -184,7 +189,7 @@ function redrawBoard(scene)
 		cardcontainer.setInteractive();
 		cardcontainer.on('pointerdown', () => playCard(state.player, card));
 
-		cardcontainers.push(cardcontainer);
+		gameObjects.push(cardcontainer);
 	}
 
 	// Discard piles
@@ -192,7 +197,24 @@ function redrawBoard(scene)
 	{
 		const player_discarded_card = state.player.discard_pile[state.player.discard_pile.length - 1];
 		const cardcontainer = makeCardContainer(scene, player_discarded_card, WIDTH_CANVAS  - WIDTH_CARD/2 - PADDING_CANVAS, HEIGHT_CANVAS  - HEIGHT_CARD/2 - PADDING_CANVAS);
-		cardcontainers.push(cardcontainer);
+		gameObjects.push(cardcontainer);
+	}
+
+	// End Turn button
+	if(state.current_caster === state.player)
+	{
+		const end_turn_btn = scene.add.image(0, 0, "end_turn_btn");
+		end_turn_btn.setDisplaySize(WIDTH_END_BUTTON, HEIGHT_END_BUTTON)
+
+		const end_text = scene.add.text(0, 0, 'END TURN', {color: "white", fontSize: "18px"})
+		end_text.setOrigin(0.5);
+
+		const end_turn_btn_container = scene.add.container(WIDTH_CANVAS - PADDING_CANVAS - WIDTH_END_BUTTON/2, HEIGHT_CANVAS/2, [end_turn_btn, end_text])
+		end_turn_btn_container.setSize(WIDTH_END_BUTTON, HEIGHT_END_BUTTON);
+		end_turn_btn_container.setInteractive();
+		end_turn_btn_container.on('pointerdown', () => startTurn(state.enemy));
+
+		gameObjects.push(end_turn_btn_container);
 	}
 	
 
@@ -209,6 +231,7 @@ const encounter_scene = new Phaser.Class({
 	{
 		this.load.image("card", "assets/card.png");
 		this.load.image("player_back", "assets/player_back.png");
+		this.load.image("end_turn_btn", "assets/end_turn_btn.png");
 	},
 	create: function()
 	{
