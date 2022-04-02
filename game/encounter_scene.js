@@ -63,7 +63,10 @@ function createCard(card_config)
 function enemyTurnLogic()
 {
 	while(state.enemy.energy > 0)
+	{
 		playCard(state.enemy, state.enemy.hand[Math.floor(Math.random()*(state.enemy.hand.length))]);
+	}
+		
 
 	startTurn(state.player);
 }
@@ -93,7 +96,6 @@ function startEncounter()
 
 function discardCard(caster, card)
 {
-	console.log('Discarding card: ', card);
 	caster.discard_pile.push(card);
 
 	state.needs_update = true;
@@ -102,7 +104,6 @@ function discardCard(caster, card)
 function drawCard(caster)
 {
 	const card = getTopCard(caster);
-	console.log('Drawing card:', card);
 
 	if(caster.handlimit === caster.hand.length)
 		discardCard(caster, card);
@@ -115,7 +116,6 @@ function drawCard(caster)
 function getTopCard(caster)
 {
 	const card = caster.deck.pop();
-	console.log("Top card: ", card);
 	if(card === undefined)
 	{
 		// Determine_Winner();
