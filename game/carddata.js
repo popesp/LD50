@@ -1,6 +1,6 @@
 const CARD_DATA = [{
 	name: "Restore Sanity",
-	description: "Place this card on the bottom of your deck",
+	description: "Place a copy of this card on the bottom of your deck",
 	type: "Action",
 	effect: function(state, caster)
 	{
@@ -13,6 +13,8 @@ const CARD_DATA = [{
 	type: "Action",
 	effect: function(state, caster)
 	{
-		
+		const target = state.player === caster ? state.enemy : state.player;
+		discardCard(target, getTopCard(target));
+		discardCard(target, getTopCard(target));
 	}
 }];
