@@ -8,8 +8,8 @@ const PADDING_CARD = 10;
 const OFFSET_DESCRIPTION = 20;
 const SPACING_CARD = 20;
 
-const DEFAULT_HANDLIMIT = 3;
-const DEFAULT_HANDSIZE = 3;
+const DEFAULT_HANDLIMIT = 5;
+const DEFAULT_HANDSIZE = 2;
 const DEFAULT_ENERGY_MAX = 1;
 
 let cardcontainers = [];
@@ -18,7 +18,7 @@ let cardcontainers = [];
 
 const state = {
 	needs_update: true,
-	source_deck: [...new Array(4).fill(CARD_DATA[0]), ...new Array(4).fill(CARD_DATA[1])],
+	source_deck: [...new Array(4).fill(CARD_DATA[0]), ...new Array(4).fill(CARD_DATA[1]), ...new Array(4).fill(CARD_DATA[2])],
 	player: {
 		name: 'Player',
 		hand: [],
@@ -104,6 +104,7 @@ function drawCard(caster)
 function getTopCard(caster)
 {
 	const card = caster.deck.pop();
+	console.log("Top card: ", card);
 	if(card === undefined)
 	{
 		// Determine_Winner();
@@ -114,11 +115,15 @@ function getTopCard(caster)
 
 function playCard(caster, card)
 {
-	console.log('Playing card:', card);
-	card.effect.bind(card, state, caster);
+	if(caster.energy === 0)
+		return;
 
+	console.log('Playing card:', card);
+	caster.energy = caster.energy + -1;
 	//Remove card from hand
 	caster.hand = caster.hand.filter(handcard => handcard !== card);
+
+	card.effect.bind(card)(state, caster);
 
 	discardCard(caster, card);
 }
@@ -128,6 +133,22 @@ function startTurn(caster)
 	console.log('Starting turn for ', caster.name);
 	caster.energy = caster.energy_max;
 	drawCard(caster);
+}
+
+function makeCardContainer(scene, card, x, y)
+{
+	const cardsprite = scene.add.image(0, 0, "card");
+	cardsprite.setDisplaySize(WIDTH_CARD, HEIGHT_CARD);
+
+	const cardname = scene.add.text(0, PADDING_CARD - HEIGHT_CARD/2, card.name, {color: "black", fontSize: "14px"});
+	cardname.setOrigin(0.5, 0);
+
+	const carddescription = scene.add.text(0, OFFSET_DESCRIPTION, card.description, {color: "black", fontSize: "12px", align: "center", wordWrap: {width: WIDTH_CARD - PADDING_CARD*2}});
+	carddescription.setOrigin(0.5, 0);
+
+	const cardcontainer = scene.add.container(x, y, [cardsprite, cardname, carddescription]);
+
+	return cardcontainer;
 }
 
 function redrawBoard(scene)
@@ -145,22 +166,23 @@ function redrawBoard(scene)
 		const card = state.player.hand[index_card];
 		const x = min_x + index_card*(WIDTH_CARD + SPACING_CARD);
 
-		const cardsprite = scene.add.image(0, 0, "card");
-		cardsprite.setDisplaySize(WIDTH_CARD, HEIGHT_CARD);
-
-		const cardname = scene.add.text(0, PADDING_CARD - HEIGHT_CARD/2, card.name, {color: "black", fontSize: "14px"});
-		cardname.setOrigin(0.5, 0);
-
-		const carddescription = scene.add.text(0, OFFSET_DESCRIPTION, card.description, {color: "black", fontSize: "12px", align: "center", wordWrap: {width: WIDTH_CARD - PADDING_CARD*2}});
-		carddescription.setOrigin(0.5, 0);
-
-		const cardcontainer = scene.add.container(x, HEIGHT_CANVAS - HEIGHT_CARD/2 - PADDING_CANVAS, [cardsprite, cardname, carddescription]);
+		const cardcontainer = makeCardContainer(scene, card, x, HEIGHT_CANVAS - HEIGHT_CARD/2 - PADDING_CANVAS);
 		cardcontainer.setSize(WIDTH_CARD, HEIGHT_CARD);
 		cardcontainer.setInteractive();
 		cardcontainer.on('pointerdown', () => playCard(state.player, card));
 
 		cardcontainers.push(cardcontainer);
 	}
+
+	// Discard piles
+	if(state.player.discard_pile.length)
+	{
+		const player_discarded_card = state.player.discard_pile[state.player.discard_pile.length - 1];
+		const cardcontainer = makeCardContainer(scene, player_discarded_card, WIDTH_CANVAS  - WIDTH_CARD/2 - PADDING_CANVAS, HEIGHT_CANVAS  - HEIGHT_CARD/2 - PADDING_CANVAS);
+		cardcontainers.push(cardcontainer);
+	}
+	
+
 }
 
 
@@ -178,8 +200,8 @@ const encounter_scene = new Phaser.Class({
 	{
 		startEncounter();
 
-		this.add.line(WIDTH_CANVAS/2, HEIGHT_CANVAS/2, 0, 0, WIDTH_CANVAS, 0, "0xff0000");
-		this.add.line(WIDTH_CANVAS/2, HEIGHT_CANVAS/2, 0, 0, 0, HEIGHT_CANVAS, "0xff0000");
+		// this.add.line(WIDTH_CANVAS/2, HEIGHT_CANVAS/2, 0, 0, WIDTH_CANVAS, 0, "0xff0000");
+		// this.add.line(WIDTH_CANVAS/2, HEIGHT_CANVAS/2, 0, 0, 0, HEIGHT_CANVAS, "0xff0000");
 
 		// new Phaser.Line(min, handle1.y, min, handle2.y);
 	},

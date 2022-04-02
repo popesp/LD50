@@ -17,4 +17,17 @@ const CARD_DATA = [{
 		discardCard(target, getTopCard(target));
 		discardCard(target, getTopCard(target));
 	}
-}];
+},
+{
+	name: "Taste of Flesh",
+	description: "Draw two cards and gain one energy",
+	type: "Action",
+	effect: function(state, caster)
+	{
+		console.log("Is this shit working???");
+		drawCard(caster);
+		drawCard(caster);
+		caster.energy++;
+	}
+}
+];
