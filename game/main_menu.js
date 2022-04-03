@@ -41,8 +41,8 @@ const main_menu = new Phaser.Class({
 			garbageBin = [];
 
 			GameState.state_run = {
-				// source_deck: [...new Array(5).fill(CARD_DATA.self_reflection), ...new Array(50).fill(CARD_DATA.mind_blast), ...new Array(2).fill(CARD_DATA.taste_of_flesh)],
-				source_deck: [...new Array(5).fill(CARD_DATA.i_win)],
+				source_deck: [...new Array(5).fill(CARD_DATA.self_reflection), ...new Array(9).fill(CARD_DATA.mind_blast), ...new Array(2).fill(CARD_DATA.taste_of_flesh)],
+				// source_deck: [...new Array(5).fill(CARD_DATA.i_win)],
 				index_encounter: 0,
 				state_encounter: null
 			};
