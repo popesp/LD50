@@ -24,9 +24,15 @@ const main_menu = new Phaser.Class({
 	preload: function()
 	{
 		this.load.image("end_turn_btn", "assets/end_turn_btn.png");
+		this.load.audio("spook", "assets/music/spook.mp3");
 	},
 	create: function()
 	{
+
+		this.music = this.sound.add("spook");
+		this.music.loop = true;
+		this.music.play()
+		
 		// TITLE TEXT
 		const title_text = this.add.text(WIDTH_CANVAS/2, PADDING_CANVAS*6.66, "C'THULU RISING", {color: "white", fontSize: "40px"});
 		title_text.setOrigin(0.5);
@@ -54,7 +60,7 @@ const main_menu = new Phaser.Class({
 				index_encounter: 0,
 				state_encounter: null
 			};
-
+			this.music.stop();
 			this.scene.start("encounter_scene");
 		});
 
@@ -76,6 +82,7 @@ const main_menu = new Phaser.Class({
 			for(const trash of garbageBin)
 				trash.destroy();
 			garbageBin = [];
+			this.music.stop();
 			this.scene.start("upgrade_shop");
 		});
 	},

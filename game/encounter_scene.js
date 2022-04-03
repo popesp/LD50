@@ -3,9 +3,9 @@
 
 const WIDTH_CARD = 150;
 const HEIGHT_CARD = 210;
-const WIDTH_CARDIMAGE = 94;
-const HEIGHT_CARDIMAGE = 56;
-const PADDING_CARD = 10;
+const WIDTH_CARDIMAGE = 141;
+const HEIGHT_CARDIMAGE = 85;
+const PADDING_CARD = 5;
 const OFFSET_DESCRIPTION = 20;
 const SPACING_CARD = 10;
 
@@ -191,7 +191,7 @@ function makeCardContainer(scene, card, x, y)
 	const cardsprite = scene.add.image(0, 0, "card");
 	cardsprite.setDisplaySize(WIDTH_CARD, HEIGHT_CARD);
 
-	const cardimage = scene.add.image(0, -20, `card_${card.key}`);
+	const cardimage = scene.add.image(0, -41, `card_${card.key}`);
 	cardimage.setDisplaySize(WIDTH_CARDIMAGE, HEIGHT_CARDIMAGE);
 
 	const cardname = scene.add.text(0, PADDING_CARD - HEIGHT_CARD/2, card.name, {color: "black", fontSize: "14px"});
@@ -385,17 +385,24 @@ const encounter_scene = new Phaser.Class({
 	},
 	preload: function()
 	{
-		this.load.image("card", "assets/card.png");
+		this.load.image("card", "assets/card_front.png");
 		this.load.image("player_back", "assets/player_back.png");
 		this.load.image("enemy_back", "assets/enemy_back.png");
 		this.load.image("end_turn_btn", "assets/end_turn_btn.png");
 		this.load.image("energy", "assets/energy.png");
 		this.load.image("card_mind_blast", "assets/card-art/mind-blast.png");
 		this.load.image("card_restore_sanity", "assets/card-art/restore-sanity.png");
+		this.load.image("card_self_reflection", "assets/card-art/self-reflection.png");
+		this.load.image("card_taste_of_flesh", "assets/card-art/taste-of-flesh.png");
+		this.load.image("card_submit_to_madness", "assets/card-art/submit-to-madness.png");
+		this.load.audio("eldritchambience", "assets/music/eldritchambience.mp3");
 	},
 	create: function()
 	{
 		GameState.state_run.state_encounter = startEncounter(GameState.state_run, ENCOUNTERS[GameState.state_run.index_encounter]);
+		this.music = this.sound.add("eldritchambience");
+		this.music.loop = true;
+		this.music.play()
 	},
 	update: function()
 	{

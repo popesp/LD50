@@ -84,11 +84,15 @@ const upgrade_shop = new Phaser.Class({
 	preload: function()
 	{
 		this.load.image("back_arrow", "assets/back_arrow.png");
-		this.load.image("card", "assets/card.png");
+		this.load.image("card", "assets/card_front.png");
 		this.load.image("card_mind_blast", "assets/card-art/mind-blast.png");
+		this.load.audio("thumpy", "assets/music/thumpy.mp3");
 	},
 	create: function()
 	{
+		this.music = this.sound.add("thumpy");
+		this.music.loop = true;
+		this.music.play()
 		// TITLE TEXT
 		const title_text = this.add.text(WIDTH_CANVAS/2, PADDING_CANVAS*2, "UPGRADE SHOP", {color: "white", fontSize: "40px"});
 		title_text.setOrigin(0.5, 0);
@@ -103,11 +107,11 @@ const upgrade_shop = new Phaser.Class({
 		back_btn.setInteractive({useHandCursor: true});
 		back_btn.on("pointerdown", () => {
 			collectGarbage()
+			this.music.stop();
 			this.scene.start("main_menu")
 		});
 
-		drawShop(this);		
-
+		drawShop(this);	
 
 	},
 	update: function()
