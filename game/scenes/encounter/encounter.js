@@ -1,15 +1,12 @@
 import Random from "../../random.js";
 import {CARD_DATA, createCard} from "../../data/cards.js";
 import {PASSIVE_DATA} from "../../data/passives.js";
-import {WIDTH_CANVAS, HEIGHT_CANVAS, PADDING_CANVAS, WIDTH_CARD, HEIGHT_CARD, OFFSET_DESCRIPTION_CARD} from "../../globals.js";
+import {WIDTH_CANVAS, HEIGHT_CANVAS, PADDING_CANVAS, WIDTH_CARD, HEIGHT_CARD} from "../../globals.js";
+import {makeCardContainer} from "../../helpers.js";
 import GameState from "../../gamestate.js";
 import {drawCard, playCard, addPassive} from "./functions.js";
 import {log} from "../../debug.js";
 
-
-const WIDTH_CARDIMAGE = 141;
-const HEIGHT_CARDIMAGE = 85;
-const PADDING_CARD = 5;
 
 const X_DISCARD_PLAYER = WIDTH_CANVAS - WIDTH_CARD/2 - PADDING_CANVAS;
 const Y_DISCARD_PLAYER = HEIGHT_CANVAS - HEIGHT_CARD/2 - PADDING_CANVAS;
@@ -21,6 +18,8 @@ const X_DECK_PLAYER = PADDING_CANVAS + WIDTH_CARD/2;
 const Y_DECK_PLAYER = HEIGHT_CANVAS - PADDING_CANVAS - HEIGHT_CARD/2 - 0;
 const X_DECK_ENEMY = PADDING_CANVAS + WIDTH_CARD/2;
 const Y_DECK_ENEMY = PADDING_CANVAS + HEIGHT_CARD/2;
+
+const OFFSET_DECKCOUNT = HEIGHT_CARD/2 + 5;
 
 const WIDTH_END_BUTTON = 100;
 const HEIGHT_END_BUTTON = 50;
@@ -116,19 +115,7 @@ StateController.prototype.gameobj_card = function(card, x, y, pointerCallback, f
 {
 	if(faceup)
 	{
-		const cardsprite = this.scene.add.image(0, 0, "card");
-		cardsprite.setDisplaySize(WIDTH_CARD, HEIGHT_CARD);
-
-		const cardimage = this.scene.add.image(0, -41, `card_${card.key}`);
-		cardimage.setDisplaySize(WIDTH_CARDIMAGE, HEIGHT_CARDIMAGE);
-
-		const cardname = this.scene.add.text(0, PADDING_CARD - HEIGHT_CARD/2, card.name, {color: "black", fontSize: "14px"});
-		cardname.setOrigin(0.5, 0);
-
-		const carddescription = this.scene.add.text(0, OFFSET_DESCRIPTION_CARD, card.description, {color: "black", fontSize: "12px", align: "center", wordWrap: {width: WIDTH_CARD - PADDING_CARD*2}});
-		carddescription.setOrigin(0.5, 0);
-
-		const cardcontainer = this.scene.add.container(x, y, [cardsprite, cardimage, cardname, carddescription]);
+		const cardcontainer = makeCardContainer(this.scene, card, x, y);
 
 		if(pointerCallback)
 		{
@@ -255,25 +242,6 @@ function startTurn(state, caster)
 		return;
 }
 
-function makeCardContainer(scene, card, x, y)
-{
-	const cardsprite = scene.add.image(0, 0, "card");
-	cardsprite.setDisplaySize(WIDTH_CARD, HEIGHT_CARD);
-
-	const cardimage = scene.add.image(0, -41, `card_${card.key}`);
-	cardimage.setDisplaySize(WIDTH_CARDIMAGE, HEIGHT_CARDIMAGE);
-
-	const cardname = scene.add.text(0, PADDING_CARD - HEIGHT_CARD/2, card.name, {color: "black", fontSize: "14px"});
-	cardname.setOrigin(0.5, 0);
-
-	const carddescription = scene.add.text(0, OFFSET_DESCRIPTION_CARD, card.description, {color: "black", fontSize: "12px", align: "center", wordWrap: {width: WIDTH_CARD - PADDING_CARD*2}});
-	carddescription.setOrigin(0.5, 0);
-
-	const cardcontainer = scene.add.container(x, y, [cardsprite, cardimage, cardname, carddescription]);
-
-	return cardcontainer;
-}
-
 function redrawBoard(state_run, scene)
 {
 	const state = state_run.state_encounter;
@@ -288,7 +256,7 @@ function redrawBoard(state_run, scene)
 	const player_deck_container = scene.add.container(
 		PADDING_CANVAS + WIDTH_CARD/2,
 		HEIGHT_CANVAS - PADDING_CANVAS - HEIGHT_CARD/2 - 0,
-		[scene.add.text(0, -PADDING_CARD - HEIGHT_CARD/2, state.player.deck.length, {color: "white", fontSize: "24px"}).setOrigin(0.5, 1)]
+		[scene.add.text(0, -OFFSET_DECKCOUNT, state.player.deck.length, {color: "white", fontSize: "24px"}).setOrigin(0.5, 1)]
 	);
 	if(state.player.deck.length > 0)
 		player_deck_container.add(scene.add.image(0, 0, "player_back").setDisplaySize(WIDTH_CARD, HEIGHT_CARD));
@@ -300,8 +268,7 @@ function redrawBoard(state_run, scene)
 	const enemy_deck_container = scene.add.container(
 		PADDING_CANVAS + WIDTH_CARD/2,
 		PADDING_CANVAS + HEIGHT_CARD/2,
-		// [scene.add.text(0, PADDING_CARD + HEIGHT_CARD/2, state.enemy.deck.length, {color: "white", fontSize: "24px"}).setOrigin(0.5, 0)]
-		[scene.add.text(0, PADDING_CARD + HEIGHT_CARD/2, length_text, {color: "white", fontSize: font_size}).setOrigin(0.5, 0)]
+		[scene.add.text(0, OFFSET_DECKCOUNT, length_text, {color: "white", fontSize: font_size}).setOrigin(0.5, 0)]
 	);
 	if(state.enemy.deck.length > 0)
 		enemy_deck_container.add(scene.add.image(0, 0, "enemy_back").setDisplaySize(WIDTH_CARD, HEIGHT_CARD));
