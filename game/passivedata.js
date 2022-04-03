@@ -14,6 +14,21 @@ const PASSIVE_DATA = {
 				}
 			}
 		]
+	},
+	cosmic_insight: {
+		name: "Cosmic Insight",
+		description: "For the rest of the game, each player draws an extra card at the start of their turn",
+		type: "relic",
+		key: "cosmic_insight",
+		triggers: [
+			{
+				action: "start_turn",
+				effect: function(state, caster, owner)
+				{
+					drawCard(state, caster);
+				}
+			}
+		]
 	}
 };
 

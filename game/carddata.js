@@ -30,11 +30,21 @@ const CARD_DATA = Object.fromEntries(Object.entries({
 	},
 	self_reflection: {
 		name: "Self Reflection",
-		description: "Gain one energy",
+		description: "Gain one energy, and place a blank card on the top of your deck",
 		type: "Action",
 		effect: function(state, caster)
 		{
+			caster.deck.push(createCard(CARD_DATA.blank));
 			caster.energy++;
+		}
+	},
+	blank: {
+		name: "A Blank",
+		description: "[This card has no effect]",
+		type: "Action",
+		effect: function(state, caster)
+		{
+
 		}
 	},
 	mind_blast: {
@@ -48,17 +58,6 @@ const CARD_DATA = Object.fromEntries(Object.entries({
 			discardCard(state, target, getTopCard(state, target));
 		}
 	},
-	taste_of_flesh: {
-		name: "Taste of Flesh",
-		description: "Draw two cards and gain one energy",
-		type: "Action",
-		effect: function(state, caster)
-		{
-			drawCard(state, caster);
-			drawCard(state, caster);
-			caster.energy++;
-		}
-	},
 	submit_to_madness: {
 		name: "Submit to Madness",
 		description: "Discard the top card of your deck and gain two energy",
@@ -69,6 +68,7 @@ const CARD_DATA = Object.fromEntries(Object.entries({
 			caster.energy += 2;
 		}
 	},
+	//Passive Cards
 	mind_worm: {
 		name: "Mind Worm",
 		description: "For the rest of the game, when your opponent draws a card, discard the top card of their deck",
@@ -76,6 +76,38 @@ const CARD_DATA = Object.fromEntries(Object.entries({
 		effect: function(state, caster)
 		{
 			addPassive(state, caster, PASSIVE_DATA.mind_worm);
+		}
+	},
+	cosmic_insight: {
+		name: "Cosmic Insight",
+		description: "For the rest of the game, each player draws an extra card at the start of their turn",
+		type: "Action",
+		effect: function(state, caster)
+		{
+			addPassive(state, caster, PASSIVE_DATA.cosmic_insight);
+		}
+	},
+
+	//Enemy Cards
+	bump_in_the_night: {
+		name: "Bump in the Night",
+		description: "Discard the top card from the enemy deck",
+		type: "Action",
+		effect: function(state, caster)
+		{
+			const target = state.player === caster ? state.enemy : state.player;
+			discardCard(state, target, getTopCard(state, target));
+		}
+	},
+	taste_of_flesh: {
+		name: "Taste of Flesh",
+		description: "Draw two cards and gain one energy",
+		type: "Action",
+		effect: function(state, caster)
+		{
+			drawCard(state, caster);
+			drawCard(state, caster);
+			caster.energy++;
 		}
 	}
 }).map(([key, cardconfig]) => ([key, {...cardconfig, key}])));

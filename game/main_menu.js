@@ -44,6 +44,7 @@ const main_menu = new Phaser.Class({
 		this.load.image("card_taste_of_flesh", "assets/card-art/taste-of-flesh.png");
 		this.load.image("card_submit_to_madness", "assets/card-art/submit-to-madness.png");
 		this.load.image("card_mind_worm", "assets/card-art/mind-worm.png");
+		this.load.image("card_cosmic_insight", "assets/card-art/cosmic-insight.png");
 		
 	},
 	create: function()
@@ -76,7 +77,11 @@ const main_menu = new Phaser.Class({
 			garbageBin = [];
 
 			GameState.state_run = {
-				source_deck: [...new Array(5).fill(CARD_DATA.self_reflection), ...new Array(9).fill(CARD_DATA.mind_blast), ...new Array(2).fill(CARD_DATA.taste_of_flesh)],
+				source_deck: [
+					...new Array(5).fill(CARD_DATA.self_reflection), 
+					...new Array(9).fill(CARD_DATA.mind_blast), 
+					...new Array(2).fill(CARD_DATA.taste_of_flesh), 
+					...new Array(15).fill(CARD_DATA.cosmic_insight)],
 				// source_deck: [...new Array(5).fill(CARD_DATA.i_win)],
 				index_encounter: 0,
 				state_encounter: null

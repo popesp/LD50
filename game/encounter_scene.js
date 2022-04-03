@@ -24,13 +24,16 @@ let gameObjects = [];
 const ENCOUNTERS = [
 	{
 		name: "Grokthur's Demonic Embrace",
-		source_deck: [...new Array(4).fill(CARD_DATA.restore_sanity), ...new Array(4).fill(CARD_DATA.mind_blast), ...new Array(4).fill(CARD_DATA.submit_to_madness)],
+		source_deck: [
+			...new Array(0).fill(CARD_DATA.taste_of_flesh), 
+			...new Array(10).fill(CARD_DATA.bump_in_the_night), 
+			...new Array(0).fill(CARD_DATA.submit_to_madness)],
 		starting_passives: [],
 		bounty: 1
 	},
 	{
 		name: "Demetrion's Horrid Palace",
-		source_deck: [...new Array(4).fill(CARD_DATA.restore_sanity), ...new Array(4).fill(CARD_DATA.mind_blast), ...new Array(4).fill(CARD_DATA.submit_to_madness)],
+		source_deck: [...new Array(4).fill(CARD_DATA.taste_of_flesh), ...new Array(4).fill(CARD_DATA.bump_in_the_night), ...new Array(4).fill(CARD_DATA.submit_to_madness)],
 		starting_passives: [PASSIVE_DATA.mind_worm],
 		bounty: 2
 	}
@@ -49,6 +52,7 @@ function determineWinner(state, caster)
 
 	state.needs_update = true;
 	console.log(`${state.caster_winner.name} won the game.`);
+	debugger;
 }
 
 function shuffleDeck(deck)
@@ -103,7 +107,8 @@ function startEncounter(state_run, encounter)
 		},
 		triggers: {
 			draw: [],
-			discard: []
+			discard: [],
+			start_turn: []
 		},
 		passives: []
 	};
@@ -139,7 +144,7 @@ function discardCard(state, caster, card)
 function getTopCard(state, caster)
 {
 	const card = caster.deck.pop();
-	if(card === undefined)
+	if(card === undefined && state.caster_winner === null)
 		determineWinner(state, caster);
 
 	return card;
@@ -153,7 +158,11 @@ function drawCard(state, caster)
 
 
 	if(caster.handlimit === caster.hand.length && card !== undefined)
+	{
 		discardCard(state, caster, card);
+		console.log(`hand full discard`);
+	}
+		
 	else if(card !== undefined)
 	{
 		console.log(`${caster.name} drew a ${card.name}`);
@@ -191,6 +200,15 @@ function startTurn(state, caster)
 	if(state.caster_winner !== null) // Winner has been determined
 		return;
 
+	for(const trigger of state.triggers.start_turn)
+	{
+		if(state.caster_winner !== null)
+			return;
+		console.log('start of turn trigger', trigger);
+		trigger.effect(state, caster, trigger.owner);
+	}
+		
+
 	// AI start
 	if(state.caster_current === state.enemy)
 		enemyTurnLogic(state);
@@ -217,10 +235,8 @@ function makeCardContainer(scene, card, x, y)
 
 function animateCard(scene, cardContainer, destination, duration)
 {
-	console.log('cardContainer', cardContainer)
 	const diff_x = destination.x - cardContainer.x;
 	const diff_y =  destination.y - cardContainer.y;
-	console.log('diff x', diff_x)
 	const event = scene.time.addEvent({
 		delay: ANIM_DELAY,
 		repeat: duration/ANIM_DELAY,
