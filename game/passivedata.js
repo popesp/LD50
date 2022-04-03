@@ -10,7 +10,57 @@ const PASSIVE_DATA = {
 				effect: function(state, caster, owner, guid)
 				{
 					if(caster !== owner)
+					{
+						console.log('worm trigger');
 						discardCard(state, caster, getTopCard(state, caster), guid);
+						for(const trigger of state.triggers.maggot)
+						{
+							trigger.effect(state, caster, trigger.owner);
+						}
+					}
+						
+				}
+			}
+		]
+	},
+	maggot_infestation: {
+		name: "Maggot Infestation",
+		description: "For the rest of the game, anytime Mind Worm would discard a card, it discards that many cards +1",
+		type: "relic",
+		key: "maggot_infestation",
+		triggers: [
+			{
+				action: "maggot",
+				effect: function(state, caster, owner, guid)
+				{
+					console.log('maggot trigger');
+					if(caster !== owner)
+					{
+						discardCard(state, caster, getTopCard(state, caster), guid);
+						for(const trigger of state.triggers.queen)
+						{
+							trigger.effect(state, caster, trigger.owner);
+						}
+					}
+						
+				}
+			}
+		]
+	},
+	feed_the_queen: {
+		name: "Feed the Queen",
+		description: "For the rest of the game, when a card effect causes an enemy to discard 2 or more cards from their deck, they also draw a card",
+		type: "relic",
+		key: "feed_the_queen",
+		triggers: [
+			{
+				action: "queen",
+				effect: function(state, caster, owner, guid)
+				{
+					console.log(state.triggers);
+					console.log('queen trigger');
+					if(caster !== owner)
+						drawCard(state, caster, getTopCard(state, caster), guid);
 				}
 			}
 		]
@@ -61,8 +111,6 @@ const PASSIVE_DATA = {
 						caster.energy += 2;
 						caster.skip_draw = true;
 					}
-						
-					
 				}
 			}
 		]

@@ -154,6 +154,24 @@ const CARD_DATA = Object.fromEntries(Object.entries({
 			addPassive(state, caster, PASSIVE_DATA.mind_worm, guid);
 		}
 	},
+	maggot_infestation: {
+		name: "Maggot Infestation",
+		description: "For the rest of the game, anytime Mind Worm would discard a card, it discards that many cards +1",
+		type: "Passive",
+		effect: function(state, caster, guid)
+		{
+			addPassive(state, caster, PASSIVE_DATA.maggot_infestation, guid);
+		}
+	},
+	feed_the_queen: {
+		name: "Feed the Queen",
+		description: "For the rest of the game, when a card effect causes an enemy to discard 2 or more cards from their deck, they also draw a card",
+		type: "Passive",
+		effect: function(state, caster, guid)
+		{
+			addPassive(state, caster, PASSIVE_DATA.feed_the_queen, guid);
+		}
+	},
 	cosmic_insight: {
 		name: "Cosmic Insight",
 		description: "For the rest of the game, each player draws an extra card at the start of their turn",

@@ -211,6 +211,8 @@ function startEncounter(state_run, encounter, scene)
 		},
 		triggers: {
 			draw: [],
+			maggot: [],
+			queen: [],
 			discard: [],
 			start_turn: []
 		},
@@ -240,18 +242,18 @@ function startEncounter(state_run, encounter, scene)
 
 function discardCard(state, caster, card, guid)
 {
-	if(card !== undefined)
-		state.controller.wrap(function()
-		{
-			caster.discard_pile.push(card);
-			state.needs_update = true;
-		}, [{
-			targets: card.gameobj,
-			ease: Phaser.Math.Easing.Cubic.InOut,
-			duration: 1000,
-			x: caster.X_DISCARD,
-			y: caster.Y_DISCARD
-		}], guid ?? random.identifier());
+		if(card !== undefined)
+			state.controller.wrap(function()
+			{
+				caster.discard_pile.push(card);
+				state.needs_update = true;
+			}, [{
+				targets: card.gameobj,
+				ease: Phaser.Math.Easing.Cubic.InOut,
+				duration: 1000,
+				x: caster.X_DISCARD,
+				y: caster.Y_DISCARD
+			}], guid ?? random.identifier());
 }
 
 function randomcard()
@@ -287,6 +289,9 @@ function drawCard(state, caster, guid)
 
 	state.controller.wrap(function()
 	{
+		for(const trigger of state.triggers.draw)
+			trigger.effect(state, caster, trigger.owner);
+			
 		if(caster.handlimit === caster.hand.length)
 			discardCard(state, caster, card, guid);
 		else
@@ -298,8 +303,7 @@ function drawCard(state, caster, guid)
 				caster.hand.push(card);
 
 				state.needs_update = true;
-				for(const trigger of state.triggers.draw)
-					trigger.effect(state, caster, trigger.owner);
+
 			}, [{
 				targets: gameobj,
 				ease: Phaser.Math.Easing.Cubic.InOut,
