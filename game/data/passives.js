@@ -15,7 +15,6 @@ export const PASSIVE_DATA = {
 				{
 					if(caster !== owner)
 					{
-						log("worm trigger");
 						discardCard(state, caster, getTopCard(state, caster, guid), guid);
 						for(const trigger of state.triggers.maggot)
 						{
@@ -36,7 +35,6 @@ export const PASSIVE_DATA = {
 				action: "maggot",
 				effect: function(state, caster, owner, guid)
 				{
-					log("maggot trigger");
 					if(caster !== owner)
 					{
 						discardCard(state, caster, getTopCard(state, caster, guid), guid);
@@ -51,7 +49,7 @@ export const PASSIVE_DATA = {
 	},
 	feed_the_queen: {
 		name: "Feed the Queen",
-		description: "For the rest of the game, when a card effect causes an enemy to discard 2 or more cards from their deck, they also draw a card",
+		description: "For the rest of the game, when an enemy discards 2 or more cards from their deck, they also draw a card",
 		type: "relic",
 		key: "feed_the_queen",
 		triggers: [
@@ -59,8 +57,6 @@ export const PASSIVE_DATA = {
 				action: "queen",
 				effect: function(state, caster, owner, guid)
 				{
-					log(state.triggers);
-					log("queen trigger");
 					if(caster !== owner)
 						drawCard(state, caster, guid);
 				}
@@ -93,7 +89,7 @@ export const PASSIVE_DATA = {
 				effect: function(state, caster, owner)
 				{
 					// TODO(shawn): animate
-					if(caster !== owner)
+					if(caster === owner)
 						caster.energy ++;
 				}
 			}
@@ -108,12 +104,51 @@ export const PASSIVE_DATA = {
 			{
 				action: "start_turn",
 				effect: function(state, caster, owner)
-				{	//i think this is trigging on player turn when a enemy has this static effect
+				{
 					if(caster === owner)
 					{
 						// TODO(shawn): animate
 						caster.energy += 2;
 						caster.skip_draw = true;
+					}
+				}
+			}
+		]
+	},
+	candles_flicker: {
+		name: "Candle's Flicker",
+		description: "For the rest of the game, when your opponent would discard 1 or more cards from their deck, you draw a card",
+		type: "relic",
+		key: "candles_flicker",
+		triggers: [
+			{
+				//needs discard funtion rework to discard from hand
+				action: "discard",
+				effect: function(state, caster, owner, guid)
+				{
+					if(caster !== owner)
+					{
+						const target = state.player === caster ? state.enemy : state.player;
+						drawCard(state, target, guid);
+					}
+				}
+			}
+		]
+	},
+	rope_burn: {
+		name: "Rope Burn",
+		description: "For the rest of the game, if you would draw a card while your hand is full, discard a card from the enemy deck instead",
+		type: "relic",
+		key: "rope_burn",
+		triggers: [
+			{
+				action: "hand_size_discard",
+				effect: function(state, caster, owner, guid)
+				{
+					log("in here!!!");
+					if(caster !== owner)
+					{
+						discardCard(state, caster, getTopCard(state, caster), guid);
 					}
 				}
 			}
