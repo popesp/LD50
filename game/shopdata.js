@@ -36,8 +36,8 @@ const SHOP_DATA = [
 		bought: 0
 	},
 	{
-		name: "Self Reflection",
-		data: CARD_DATA.self_reflection,
+		name: CARD_DATA.restore_sanity,
+		data: CARD_DATA.restore_sanity,
 		cost: 1,
 		quantity: 1,
 		bought: 0
