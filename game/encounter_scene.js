@@ -385,17 +385,8 @@ const encounter_scene = new Phaser.Class({
 	},
 	preload: function()
 	{
-		this.load.image("card", "assets/card_front.png");
-		this.load.image("player_back", "assets/player_back.png");
-		this.load.image("enemy_back", "assets/enemy_back.png");
-		this.load.image("end_turn_btn", "assets/end_turn_btn.png");
 		this.load.image("energy", "assets/energy.png");
-		this.load.image("card_mind_blast", "assets/card-art/mind-blast.png");
-		this.load.image("card_restore_sanity", "assets/card-art/restore-sanity.png");
-		this.load.image("card_self_reflection", "assets/card-art/self-reflection.png");
-		this.load.image("card_taste_of_flesh", "assets/card-art/taste-of-flesh.png");
-		this.load.image("card_submit_to_madness", "assets/card-art/submit-to-madness.png");
-		this.load.audio("eldritchambience", "assets/music/eldritchambience.mp3");
+		
 	},
 	create: function()
 	{

@@ -83,10 +83,7 @@ const upgrade_shop = new Phaser.Class({
 	},
 	preload: function()
 	{
-		this.load.image("back_arrow", "assets/back_arrow.png");
-		this.load.image("card", "assets/card_front.png");
-		this.load.image("card_mind_blast", "assets/card-art/mind-blast.png");
-		this.load.audio("thumpy", "assets/music/thumpy.mp3");
+		
 	},
 	create: function()
 	{
