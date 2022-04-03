@@ -16,6 +16,9 @@ const DEFAULT_HANDLIMIT = 5;
 const DEFAULT_HANDSIZE = 2;
 const DEFAULT_ENERGY = 1;
 
+const ANIM_DELAY = (1/60)*1000;
+const animation_arrays = [];
+
 let gameObjects = [];
 
 const ENCOUNTERS = [
@@ -154,6 +157,7 @@ function drawCard(state, caster)
 	else if(card !== undefined)
 	{
 		console.log(`${caster.name} drew a ${card.name}`);
+		card.animated = false;
 		caster.hand.push(card);
 	}
 
@@ -211,6 +215,27 @@ function makeCardContainer(scene, card, x, y)
 	return cardcontainer;
 }
 
+function animateCard(scene, cardContainer, destination, duration)
+{
+	console.log('cardContainer', cardContainer)
+	const diff_x = destination.x - cardContainer.x;
+	const diff_y =  destination.y - cardContainer.y;
+	console.log('diff x', diff_x)
+	const event = scene.time.addEvent({
+		delay: ANIM_DELAY,
+		repeat: duration/ANIM_DELAY,
+		loop: false,
+		callback: () => {
+			cardContainer.setX(cardContainer.x + (diff_x/(duration/ANIM_DELAY)))
+			cardContainer.setY(cardContainer.y + (diff_y/(duration/ANIM_DELAY)))
+			if (event.getOverallProgress() >= 1)
+			{
+
+			}
+		}
+	});
+}
+
 function redrawBoard(state_run, scene)
 {
 	const state = state_run.state_encounter;
@@ -248,14 +273,25 @@ function redrawBoard(state_run, scene)
 		const card = state.player.hand[index_card];
 		const x = min_x_player + index_card*(WIDTH_CARD + SPACING_CARD);
 
-		const cardcontainer = makeCardContainer(scene, card, x, HEIGHT_CANVAS - HEIGHT_CARD/2 - PADDING_CANVAS);
+		const destination = {
+			x: x,
+			y: HEIGHT_CANVAS - HEIGHT_CARD/2 - PADDING_CANVAS
+		}
+		const cardcontainer = makeCardContainer(scene, card, card.animated ? destination.x : PADDING_CANVAS + WIDTH_CARD/2, card.animated ? destination.y : HEIGHT_CANVAS - PADDING_CANVAS - HEIGHT_CARD/2 - 0);
+
+		if (!card.animated)
+		{
+			animation_arrays.push(card);
+			animateCard(scene, cardcontainer, destination, 1000);
+			card.animated = true;
+		}
+
 		cardcontainer.setSize(WIDTH_CARD, HEIGHT_CARD);
 		if(!state.caster_winner)
 		{
 			cardcontainer.setInteractive({useHandCursor: true});
 			cardcontainer.on("pointerdown", () => playCard(state, state.player, card));
 		}
-
 		gameObjects.push(cardcontainer);
 	}
 
@@ -263,9 +299,23 @@ function redrawBoard(state_run, scene)
 	const min_x_enemy = WIDTH_CANVAS/2 - (state.enemy.hand.length - 1)*(WIDTH_CARD/2 + SPACING_CARD/2);
 	for(let index_card = 0; index_card < state.enemy.hand.length; ++index_card)
 	{
+		const card = state.enemy.hand[index_card];
+		card
 		const x = min_x_enemy + index_card*(WIDTH_CARD + SPACING_CARD);
 
-		const cardsprite = scene.add.image(x, PADDING_CANVAS + HEIGHT_CARD/2, "enemy_back").setDisplaySize(WIDTH_CARD, HEIGHT_CARD);
+		const destination = {
+			x: x,
+			y: PADDING_CANVAS + HEIGHT_CARD/2
+		}
+
+		const cardsprite = scene.add.image(card.animated ? destination.x : PADDING_CANVAS + WIDTH_CARD/2, card.animated ? destination.y : PADDING_CANVAS + HEIGHT_CARD/2, "enemy_back").setDisplaySize(WIDTH_CARD, HEIGHT_CARD);
+		if (!card.animated)
+		{
+			animation_arrays.push(card);
+			animateCard(scene, cardsprite, destination, 1000);
+			card.animated = true;
+		}
+
 		gameObjects.push(cardsprite);
 	}
 
