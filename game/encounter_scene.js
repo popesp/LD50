@@ -80,7 +80,7 @@ function createCard(card_config)
 function enemyTurnLogic(state)
 {
 	// Increment bounty for final boss
-	if(GameState.state_run.index_encounter === 2)
+	if(state.enemy.isFinalBoss)
 		state.enemy.bounty++;
 
 	while(state.enemy.energy > 0 && state.enemy.hand.length > 0 && state.caster_winner === null)
@@ -295,8 +295,8 @@ function redrawBoard(state_run, scene)
 	gameObjects.push(player_deck_container);
 
 	// enemy deck
-	const length_text = GameState.state_run.index_encounter === 2 ? "∞" : state.enemy.deck.length;
-	const font_size = GameState.state_run.index_encounter === 2 ? "40px" : "24px";
+	const length_text = state.enemy.isFinalBoss ? "∞" : state.enemy.deck.length;
+	const font_size = state.enemy.isFinalBoss ? "40px" : "24px";
 	const enemy_deck_container = scene.add.container(
 		PADDING_CANVAS + WIDTH_CARD/2,
 		PADDING_CANVAS + HEIGHT_CARD/2,
@@ -455,7 +455,9 @@ function redrawBoard(state_run, scene)
 		}
 		else
 		{
-			const game_end_text = scene.add.text(WIDTH_CANVAS/2, HEIGHT_CANVAS/2, "You Lose", {color: "white", fontSize: "32px", align: "center"}).setOrigin(0.5);
+			const lose_text = state.enemy.isFinalBoss ? `You lost...but perhaps there is still hope. You gained ${state.enemy.bounty} gold.` : "You Lose";
+			state.player.currency += state.enemy.bounty;
+			const game_end_text = scene.add.text(WIDTH_CANVAS/2, HEIGHT_CANVAS/2, lose_text, {color: "white", fontSize: "32px", align: "center"}).setOrigin(0.5);
 			gameObjects.push(game_end_text);
 
 			const btn_menu = scene.add.image(0, 0, "end_turn_btn");
