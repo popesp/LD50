@@ -33,7 +33,7 @@ function makeItemContainer(scene, item, x, y)
 	itemcost.setOrigin(0.5);
 
 	const itemcontainer = scene.add.container(x, y, [itemsprite, itemimage, itemname, itemdescription, itemavailability, itemcost]);
-
+	
 	return itemcontainer;
 }
 
@@ -54,7 +54,7 @@ function drawShop(scene)
 	collectGarbage();
 
 	// Points remaining
-	const points_text = scene.add.text(WIDTH_CANVAS/2, PADDING_CANVAS*2, "Points: " + GameState.currency, {color: "white", fontSize: "40px"});
+	const points_text = scene.add.text(WIDTH_CANVAS/2, PADDING_CANVAS*2, "Gold: " + GameState.currency, {color: "white", fontSize: "40px"});
 	points_text.setOrigin(1, 0);
 	points_text.setPosition(WIDTH_CANVAS - PADDING_CANVAS*2, PADDING_CANVAS*2);
 	garbageBin.push(points_text);

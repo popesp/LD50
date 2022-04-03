@@ -39,7 +39,7 @@ const CARD_DATA = Object.fromEntries(Object.entries({
 	},
 	mind_blast: {
 		name: "Mind Blast",
-		description: "Remove the top 2 cards from the enemy deck",
+		description: "Discard the top 2 cards from the enemy deck",
 		type: "Action",
 		effect: function(state, caster)
 		{
@@ -71,7 +71,7 @@ const CARD_DATA = Object.fromEntries(Object.entries({
 	},
 	mind_worm: {
 		name: "Mind Worm",
-		description: "Create a mind worm",
+		description: "For the rest of the game, when your opponent draws a card, discard the top card of their deck",
 		type: "Action",
 		effect: function(state, caster)
 		{

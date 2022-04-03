@@ -43,6 +43,7 @@ const main_menu = new Phaser.Class({
 		this.load.image("card_self_reflection", "assets/card-art/self-reflection.png");
 		this.load.image("card_taste_of_flesh", "assets/card-art/taste-of-flesh.png");
 		this.load.image("card_submit_to_madness", "assets/card-art/submit-to-madness.png");
+		this.load.image("card_mind_worm", "assets/card-art/mind-worm.png");
 		
 	},
 	create: function()
@@ -54,7 +55,7 @@ const main_menu = new Phaser.Class({
 		this.add.image(650, 360, "background")
 		
 		// TITLE TEXT
-		const title_text = this.add.text(WIDTH_CANVAS/2, PADDING_CANVAS*6.66, "C'THULhU RISING", {color: "white", fontSize: "40px"});
+		const title_text = this.add.text(WIDTH_CANVAS/2, PADDING_CANVAS*6.66, "C'THULHU RISING", {color: "white", fontSize: "40px"});
 		title_text.setOrigin(0.5);
 
 		// Start New Run Button
@@ -90,7 +91,7 @@ const main_menu = new Phaser.Class({
 		// Upgrade Shop Button
 		const upgrade_shop_btn = this.add.image(0, 0, "end_turn_btn");
 		upgrade_shop_btn.setDisplaySize(200, 50);
-		const upgrade_shop_text = this.add.text(0, 0, "UPGRADE SHOP", {color: "black", fontSize: "24px"});
+		const upgrade_shop_text = this.add.text(0, 0, "CARD SHOP", {color: "black", fontSize: "24px"});
 		upgrade_shop_text.setOrigin(0.5);
 		const upgrade_shop_container = this.add.container(WIDTH_CANVAS/2, HEIGHT_CANVAS/2 + HEIGHT_START_BUTTON*2, [upgrade_shop_btn, upgrade_shop_text]);
 		upgrade_shop_container.setSize(WIDTH_UPGRADE_BUTTON, HEIGHT_UPGRADE_BUTTON);

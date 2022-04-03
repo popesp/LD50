@@ -7,9 +7,8 @@ const SHOP_DATA = [
 		bought: 0
 	},
 	{
-		name: PASSIVE_DATA.mind_worm.name,
-		type: "Passive",
-		data: PASSIVE_DATA.mind_worm,
+		name: CARD_DATA.mind_worm.name,
+		data: CARD_DATA.mind_worm,
 		cost: 1,
 		quantity: 1,
 		bought: 0

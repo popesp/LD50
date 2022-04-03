@@ -6,7 +6,7 @@ const HEIGHT_CARD = 210;
 const WIDTH_CARDIMAGE = 141;
 const HEIGHT_CARDIMAGE = 85;
 const PADDING_CARD = 5;
-const OFFSET_DESCRIPTION = 20;
+const OFFSET_DESCRIPTION = 15;
 const SPACING_CARD = 10;
 
 const WIDTH_END_BUTTON = 100;
@@ -22,12 +22,14 @@ const ENCOUNTERS = [
 	{
 		name: "Grokthur's Demonic Embrace",
 		source_deck: [...new Array(4).fill(CARD_DATA.restore_sanity), ...new Array(4).fill(CARD_DATA.mind_blast), ...new Array(4).fill(CARD_DATA.submit_to_madness)],
-		starting_passives: []
+		starting_passives: [],
+		bounty: 1
 	},
 	{
 		name: "Demetrion's Horrid Palace",
 		source_deck: [...new Array(4).fill(CARD_DATA.restore_sanity), ...new Array(4).fill(CARD_DATA.mind_blast), ...new Array(4).fill(CARD_DATA.submit_to_madness)],
-		starting_passives: [PASSIVE_DATA.mind_worm]
+		starting_passives: [PASSIVE_DATA.mind_worm],
+		bounty: 2
 	}
 ];
 
@@ -35,7 +37,10 @@ function determineWinner(state, caster)
 {
 	console.log(caster);
 	if(caster === state.enemy)
+	{
 		state.caster_winner = state.player;
+		GameState.currency += state.enemy.bounty;
+	}
 	else
 		state.caster_winner = state.enemy;
 
@@ -90,7 +95,8 @@ function startEncounter(state_run, encounter)
 			handlimit: DEFAULT_HANDLIMIT,
 			deck: encounter.source_deck.map(createCard),
 			discard_pile: [],
-			energy: 1
+			energy: 1,
+			bounty: encounter.bounty
 		},
 		triggers: {
 			draw: [],
@@ -336,13 +342,13 @@ function redrawBoard(state_run, scene)
 	if(state.caster_winner !== null)
 		if(state.caster_winner === state.player)
 		{
-			const game_end_text = scene.add.text(WIDTH_CANVAS/2, HEIGHT_CANVAS/2, "Encounter Complete", {color: "white", fontSize: "32px", align: "center"}).setOrigin(0.5);
+			const game_end_text = scene.add.text(WIDTH_CANVAS/2, HEIGHT_CANVAS/2, "Victory! You claimed " + state.enemy.bounty + " gold.", {color: "white", fontSize: "32px", align: "center"}).setOrigin(0.5);
 			gameObjects.push(game_end_text);
 
 			const btn_next = scene.add.image(0, 0, "end_turn_btn");
 			btn_next.setDisplaySize(WIDTH_END_BUTTON, HEIGHT_END_BUTTON);
 
-			const text_next = scene.add.text(0, 0, "Next", {color: "white", fontSize: "18px"});
+			const text_next = scene.add.text(0, 0, "Next", {color: "black", fontSize: "18px"});
 			text_next.setOrigin(0.5);
 
 			const btn_next_container = scene.add.container(WIDTH_CANVAS/2, HEIGHT_CANVAS/2 + 50, [btn_next, text_next]);

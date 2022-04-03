@@ -3,6 +3,7 @@ const PASSIVE_DATA = {
 		name: "Mind Worm",
 		description: "Everytime your opponent draws a card, remove a card from the top of their deck",
 		type: "relic",
+		key: "mind_worm",
 		triggers: [
 			{
 				action: "draw",

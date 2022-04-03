@@ -5,7 +5,7 @@ const PADDING_CANVAS = 20;
 
 const GameState = {
 	unlocks: [],
-	currency: 999,
+	currency: 0,
 	state_run: null
 };
 
