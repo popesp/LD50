@@ -63,7 +63,7 @@ const main_menu = new Phaser.Class({
 		this.add.image(WIDTH_CANVAS/2, HEIGHT_CANVAS/2, "background")
 		
 		// TITLE TEXT
-		const title_text = this.add.text(WIDTH_CANVAS/2, PADDING_CANVAS*6.66, "C'THULHU RISING", {color: "white", fontSize: "40px"});
+		const title_text = this.add.text(WIDTH_CANVAS/2, PADDING_CANVAS*6.66, "INFINITE RISING", {color: "white", fontSize: "40px"});
 		title_text.setOrigin(0.5);
 
 		// Start New Run Button

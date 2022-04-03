@@ -105,7 +105,7 @@ const PASSIVE_DATA = {
 			{
 				action: "start_turn",
 				effect: function(state, caster, owner, guid)
-				{
+				{	//i think this is trigging on player turn when a enemy has this static effect
 					if(caster === owner)
 					{
 						caster.energy += 2;
