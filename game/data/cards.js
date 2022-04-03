@@ -180,7 +180,7 @@ export const CARD_DATA = Object.fromEntries(Object.entries({
 	},
 	feed_the_queen: {
 		name: "Feed the Queen",
-		description: "For the rest of the game, when a card effect causes an enemy to discard 2 or more cards from their deck, they also draw a card",
+		description: "For the rest of the game, when an enemy discards 2 or more cards from their deck, they also draw a card",
 		type: "Passive",
 		effect: function(state, caster, guid)
 		{
