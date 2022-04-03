@@ -86,7 +86,7 @@ export const CARD_DATA = Object.fromEntries(Object.entries({
 		}
 	},
 	deja_vu: {
-		name: 'Deja Vu',
+		name: "Deja Vu",
 		description: "Place the top card of your discard pile on to the top of your deck",
 		type: "Action",
 		effect: function(state, caster)
@@ -97,7 +97,7 @@ export const CARD_DATA = Object.fromEntries(Object.entries({
 		}
 	},
 	gaze_into_abyss: {
-		name: 'Gaze into Abyss',
+		name: "Gaze into Abyss",
 		description: "Play the top card of the enemy deck",
 		type: "Action",
 		effect: function(state, caster, guid)
@@ -110,7 +110,7 @@ export const CARD_DATA = Object.fromEntries(Object.entries({
 		}
 	},
 	point_of_grace: {
-		name: 'Point of Grace',
+		name: "Point of Grace",
 		description: "Add a random passive card from your deck to your hand",
 		type: "Action",
 		effect: function(state, caster)
@@ -129,7 +129,7 @@ export const CARD_DATA = Object.fromEntries(Object.entries({
 		}
 	},
 	spilt_beans: {
-		name: 'Spilt Beans',
+		name: "Spilt Beans",
 		description: "discard cards from the enemy deck equal to your hand size, then put your hand on the bottom of your deck",
 		type: "Action",
 		effect: function(state, caster, guid)

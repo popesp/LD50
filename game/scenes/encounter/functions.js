@@ -7,7 +7,7 @@ import {log} from "../../debug.js";
 
 function determineWinner(state, caster)
 {
-	log('Determining winner:', caster);
+	log(`Determining winner: ${caster}`);
 	if(caster === state.enemy)
 	{
 		state.caster_winner = state.player;
