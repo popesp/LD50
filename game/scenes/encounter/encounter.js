@@ -260,6 +260,10 @@ function redrawBoard(state_run, scene)
 		obj.destroy();
 	gameObjects = [];
 
+	// bounty text
+	const bounty_text = scene.add.text(0, HEIGHT_CANVAS/2, `Gold Bounty: ${state.enemy.bounty}`, {color: "white", fontSize: "18px"});
+	gameObjects.push(bounty_text);
+
 	// player deck
 	const player_deck_container = scene.add.container(
 		PADDING_CANVAS + WIDTH_CARD/2,
