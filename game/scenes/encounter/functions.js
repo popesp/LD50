@@ -4,6 +4,8 @@ import GameState from "../../gamestate.js";
 import Random from "../../random.js";
 import {log} from "../../debug.js";
 
+const DEFAULT_DURATION = 200;
+
 
 function determineWinner(state, caster)
 {
@@ -37,6 +39,8 @@ export function getTopCard(state, caster)
 
 export function discardCard(state, caster, card, guid)
 {
+	const anim_duration = caster.drawn_cards > 10 ? DEFAULT_DURATION*5 / (caster.drawn_cards-10) : DEFAULT_DURATION*5
+
 	if(card !== undefined)
 		state.controller.wrap(function()
 		{
@@ -45,7 +49,7 @@ export function discardCard(state, caster, card, guid)
 		}, [{
 			targets: card.gameobj,
 			ease: Phaser.Math.Easing.Cubic.InOut,
-			duration: 1000,
+			duration: anim_duration,
 			x: caster.X_DISCARD,
 			y: caster.Y_DISCARD
 		}], guid ?? Random.identifier());
@@ -65,6 +69,13 @@ export function drawCard(state, caster, guid)
 	const card = getTopCard(state, caster);
 	if(card === undefined) // GAME IS OVER
 		return;
+	caster.drawn_cards++;
+	if(caster === state.enemy && caster.drawn_cards > 100) // Assume infinite loop is completed
+	{
+		state.caster_winner = state.player;
+		return;
+	}
+	const anim_duration = caster.drawn_cards > 10 ? DEFAULT_DURATION / (caster.drawn_cards-10) : DEFAULT_DURATION
 
 	guid = guid ?? Random.identifier();
 	const gameobj = state.controller.gameobj_card(card, caster.X_DECK, caster.Y_DECK, () => playCard(state, state.player, card), caster === state.player);
@@ -90,7 +101,7 @@ export function drawCard(state, caster, guid)
 			}, [{
 				targets: gameobj,
 				ease: Phaser.Math.Easing.Cubic.InOut,
-				duration: 200,
+				duration: anim_duration,
 				x: min_x + caster.hand.length*(WIDTH_CARD + SPACING_CARD),
 				y: caster.Y_HAND
 			}, ...caster.hand.map(function(card, index_card)
@@ -98,7 +109,7 @@ export function drawCard(state, caster, guid)
 				return {
 					targets: card.gameobj,
 					ease: Phaser.Math.Easing.Cubic.InOut,
-					duration: 200,
+					duration: anim_duration,
 					x: min_x + index_card*(WIDTH_CARD + SPACING_CARD),
 					y: caster.Y_HAND
 				};
@@ -107,7 +118,7 @@ export function drawCard(state, caster, guid)
 	}, [{
 		targets: gameobj,
 		ease: Phaser.Math.Easing.Cubic.Out,
-		duration: 200,
+		duration: anim_duration,
 		x: WIDTH_CANVAS/2,
 		y: HEIGHT_CANVAS/2
 	}], guid);
@@ -122,6 +133,8 @@ export function playCard(state, caster, card, guid)
 	caster.hand = caster.hand.filter(handcard => handcard !== card);
 	guid = guid ?? Random.identifier();
 
+	const anim_duration = caster.drawn_cards > 10 ? DEFAULT_DURATION / (caster.drawn_cards-10) : DEFAULT_DURATION
+
 	const min_x = WIDTH_CANVAS/2 - (caster.hand.length - 1)*(WIDTH_CARD/2 + SPACING_CARD/2);
 	state.controller.wrap(function()
 	{
@@ -131,7 +144,7 @@ export function playCard(state, caster, card, guid)
 	}, [{
 		targets: card.gameobj,
 		ease: Phaser.Math.Easing.Cubic.Out,
-		duration: 200,
+		duration: anim_duration,
 		x: WIDTH_CANVAS/2,
 		y: HEIGHT_CANVAS/2
 	}, ...caster.hand.map(function(card, index_card)
@@ -139,7 +152,7 @@ export function playCard(state, caster, card, guid)
 		return {
 			targets: card.gameobj,
 			ease: Phaser.Math.Easing.Cubic.InOut,
-			duration: 200,
+			duration: anim_duration,
 			x: min_x + index_card*(WIDTH_CARD + SPACING_CARD),
 			y: caster.Y_HAND
 		};

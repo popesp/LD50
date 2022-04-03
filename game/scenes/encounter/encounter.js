@@ -180,7 +180,8 @@ function startEncounter(state_run, encounter, scene)
 			Y_DISCARD: Y_DISCARD_PLAYER,
 			Y_HAND: Y_HAND_PLAYER,
 			X_DECK: X_DECK_PLAYER,
-			Y_DECK: Y_DECK_PLAYER
+			Y_DECK: Y_DECK_PLAYER,
+			drawn_cards: 0
 		},
 		enemy: {
 			name: "Enemy",
@@ -196,7 +197,8 @@ function startEncounter(state_run, encounter, scene)
 			Y_DISCARD: Y_DISCARD_ENEMY,
 			Y_HAND: Y_HAND_ENEMY,
 			X_DECK: X_DECK_ENEMY,
-			Y_DECK: Y_DECK_ENEMY
+			Y_DECK: Y_DECK_ENEMY,
+			drawn_cards: 0
 		},
 		triggers: {
 			draw: [],
@@ -232,6 +234,7 @@ function startEncounter(state_run, encounter, scene)
 function startTurn(state, caster)
 {
 	log(`Starting ${caster.name}'s turn`);
+	caster.drawn_cards = 0;
 
 	// Increment bounty for final boss
 	if(caster === state.enemy && state.enemy.isFinalBoss)
@@ -384,25 +387,32 @@ function redrawBoard(state_run, scene)
 	if(state.caster_winner !== null)
 		if(state.caster_winner === state.player)
 		{
-			const game_end_text = scene.add.text(WIDTH_CANVAS/2, HEIGHT_CANVAS/2, "Victory! You claimed " + state.enemy.bounty + " gold.", {color: "white", fontSize: "32px", align: "center"}).setOrigin(0.5);
+			let victory_text = "Victory! You claimed " + state.enemy.bounty + " gold.";
+			if(GameState.state_run.index_encounter === ENCOUNTERS.length-1)
+				victory_text = "Congratulations! You have delayed the inevitable...for all time...";
+
+			const game_end_text = scene.add.text(WIDTH_CANVAS/2, HEIGHT_CANVAS/2, victory_text, {color: "white", fontSize: "32px", align: "center"}).setOrigin(0.5);
 			gameObjects.push(game_end_text);
 
-			const btn_next = scene.add.image(0, 0, "button");
-			btn_next.setDisplaySize(WIDTH_END_BUTTON, HEIGHT_END_BUTTON);
-
-			const text_next = scene.add.text(0, 0, "Next", {color: "black", fontSize: "18px"});
-			text_next.setOrigin(0.5);
-
-			const btn_next_container = scene.add.container(WIDTH_CANVAS/2, HEIGHT_CANVAS/2 + 50, [btn_next, text_next]);
-			btn_next_container.setSize(WIDTH_END_BUTTON, HEIGHT_END_BUTTON);
-			btn_next_container.setInteractive({useHandCursor: true});
-			btn_next_container.on("pointerdown", function()
+			if(GameState.state_run.index_encounter !== ENCOUNTERS.length-1)
 			{
-				state_run.index_encounter++;
-				GameState.state_run.state_encounter = startEncounter(state_run, ENCOUNTERS[state_run.index_encounter], scene);
-			});
+				const btn_next = scene.add.image(0, 0, "button");
+				btn_next.setDisplaySize(WIDTH_END_BUTTON, HEIGHT_END_BUTTON);
+	
+				const text_next = scene.add.text(0, 0, "Next", {color: "black", fontSize: "18px"});
+				text_next.setOrigin(0.5);
+			
+				const btn_next_container = scene.add.container(WIDTH_CANVAS/2, HEIGHT_CANVAS/2 + 50, [btn_next, text_next]);
+				btn_next_container.setSize(WIDTH_END_BUTTON, HEIGHT_END_BUTTON);
+				btn_next_container.setInteractive({useHandCursor: true});
+				btn_next_container.on("pointerdown", function()
+				{
+					state_run.index_encounter++;
+					GameState.state_run.state_encounter = startEncounter(state_run, ENCOUNTERS[state_run.index_encounter], scene);
+				});
 
-			gameObjects.push(btn_next_container);
+				gameObjects.push(btn_next_container);
+			}
 		}
 		else
 		{

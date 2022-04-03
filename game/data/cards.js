@@ -205,15 +205,15 @@ export const CARD_DATA = Object.fromEntries(Object.entries({
 			addPassive(state, caster, PASSIVE_DATA.the_lighthouse, guid);
 		}
 	},
-	the_electric_chair: {
-		name: "The Electric Chair",
-		description: "For the rest of the game, at the start of your turn gain two extra actions, but you no longer draw a card for your turn",
-		type: "Passive",
-		effect: function(state, caster, guid)
-		{
-			addPassive(state, caster, PASSIVE_DATA.the_electric_chair, guid);
-		}
-	},
+	// the_electric_chair: {
+	// 	name: "The Electric Chair",
+	// 	description: "For the rest of the game, at the start of your turn gain two extra actions, but you no longer draw a card for your turn",
+	// 	type: "Passive",
+	// 	effect: function(state, caster, guid)
+	// 	{
+	// 		addPassive(state, caster, PASSIVE_DATA.the_electric_chair, guid);
+	// 	}
+	// },
 
 	//Enemy Only Cards
 	bump_in_the_night: {
