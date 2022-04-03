@@ -77,7 +77,7 @@ export default new Phaser.Class({
 					// ...new Array(100).fill(CARD_DATA.candles_flicker),
 					// ...new Array(50).fill(CARD_DATA.mind_blast),
 					// ...new Array(100).fill(CARD_DATA.rope_burn),
-					...new Array(20).fill(CARD_DATA.shifting_shadows),
+					...new Array(20).fill(CARD_DATA.encroaching_mist),
 					// ...new Array(5).fill(CARD_DATA.mind_blast),
 					// ...new Array(5).fill(CARD_DATA.mind_worm),
 					// ...new Array(5).fill(CARD_DATA.maggot_infestation),

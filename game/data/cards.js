@@ -309,6 +309,25 @@ export const CARD_DATA = Object.fromEntries(Object.entries({
 				}
 			}
 		}
+	},
+	encroaching_mist: {
+		name: "Encroaching Mist",
+		description: "Remove a card from the top of enemy deck for each of your turn's that have passed",
+		type: "Action",
+		effect: function(state, caster, guid)
+		{
+			const target = state.player === caster ? state.enemy : state.player;
+			for(let i = 1; i < caster.turn_count; i++)
+				discardCard(state, target, getTopCard(state, target), guid);
+		}
+	},
+	dark_expanse: {
+		name: "Dark Expanse",
+		description: "Place three 'Dark Expanse' cards on the bottom of your deck",
+		type: "Action",
+		effect: function(state, caster, guid)
+		{
+			caster.deck.unshift(createCard(CARD_DATA.dark_expanse), createCard(CARD_DATA.dark_expanse), createCard(CARD_DATA.dark_expanse));
+		}
 	}
-
 }).map(([key, cardconfig]) => ([key, {...cardconfig, key}])));

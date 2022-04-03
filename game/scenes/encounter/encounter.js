@@ -37,7 +37,7 @@ const ENCOUNTERS = [
 		name: "Grokthur's Demonic Embrace",
 		source_deck: [
 			...new Array(0).fill(CARD_DATA.taste_of_flesh),
-			...new Array(100).fill(CARD_DATA.the_electric_chair),
+			...new Array(100).fill(CARD_DATA.dark_expanse),
 			...new Array(0).fill(CARD_DATA.submit_to_madness)
 		],
 		starting_passives: [],
@@ -176,6 +176,7 @@ function startEncounter(state_run, encounter, scene)
 			discard_pile: [],
 			energy: 1,
 			skip_draw: false,
+			turn_count: 0,
 			X_DISCARD: X_DISCARD_PLAYER,
 			Y_DISCARD: Y_DISCARD_PLAYER,
 			Y_HAND: Y_HAND_PLAYER,
@@ -191,6 +192,7 @@ function startEncounter(state_run, encounter, scene)
 			discard_pile: [],
 			energy: 1,
 			skip_draw: false,
+			turn_count: 0,
 			bounty: encounter.bounty,
 			isFinalBoss: GameState.state_run.index_encounter === ENCOUNTERS.length - 1,
 			X_DISCARD: X_DISCARD_ENEMY,
@@ -234,6 +236,8 @@ function startEncounter(state_run, encounter, scene)
 
 function startTurn(state, caster)
 {
+	caster.turn_count ++;
+
 	log(`Starting ${caster.name}'s turn`);
 	caster.drawn_cards = 0;
 
