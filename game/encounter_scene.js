@@ -36,12 +36,18 @@ const ENCOUNTERS = [
 		source_deck: [...new Array(4).fill(CARD_DATA.taste_of_flesh), ...new Array(4).fill(CARD_DATA.bump_in_the_night), ...new Array(4).fill(CARD_DATA.submit_to_madness)],
 		starting_passives: [PASSIVE_DATA.mind_worm],
 		bounty: 2
+	},
+	{
+		name: "The End of All Things",
+		source_deck: [...new Array(4).fill(CARD_DATA.mind_blast)],
+		starting_passives: [],
+		bounty: 1
 	}
 ];
 
 function determineWinner(state, caster)
 {
-	console.log(caster);
+	console.log('Determining winner:', caster);
 	if(caster === state.enemy)
 	{
 		state.caster_winner = state.player;
@@ -52,7 +58,6 @@ function determineWinner(state, caster)
 
 	state.needs_update = true;
 	console.log(`${state.caster_winner.name} won the game.`);
-	debugger;
 }
 
 function shuffleDeck(deck)
@@ -74,7 +79,7 @@ function createCard(card_config)
 
 function enemyTurnLogic(state)
 {
-	while(state.enemy.energy > 0 && state.enemy.hand.length > 0)
+	while(state.enemy.energy > 0 && state.enemy.hand.length > 0 && state.caster_winner === null)
 	{
 		playCard(state, state.enemy, state.enemy.hand[Math.floor(Math.random()*(state.enemy.hand.length))]);
 	}
@@ -210,7 +215,7 @@ function startTurn(state, caster)
 		
 
 	// AI start
-	if(state.caster_current === state.enemy)
+	if(state.caster_current === state.enemy && state.caster_winner === null)
 		enemyTurnLogic(state);
 }
 
@@ -394,15 +399,15 @@ function redrawBoard(state_run, scene)
 	};
 	const enemy_passive_start = {
 		x: WIDTH_CANVAS/2 + 300,
-		y: PADDING_CANVAS
+		y: HEIGHT_CANVAS/2 - 50
 	};
 	for(let index_passive = 0; index_passive < state.passives.length; ++index_passive)
 	{
 		const passive = state.passives[index_passive];
 		if(passive.owner === state.enemy)
-			scene.add.text(enemy_passive_start.x, enemy_passive_start.y + (10 * index_passive), passive.config.name, {color: "white", fontSize: "12px", align: "center"});
+			gameObjects.push(scene.add.text(enemy_passive_start.x, enemy_passive_start.y + (10 * index_passive), passive.config.name, {color: "white", fontSize: "12px", align: "center"}));
 		else
-			scene.add.text(player_passive_start.x, player_passive_start.y + (10 * index_passive), passive.config.name, {color: "white", fontSize: "12px", align: "center"});
+			gameObjects.push(scene.add.text(player_passive_start.x, player_passive_start.y + (10 * index_passive), passive.config.name, {color: "white", fontSize: "12px", align: "center"}));
 	}
 
 	if(state.caster_winner !== null)
