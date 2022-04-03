@@ -16,12 +16,12 @@ const main_menu = new Phaser.Class({
 	preload: function()
 	{
 		this.load.image("end_turn_btn", "assets/end_turn_btn.png");
-		this.load.audio("eldritchambience", "assets/music/eldritchambience.mp3");
+		this.load.audio("spook", "assets/music/spook.mp3");
 	},
 	create: function()
 	{
 
-		this.music = this.sound.add("eldritchambience");
+		this.music = this.sound.add("spook");
 		this.music.loop = true;
 		this.music.play()
 		
@@ -74,6 +74,7 @@ const main_menu = new Phaser.Class({
 			for(const trash of garbageBin)
 				trash.destroy();
 			garbageBin = [];
+			this.music.stop();
 			this.scene.start("upgrade_shop");
 		});
 	},
