@@ -26,6 +26,7 @@ const main_menu = new Phaser.Class({
 		// UI
 		this.load.image("back_arrow", "assets/back_arrow.png");
 		this.load.image("end_turn_btn", "assets/end_turn_btn.png");
+		this.load.image("background", "assets/cthulhu.png")
 
 		// Music
 		this.load.audio("spook", "assets/music/spook.mp3");
@@ -50,9 +51,10 @@ const main_menu = new Phaser.Class({
 		this.music = this.sound.add("spook");
 		this.music.loop = true;
 		this.music.play()
+		this.add.image(650, 360, "background")
 		
 		// TITLE TEXT
-		const title_text = this.add.text(WIDTH_CANVAS/2, PADDING_CANVAS*6.66, "C'THULU RISING", {color: "white", fontSize: "40px"});
+		const title_text = this.add.text(WIDTH_CANVAS/2, PADDING_CANVAS*6.66, "C'THULhU RISING", {color: "white", fontSize: "40px"});
 		title_text.setOrigin(0.5);
 
 		// Start New Run Button
