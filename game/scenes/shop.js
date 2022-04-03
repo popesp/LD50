@@ -17,6 +17,8 @@ const SPACING_ITEM = 20;
 const WIDTH_ITEMIMAGE = 141;
 const HEIGHT_ITEMIMAGE = 85;
 
+const ANCHOR_X = 300;
+const ANCHOR_Y = 310;
 
 function buyItem(item)
 {
@@ -65,12 +67,19 @@ export default new Phaser.Class({
 		// gold amount
 		text_gold = this.add.text(WIDTH_CANVAS - PADDING_CANVAS*2, PADDING_CANVAS*2, "Gold: " + GameState.currency, {color: "white", fontSize: "40px"}).setOrigin(1, 0);
 
-		// purchasable cards
-		const ANCHOR_X = 300;
-		const ANCHOR_Y = 300;
+		// remove sold out cards
+		const display_shop = [];
 		for(let i = 0; i < SHOP_DATA.length; ++i)
 		{
-			const item = SHOP_DATA[i];
+			if(SHOP_DATA[i].bought !== SHOP_DATA[i].quantity)
+			{
+				display_shop.push(SHOP_DATA[i])
+			}
+		}
+		// purchasable cards
+		for(let i = 0; i < display_shop.length; ++i)
+		{
+			const item = display_shop[i];
 			const ITEM_X = ANCHOR_X + (WIDTH_ITEM*(i%ITEMS_PER_ROW)) + SPACING_ITEM*(i%ITEMS_PER_ROW);
 			const ITEM_Y = ANCHOR_Y + (HEIGHT_ITEM*Math.floor(i/ITEMS_PER_ROW)) + (SPACING_ITEM*Math.floor(i/ITEMS_PER_ROW)*3);
 
@@ -84,7 +93,7 @@ export default new Phaser.Class({
 
 			const container = this.add.container(ITEM_X, ITEM_Y, [itemsprite, itemimage, itemname, itemdescription, itemcost, item.availability]).setSize(WIDTH_ITEM, HEIGHT_ITEM);
 			container.setInteractive({useHandCursor: true}).on("pointerdown", () => buyItem(item));
-		}
+			}
 	},
 	update: function()
 	{

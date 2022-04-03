@@ -1,5 +1,5 @@
 export default {
 	unlocks: [],
-	currency: 10,
+	currency: 0,
 	state_run: null
 };

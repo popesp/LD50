@@ -74,10 +74,12 @@ export default new Phaser.Class({
 
 			GameState.state_run = {
 				source_deck: [
-					// ...new Array(100).fill(CARD_DATA.candles_flicker),
+					...new Array(5).fill(CARD_DATA.mind_blast),
+					...new Array(3).fill(CARD_DATA.self_reflection),
+					...new Array(2).fill(CARD_DATA.submit_to_madness),
 					// ...new Array(50).fill(CARD_DATA.mind_blast),
 					// ...new Array(100).fill(CARD_DATA.rope_burn),
-					...new Array(20).fill(CARD_DATA.encroaching_mist),
+					// ...new Array(20).fill(CARD_DATA.encroaching_mist),
 					// ...new Array(5).fill(CARD_DATA.mind_blast),
 					// ...new Array(5).fill(CARD_DATA.mind_worm),
 					// ...new Array(5).fill(CARD_DATA.maggot_infestation),
