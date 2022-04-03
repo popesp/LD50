@@ -29,7 +29,10 @@ function makeItemContainer(scene, item, x, y)
 	const itemavailability = scene.add.text(0, HEIGHT_ITEM/2+PADDING_ITEM*2, `${item.bought}/${item.quantity}`, {color: "white", fontSize: "20px"})
 	itemavailability.setOrigin(0.5);
 
-	const itemcontainer = scene.add.container(x, y, [itemsprite, itemimage, itemname, itemdescription, itemavailability]);
+	const itemcost = scene.add.text(0, -(HEIGHT_ITEM/2+PADDING_ITEM*2), `Cost: ${item.cost}`, {color: "white", fontSize: "20px"})
+	itemcost.setOrigin(0.5);
+
+	const itemcontainer = scene.add.container(x, y, [itemsprite, itemimage, itemname, itemdescription, itemavailability, itemcost]);
 
 	return itemcontainer;
 }
@@ -61,7 +64,7 @@ function drawShop(scene)
 	for(let i = 0; i < SHOP_DATA.length; ++i)
 	{
 		const ITEM_X = ANCHOR_X + (WIDTH_ITEM*(i%ITEMS_PER_ROW)) + SPACING_ITEM*(i%ITEMS_PER_ROW);
-		const ITEM_Y = ANCHOR_Y + (HEIGHT_ITEM*Math.floor(i/ITEMS_PER_ROW)) + (SPACING_ITEM*Math.floor(i/ITEMS_PER_ROW)*2);
+		const ITEM_Y = ANCHOR_Y + (HEIGHT_ITEM*Math.floor(i/ITEMS_PER_ROW)) + (SPACING_ITEM*Math.floor(i/ITEMS_PER_ROW)*3);
 		const item = SHOP_DATA[i];
 
 		const itemcontainer = makeItemContainer(scene, item, ITEM_X, ITEM_Y);
