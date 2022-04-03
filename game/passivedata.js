@@ -16,8 +16,9 @@ const PASSIVE_DATA = {
 	}
 };
 
-function addPassive(state, caster, passive)
+function addPassive(state, caster, passive, guid)
 {
+	// TODO(shawn): animate this
 	for(const trigger of passive.triggers)
 		state.triggers[trigger.action].push({effect: trigger.effect, owner: caster});
 

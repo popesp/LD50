@@ -3,28 +3,29 @@ const CARD_DATA = Object.fromEntries(Object.entries({
 		name: "I Win Button",
 		description: "Devs hold all the power",
 		type: "Action",
-		effect: function(state, caster)
+		effect: function(state, caster, guid)
 		{
 			const target = state.player === caster ? state.enemy : state.player;
-			discardCard(state, target, getTopCard(state, target));
-			discardCard(state, target, getTopCard(state, target));
-			discardCard(state, target, getTopCard(state, target));
-			discardCard(state, target, getTopCard(state, target));
-			discardCard(state, target, getTopCard(state, target));
-			discardCard(state, target, getTopCard(state, target));
-			discardCard(state, target, getTopCard(state, target));
-			discardCard(state, target, getTopCard(state, target));
-			discardCard(state, target, getTopCard(state, target));
-			discardCard(state, target, getTopCard(state, target));
-			discardCard(state, target, getTopCard(state, target));
+			discardCard(state, target, getTopCard(state, target), guid);
+			discardCard(state, target, getTopCard(state, target), guid);
+			discardCard(state, target, getTopCard(state, target), guid);
+			discardCard(state, target, getTopCard(state, target), guid);
+			discardCard(state, target, getTopCard(state, target), guid);
+			discardCard(state, target, getTopCard(state, target), guid);
+			discardCard(state, target, getTopCard(state, target), guid);
+			discardCard(state, target, getTopCard(state, target), guid);
+			discardCard(state, target, getTopCard(state, target), guid);
+			discardCard(state, target, getTopCard(state, target), guid);
+			discardCard(state, target, getTopCard(state, target), guid);
 		}
 	},
 	restore_sanity: {
 		name: "Restore Sanity",
 		description: "Place two 'Self Reflection' cards on the bottom of your deck",
 		type: "Action",
-		effect: function(state, caster)
+		effect: function(state, caster, guid)
 		{
+			// TODO(shawn): animate this
 			caster.deck.unshift(createCard(CARD_DATA.self_reflection), createCard(CARD_DATA.self_reflection));
 		}
 	},
@@ -34,6 +35,7 @@ const CARD_DATA = Object.fromEntries(Object.entries({
 		type: "Action",
 		effect: function(state, caster)
 		{
+			// TODO(shawn): animate this
 			caster.energy++;
 		}
 	},
@@ -41,21 +43,21 @@ const CARD_DATA = Object.fromEntries(Object.entries({
 		name: "Mind Blast",
 		description: "Remove the top 2 cards from the enemy deck",
 		type: "Action",
-		effect: function(state, caster)
+		effect: function(state, caster, guid)
 		{
 			const target = state.player === caster ? state.enemy : state.player;
-			discardCard(state, target, getTopCard(state, target));
-			discardCard(state, target, getTopCard(state, target));
+			discardCard(state, target, getTopCard(state, target, guid));
+			discardCard(state, target, getTopCard(state, target, guid));
 		}
 	},
 	taste_of_flesh: {
 		name: "Taste of Flesh",
 		description: "Draw two cards and gain one energy",
 		type: "Action",
-		effect: function(state, caster)
+		effect: function(state, caster, guid)
 		{
-			drawCard(state, caster);
-			drawCard(state, caster);
+			drawCard(state, caster, guid);
+			drawCard(state, caster, guid);
 			caster.energy++;
 		}
 	},
@@ -63,9 +65,9 @@ const CARD_DATA = Object.fromEntries(Object.entries({
 		name: "Submit to Madness",
 		description: "Discard the top card of your deck and gain two energy",
 		type: "Action",
-		effect: function(state, caster)
+		effect: function(state, caster, guid)
 		{
-			discardCard(state, caster, getTopCard(state, caster));
+			discardCard(state, caster, getTopCard(state, caster), guid);
 			caster.energy += 2;
 		}
 	},
@@ -75,7 +77,7 @@ const CARD_DATA = Object.fromEntries(Object.entries({
 		type: "Action",
 		effect: function(state, caster)
 		{
-			addPassive(state, caster, PASSIVE_DATA.mind_worm);
+			addPassive(state, caster, PASSIVE_DATA.mind_worm, guid);
 		}
 	}
 }).map(([key, cardconfig]) => ([key, {...cardconfig, key}])));

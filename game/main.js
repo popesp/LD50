@@ -1,8 +1,3 @@
-const WIDTH_CANVAS = 1280;
-const HEIGHT_CANVAS = 720;
-const PADDING_CANVAS = 20;
-
-
 const GameState = {
 	unlocks: [],
 	currency: 999,
