@@ -79,6 +79,10 @@ function createCard(card_config)
 
 function enemyTurnLogic(state)
 {
+	// Increment bounty for final boss
+	if(GameState.state_run.index_encounter === 2)
+		state.enemy.bounty++;
+
 	while(state.enemy.energy > 0 && state.enemy.hand.length > 0 && state.caster_winner === null)
 	{
 		playCard(state, state.enemy, state.enemy.hand[Math.floor(Math.random()*(state.enemy.hand.length))]);
@@ -108,7 +112,8 @@ function startEncounter(state_run, encounter)
 			deck: encounter.source_deck.map(createCard),
 			discard_pile: [],
 			energy: 1,
-			bounty: encounter.bounty
+			bounty: encounter.bounty,
+			isFinalBoss: GameState.state_run.index_encounter === 2 ? true : false
 		},
 		triggers: {
 			draw: [],
@@ -146,9 +151,21 @@ function discardCard(state, caster, card)
 	state.needs_update = true;
 }
 
+function randomcard()
+{
+	let keys = Object.keys(CARD_DATA);
+	return CARD_DATA[keys[ keys.length * Math.random() << 0]];
+};
+
 function getTopCard(state, caster)
 {
-	const card = caster.deck.pop();
+	let card;
+	// Generate "infinite" deck for final boss
+	if(caster.isFinalBoss)
+		card = randomcard();
+	else
+		card = caster.deck.pop();
+
 	if(card === undefined && state.caster_winner === null)
 		determineWinner(state, caster);
 
@@ -278,10 +295,13 @@ function redrawBoard(state_run, scene)
 	gameObjects.push(player_deck_container);
 
 	// enemy deck
+	const length_text = GameState.state_run.index_encounter === 2 ? "∞" : state.enemy.deck.length;
+	const font_size = GameState.state_run.index_encounter === 2 ? "40px" : "24px";
 	const enemy_deck_container = scene.add.container(
 		PADDING_CANVAS + WIDTH_CARD/2,
 		PADDING_CANVAS + HEIGHT_CARD/2,
-		[scene.add.text(0, PADDING_CARD + HEIGHT_CARD/2, state.enemy.deck.length, {color: "white", fontSize: "24px"}).setOrigin(0.5, 0)]
+		// [scene.add.text(0, PADDING_CARD + HEIGHT_CARD/2, state.enemy.deck.length, {color: "white", fontSize: "24px"}).setOrigin(0.5, 0)]
+		[scene.add.text(0, PADDING_CARD + HEIGHT_CARD/2, length_text, {color: "white", fontSize: font_size}).setOrigin(0.5, 0)]
 	);
 	if(state.enemy.deck.length > 0)
 		enemy_deck_container.add(scene.add.image(0, 0, "enemy_back").setDisplaySize(WIDTH_CARD, HEIGHT_CARD));
