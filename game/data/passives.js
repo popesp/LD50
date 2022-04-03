@@ -1,4 +1,8 @@
-const PASSIVE_DATA = {
+import {discardCard, getTopCard, drawCard} from "../scenes/encounter/functions.js";
+import {log} from "../debug.js";
+
+
+export const PASSIVE_DATA = {
 	mind_worm: {
 		name: "Mind Worm",
 		description: "Everytime your opponent draws a card, discard a card from the top of their deck",
@@ -11,14 +15,13 @@ const PASSIVE_DATA = {
 				{
 					if(caster !== owner)
 					{
-						console.log('worm trigger');
+						log('worm trigger');
 						discardCard(state, caster, getTopCard(state, caster), guid);
 						for(const trigger of state.triggers.maggot)
 						{
 							trigger.effect(state, caster, trigger.owner);
 						}
 					}
-						
 				}
 			}
 		]
@@ -33,7 +36,7 @@ const PASSIVE_DATA = {
 				action: "maggot",
 				effect: function(state, caster, owner, guid)
 				{
-					console.log('maggot trigger');
+					log('maggot trigger');
 					if(caster !== owner)
 					{
 						discardCard(state, caster, getTopCard(state, caster), guid);
@@ -42,7 +45,6 @@ const PASSIVE_DATA = {
 							trigger.effect(state, caster, trigger.owner);
 						}
 					}
-						
 				}
 			}
 		]
@@ -57,8 +59,8 @@ const PASSIVE_DATA = {
 				action: "queen",
 				effect: function(state, caster, owner, guid)
 				{
-					console.log(state.triggers);
-					console.log('queen trigger');
+					log(state.triggers);
+					log('queen trigger');
 					if(caster !== owner)
 						drawCard(state, caster, getTopCard(state, caster), guid);
 				}
@@ -88,8 +90,9 @@ const PASSIVE_DATA = {
 		triggers: [
 			{
 				action: "start_turn",
-				effect: function(state, caster, owner, guid)
+				effect: function(state, caster, owner)
 				{
+					// TODO(shawn): animate
 					if(caster !== owner)
 						caster.energy ++;
 				}
@@ -104,10 +107,11 @@ const PASSIVE_DATA = {
 		triggers: [
 			{
 				action: "start_turn",
-				effect: function(state, caster, owner, guid)
+				effect: function(state, caster, owner)
 				{	//i think this is trigging on player turn when a enemy has this static effect
 					if(caster === owner)
 					{
+						// TODO(shawn): animate
 						caster.energy += 2;
 						caster.skip_draw = true;
 					}
@@ -116,12 +120,3 @@ const PASSIVE_DATA = {
 		]
 	}
 };
-
-function addPassive(state, caster, passive, guid)
-{
-	// TODO(shawn): animate this
-	for(const trigger of passive.triggers)
-		state.triggers[trigger.action].push({effect: trigger.effect, owner: caster});
-
-	state.passives.push({owner: caster, config: passive});
-}

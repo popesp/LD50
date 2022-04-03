@@ -1,4 +1,20 @@
-const CARD_DATA = Object.fromEntries(Object.entries({
+import {PASSIVE_DATA} from "./passives.js";
+import {discardCard, getTopCard, addPassive, drawCard, playCard} from "../scenes/encounter/functions.js";
+import Random from "../random.js";
+
+
+export function randomCard()
+{
+	const cards = Object.values(CARD_DATA);
+	return createCard(cards[Random.int(0, cards.length)]);
+}
+
+export function createCard(config)
+{
+	return {...config};
+}
+
+export const CARD_DATA = Object.fromEntries(Object.entries({
 	i_win: {
 		name: "I Win Button",
 		description: "Devs hold all the power",
@@ -23,7 +39,7 @@ const CARD_DATA = Object.fromEntries(Object.entries({
 		name: "Restore Sanity",
 		description: "Place two 'Self Reflection' cards on the bottom of your deck",
 		type: "Action",
-		effect: function(state, caster, guid)
+		effect: function(state, caster)
 		{
 			// TODO(shawn): animate this
 			caster.deck.unshift(createCard(CARD_DATA.self_reflection), createCard(CARD_DATA.self_reflection));
@@ -33,7 +49,7 @@ const CARD_DATA = Object.fromEntries(Object.entries({
 		name: "Self Reflection",
 		description: "Gain one energy, and place a blank card on the top of your deck",
 		type: "Action",
-		effect: function(state, caster, guid)
+		effect: function(state, caster)
 		{
 			// TODO(shawn): animate this
 			caster.deck.push(createCard(CARD_DATA.a_blank));
@@ -73,7 +89,7 @@ const CARD_DATA = Object.fromEntries(Object.entries({
 		name: 'Deja Vu',
 		description: "Place the top card of your discard pile on to the top of your deck",
 		type: "Action",
-		effect: function(state, caster, guid)
+		effect: function(state, caster)
 		{
 			// TODO(shawn): animate
 			if(caster.discard_pile.length)
@@ -97,7 +113,7 @@ const CARD_DATA = Object.fromEntries(Object.entries({
 		name: 'Point of Grace',
 		description: "Add a random passive card from your deck to your hand",
 		type: "Action",
-		effect: function(state, caster, guid)
+		effect: function(state, caster)
 		{
 			for(let i = 0; i < caster.deck.length; ++i)
 			{
@@ -120,7 +136,7 @@ const CARD_DATA = Object.fromEntries(Object.entries({
 		{
 			const target = state.player === caster ? state.enemy : state.player;
 			// animation not updating when card is being played
-			while (caster.hand.length > 0)
+			while(caster.hand.length > 0)
 			{
 				discardCard(state, target, getTopCard(state, target), guid);
 				caster.deck.push(caster.hand.splice(0, 1)[0]);
@@ -135,12 +151,11 @@ const CARD_DATA = Object.fromEntries(Object.entries({
 		{
 			if(caster.hand.length > 0)
 				discardCard(state, caster, caster.hand.splice(0, 1)[0]);
-			
+
 			const target = state.player === caster ? state.enemy : state.player;
 			if(target.hand.length > 0)
 				discardCard(state, target, target.hand.splice(0, 1)[0]);
-			
-			
+
 			drawCard(state, caster, guid);
 		}
 	},
@@ -222,7 +237,7 @@ const CARD_DATA = Object.fromEntries(Object.entries({
 			caster.energy++;
 		}
 	},
-	eye_for_an_eye:{
+	eye_for_an_eye: {
 		name: "Eye for an Eye",
 		description: "Each player discards the top 3 cards of their deck",
 		type: "Action",
@@ -232,7 +247,7 @@ const CARD_DATA = Object.fromEntries(Object.entries({
 			discardCard(state, target, getTopCard(state, target), guid);
 			discardCard(state, target, getTopCard(state, target), guid);
 			discardCard(state, target, getTopCard(state, target), guid);
-			
+
 			discardCard(state, caster, getTopCard(state, caster), guid);
 			discardCard(state, caster, getTopCard(state, caster), guid);
 			discardCard(state, caster, getTopCard(state, caster), guid);

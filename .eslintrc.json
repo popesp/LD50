@@ -7,7 +7,7 @@
 	{
 		"array-bracket-newline": ["error", "consistent"],
 		"array-bracket-spacing": ["error", "never"],
-		"array-callback-return": ["error", {"allowImplicit": false, "checkForEach": true}],
+		"array-callback-return": ["error", {"allowImplicit": false}],
 		"arrow-spacing": ["error", {"before": true, "after": true}],
 		"block-scoped-var": "error",
 		"brace-style": ["error", "allman", {"allowSingleLine": false}],
@@ -52,16 +52,5 @@
 		"space-before-function-paren": ["error", "never"],
 		"space-in-parens": ["error", "never"],
 		"vars-on-top": "error"
-	},
-	"globals": {
-		"CARD_DATA": false,
-		"PASSIVE_DATA": false,
-		"WIDTH_CANVAS": false,
-		"HEIGHT_CANVAS": false,
-		"discardCard": false,
-		"getTopCard": false,
-		"drawCard": false,
-		"addPassive": false,
-		"createCard": false
 	}
 }

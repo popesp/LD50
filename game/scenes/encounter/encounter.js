@@ -1,14 +1,15 @@
-const WIDTH_CANVAS = 1280;
-const HEIGHT_CANVAS = 720;
-const PADDING_CANVAS = 20;
+import Random from "../../random.js";
+import {CARD_DATA, createCard} from "../../data/cards.js";
+import {PASSIVE_DATA} from "../../data/passives.js";
+import {WIDTH_CANVAS, HEIGHT_CANVAS, PADDING_CANVAS, WIDTH_CARD, HEIGHT_CARD, OFFSET_DESCRIPTION_CARD} from "../../globals.js";
+import GameState from "../../gamestate.js";
+import {drawCard, playCard, addPassive} from "./functions.js";
+import {log} from "../../debug.js";
 
-const WIDTH_CARD = 150;
-const HEIGHT_CARD = 210;
+
 const WIDTH_CARDIMAGE = 141;
 const HEIGHT_CARDIMAGE = 85;
 const PADDING_CARD = 5;
-const OFFSET_DESCRIPTION = 15;
-const SPACING_CARD = 10;
 
 const X_DISCARD_PLAYER = WIDTH_CANVAS - WIDTH_CARD/2 - PADDING_CANVAS;
 const Y_DISCARD_PLAYER = HEIGHT_CANVAS - HEIGHT_CARD/2 - PADDING_CANVAS;
@@ -28,7 +29,6 @@ const DEFAULT_HANDLIMIT = 5;
 const DEFAULT_HANDSIZE = 2;
 const DEFAULT_ENERGY = 1;
 
-const random = new Random();
 
 let gameObjects = [];
 
@@ -125,7 +125,7 @@ StateController.prototype.gameobj_card = function(card, x, y, pointerCallback, f
 		const cardname = this.scene.add.text(0, PADDING_CARD - HEIGHT_CARD/2, card.name, {color: "black", fontSize: "14px"});
 		cardname.setOrigin(0.5, 0);
 
-		const carddescription = this.scene.add.text(0, OFFSET_DESCRIPTION, card.description, {color: "black", fontSize: "12px", align: "center", wordWrap: {width: WIDTH_CARD - PADDING_CARD*2}});
+		const carddescription = this.scene.add.text(0, OFFSET_DESCRIPTION_CARD, card.description, {color: "black", fontSize: "12px", align: "center", wordWrap: {width: WIDTH_CARD - PADDING_CARD*2}});
 		carddescription.setOrigin(0.5, 0);
 
 		const cardcontainer = this.scene.add.container(x, y, [cardsprite, cardimage, cardname, carddescription]);
@@ -143,32 +143,12 @@ StateController.prototype.gameobj_card = function(card, x, y, pointerCallback, f
 	return this.scene.add.image(x, y, "enemy_back").setDisplaySize(WIDTH_CARD, HEIGHT_CARD);
 };
 
-function determineWinner(state, caster)
-{
-	console.log('Determining winner:', caster);
-	if(caster === state.enemy)
-	{
-		state.caster_winner = state.player;
-		GameState.currency += state.enemy.bounty;
-	}
-	else
-		state.caster_winner = state.enemy;
-
-	state.needs_update = true;
-	console.log(`${state.caster_winner.name} won the game.`);
-}
-
-function createCard(card_config)
-{
-	return {...card_config};
-}
-
 function enemyTurnLogic(state)
 {
 	if(!state.controller.locked)
 	{
 		if(state.enemy.energy > 0 && state.enemy.hand.length > 0 && state.caster_winner === null)
-			playCard(state, state.enemy, state.enemy.hand[Math.floor(Math.random()*(state.enemy.hand.length))]);
+			playCard(state, state.enemy, state.enemy.hand[Random.int(0, state.enemy.hand.length)]);
 		else
 			startTurn(state, state.player);
 	}
@@ -211,7 +191,7 @@ function startEncounter(state_run, encounter, scene)
 			energy: 1,
 			skip_draw: false,
 			bounty: encounter.bounty,
-			isFinalBoss: GameState.state_run.index_encounter === ENCOUNTERS.length - 1 ? true : false,
+			isFinalBoss: GameState.state_run.index_encounter === ENCOUNTERS.length - 1,
 			X_DISCARD: X_DISCARD_ENEMY,
 			Y_DISCARD: Y_DISCARD_ENEMY,
 			Y_HAND: Y_HAND_ENEMY,
@@ -229,10 +209,10 @@ function startEncounter(state_run, encounter, scene)
 		controller: new StateController(scene)
 	};
 
-	console.log("=== Starting encounter ===");
+	log("=== Starting encounter ===");
 
-	random.shuffle(state.player.deck);
-	random.shuffle(state.enemy.deck);
+	Random.shuffle(state.player.deck);
+	Random.shuffle(state.enemy.deck);
 
 	// draw cards for players
 	for(let i = 0; i < DEFAULT_HANDSIZE; ++i)
@@ -249,132 +229,9 @@ function startEncounter(state_run, encounter, scene)
 	return state;
 }
 
-function discardCard(state, caster, card, guid)
-{
-		if(card !== undefined)
-			state.controller.wrap(function()
-			{
-				caster.discard_pile.push(card);
-				state.needs_update = true;
-			}, [{
-				targets: card.gameobj,
-				ease: Phaser.Math.Easing.Cubic.InOut,
-				duration: 1000,
-				x: caster.X_DISCARD,
-				y: caster.Y_DISCARD
-			}], guid ?? random.identifier());
-}
-
-function randomcard()
-{
-	let keys = Object.keys(CARD_DATA);
-	return CARD_DATA[keys[ keys.length * Math.random() << 0]];
-};
-
-function getTopCard(state, caster)
-{
-	let card;
-	// Generate "infinite" deck for final boss
-	if(caster.isFinalBoss)
-		card = randomcard();
-	else
-		card = caster.deck.pop();
-
-	if(card === undefined && state.caster_winner === null)
-		determineWinner(state, caster);
-
-	return card;
-}
-
-function drawCard(state, caster, guid)
-{
-	const card = getTopCard(state, caster);
-	if(card === undefined) // GAME IS OVER
-		return;
-
-	guid = guid ?? random.identifier();
-	const gameobj = state.controller.gameobj_card(card, caster.X_DECK, caster.Y_DECK, () => playCard(state, state.player, card), caster === state.player);
-	card.gameobj = gameobj;
-
-	state.controller.wrap(function()
-	{
-		for(const trigger of state.triggers.draw)
-			trigger.effect(state, caster, trigger.owner);
-			
-		if(caster.handlimit === caster.hand.length)
-			discardCard(state, caster, card, guid);
-		else
-		{
-			const min_x = WIDTH_CANVAS/2 - caster.hand.length*(WIDTH_CARD/2 + SPACING_CARD/2);
-			state.controller.wrap(function()
-			{
-				console.log(`${caster.name} drew a ${card.name}`);
-				caster.hand.push(card);
-
-				state.needs_update = true;
-
-			}, [{
-				targets: gameobj,
-				ease: Phaser.Math.Easing.Cubic.InOut,
-				duration: 200,
-				x: min_x + caster.hand.length*(WIDTH_CARD + SPACING_CARD),
-				y: caster.Y_HAND
-			}, ...caster.hand.map(function(card, index_card)
-			{
-				return {
-					targets: card.gameobj,
-					ease: Phaser.Math.Easing.Cubic.InOut,
-					duration: 200,
-					x: min_x + index_card*(WIDTH_CARD + SPACING_CARD),
-					y: caster.Y_HAND
-				};
-			})], guid);
-		}
-	}, [{
-		targets: gameobj,
-		ease: Phaser.Math.Easing.Cubic.Out,
-		duration: 200,
-		x: WIDTH_CANVAS/2,
-		y: HEIGHT_CANVAS/2
-	}], guid);
-}
-
-function playCard(state, caster, card, guid)
-{
-	if(caster.energy === 0 || state.caster_current !== caster || state.caster_winner !== null)
-		return;
-
-	caster.energy--;
-	caster.hand = caster.hand.filter(handcard => handcard !== card);
-	guid = guid ?? random.identifier();
-
-	const min_x = WIDTH_CANVAS/2 - (caster.hand.length - 1)*(WIDTH_CARD/2 + SPACING_CARD/2);
-	state.controller.wrap(function()
-	{
-		card.effect.bind(card)(state, caster, guid);
-		console.log(`${caster.name} played a ${card.name}`);
-		discardCard(state, caster, card);
-	}, [{
-		targets: card.gameobj,
-		ease: Phaser.Math.Easing.Cubic.Out,
-		duration: 200,
-		x: WIDTH_CANVAS/2,
-		y: HEIGHT_CANVAS/2
-	}, ...caster.hand.map(function(card, index_card)
-	{
-		return {
-			targets: card.gameobj,
-			ease: Phaser.Math.Easing.Cubic.InOut,
-			duration: 200,
-			x: min_x + index_card*(WIDTH_CARD + SPACING_CARD),
-			y: caster.Y_HAND
-		};
-	})], guid);
-}
-
 function startTurn(state, caster)
 {
-	console.log(`Starting ${caster.name}'s turn`);
+	log(`Starting ${caster.name}'s turn`);
 
 	// Increment bounty for final boss
 	if(caster === state.enemy && state.enemy.isFinalBoss)
@@ -409,7 +266,7 @@ function makeCardContainer(scene, card, x, y)
 	const cardname = scene.add.text(0, PADDING_CARD - HEIGHT_CARD/2, card.name, {color: "black", fontSize: "14px"});
 	cardname.setOrigin(0.5, 0);
 
-	const carddescription = scene.add.text(0, OFFSET_DESCRIPTION, card.description, {color: "black", fontSize: "12px", align: "center", wordWrap: {width: WIDTH_CARD - PADDING_CARD*2}});
+	const carddescription = scene.add.text(0, OFFSET_DESCRIPTION_CARD, card.description, {color: "black", fontSize: "12px", align: "center", wordWrap: {width: WIDTH_CARD - PADDING_CARD*2}});
 	carddescription.setOrigin(0.5, 0);
 
 	const cardcontainer = scene.add.container(x, y, [cardsprite, cardimage, cardname, carddescription]);
@@ -563,7 +420,7 @@ function redrawBoard(state_run, scene)
 			const btn_menu_container = scene.add.container(WIDTH_CANVAS/2, HEIGHT_CANVAS/2 + 50, [btn_menu, text_menu]);
 			btn_menu_container.setSize(WIDTH_END_BUTTON*2, HEIGHT_END_BUTTON);
 			btn_menu_container.setInteractive({useHandCursor: true});
-			btn_menu_container.on("pointerdown", () => 
+			btn_menu_container.on("pointerdown", () =>
 			{
 				scene.music.stop();
 				scene.scene.start("main_menu");
@@ -574,7 +431,7 @@ function redrawBoard(state_run, scene)
 }
 
 
-const encounter_scene = new Phaser.Class({
+export default new Phaser.Class({
 	Extends: Phaser.Scene,
 	initialize: function()
 	{

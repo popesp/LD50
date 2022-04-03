@@ -1,4 +1,7 @@
-const SHOP_DATA = [
+import {CARD_DATA} from "./cards.js";
+
+
+export const SHOP_DATA = [
 	{
 		name: CARD_DATA.mind_blast.name,
 		data: CARD_DATA.mind_blast,
@@ -68,5 +71,5 @@ const SHOP_DATA = [
 		cost: 1,
 		quantity: 1,
 		bought: 0
-	},
+	}
 ];
