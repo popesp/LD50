@@ -395,10 +395,14 @@ const encounter_scene = new Phaser.Class({
 		this.load.image("card_self_reflection", "assets/card-art/self-reflection.png");
 		this.load.image("card_taste_of_flesh", "assets/card-art/taste-of-flesh.png");
 		this.load.image("card_submit_to_madness", "assets/card-art/submit-to-madness.png");
+		this.load.audio("thumpy", "assets/music/thumpy.mp3");
 	},
 	create: function()
 	{
 		GameState.state_run.state_encounter = startEncounter(GameState.state_run, ENCOUNTERS[GameState.state_run.index_encounter]);
+		this.music = this.sound.add("thumpy");
+		this.music.loop = true;
+		this.music.play()
 	},
 	update: function()
 	{

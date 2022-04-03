@@ -19,6 +19,11 @@ const main_menu = new Phaser.Class({
 	},
 	create: function()
 	{
+
+		this.music = this.sound.add("thumpy");
+		this.music.loop = true;
+		this.music.play()
+		
 		// TITLE TEXT
 		const title_text = this.add.text(WIDTH_CANVAS/2, PADDING_CANVAS*6.66, "C'THULU RISING", {color: "white", fontSize: "40px"});
 		title_text.setOrigin(0.5);
