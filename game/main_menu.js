@@ -25,7 +25,7 @@ const main_menu = new Phaser.Class({
 	{
 		// UI
 		this.load.image("back_arrow", "assets/back_arrow.png");
-		this.load.image("end_turn_btn", "assets/end_turn_btn.png");
+		this.load.image("button", "assets/button.png");
 		this.load.image("background", "assets/cthulhu.png")
 
 		// Music
@@ -43,6 +43,13 @@ const main_menu = new Phaser.Class({
 		this.load.image("card_self_reflection", "assets/card-art/self-reflection.png");
 		this.load.image("card_taste_of_flesh", "assets/card-art/taste-of-flesh.png");
 		this.load.image("card_submit_to_madness", "assets/card-art/submit-to-madness.png");
+		this.load.image("card_mind_worm", "assets/card-art/mind-worm.png");
+		this.load.image("card_cosmic_insight", "assets/card-art/cosmic-insight.png");
+		this.load.image("card_a_blank", "assets/card-art/a_blank.png");
+		this.load.image("card_bump_in_the_night", "assets/card-art/bump-in-the-night.png");
+		this.load.image("card_deja_vu", "assets/card-art/deja-vu.png");
+		this.load.image("card_point_of_grace", "assets/card-art/point-of-grace.png");
+		this.load.image("card_gaze_into_abyss", "assets/card-art/gaze-into-abyss.png");
 		
 	},
 	create: function()
@@ -54,11 +61,11 @@ const main_menu = new Phaser.Class({
 		this.add.image(650, 360, "background")
 		
 		// TITLE TEXT
-		const title_text = this.add.text(WIDTH_CANVAS/2, PADDING_CANVAS*6.66, "C'THULhU RISING", {color: "white", fontSize: "40px"});
+		const title_text = this.add.text(WIDTH_CANVAS/2, PADDING_CANVAS*6.66, "C'THULHU RISING", {color: "white", fontSize: "40px"});
 		title_text.setOrigin(0.5);
 
 		// Start New Run Button
-		const start_game_btn = this.add.image(0, 0, "end_turn_btn");
+		const start_game_btn = this.add.image(0, 0, "button");
 		start_game_btn.setDisplaySize(200, 50);
 		const start_game_text = this.add.text(0, 0, "START NEW RUN", {color: "black", fontSize: "24px"});
 		start_game_text.setOrigin(0.5);
@@ -75,8 +82,16 @@ const main_menu = new Phaser.Class({
 			garbageBin = [];
 
 			GameState.state_run = {
-				source_deck: [...new Array(5).fill(CARD_DATA.self_reflection), ...new Array(9).fill(CARD_DATA.mind_blast), ...new Array(2).fill(CARD_DATA.taste_of_flesh)],
-				// source_deck: [...new Array(5).fill(CARD_DATA.i_win)],
+				source_deck: [
+					...new Array(10).fill(CARD_DATA.i_win),
+					// ...new Array(10).fill(CARD_DATA.point_of_grace),
+					// ...new Array(5).fill(CARD_DATA.gaze_into_the_abyss),
+					// ...new Array(5).fill(CARD_DATA.deja_vu),
+					// ...new Array(5).fill(CARD_DATA.self_reflection),
+					// ...new Array(5).fill(CARD_DATA.mind_blast),
+					// ...new Array(5).fill(CARD_DATA.taste_of_flesh),
+					...new Array(5).fill(CARD_DATA.cosmic_insight)
+				],
 				index_encounter: 0,
 				state_encounter: null
 			};
@@ -84,13 +99,13 @@ const main_menu = new Phaser.Class({
 			this.scene.start("encounter_scene");
 		});
 
-		// gameObjects.push(end_turn_btn_container);
+		// gameObjects.push(button_container);
 
 
 		// Upgrade Shop Button
-		const upgrade_shop_btn = this.add.image(0, 0, "end_turn_btn");
+		const upgrade_shop_btn = this.add.image(0, 0, "button");
 		upgrade_shop_btn.setDisplaySize(200, 50);
-		const upgrade_shop_text = this.add.text(0, 0, "UPGRADE SHOP", {color: "black", fontSize: "24px"});
+		const upgrade_shop_text = this.add.text(0, 0, "CARD SHOP", {color: "black", fontSize: "24px"});
 		upgrade_shop_text.setOrigin(0.5);
 		const upgrade_shop_container = this.add.container(WIDTH_CANVAS/2, HEIGHT_CANVAS/2 + HEIGHT_START_BUTTON*2, [upgrade_shop_btn, upgrade_shop_text]);
 		upgrade_shop_container.setSize(WIDTH_UPGRADE_BUTTON, HEIGHT_UPGRADE_BUTTON);

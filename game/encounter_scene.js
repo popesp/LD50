@@ -7,7 +7,7 @@ const HEIGHT_CARD = 210;
 const WIDTH_CARDIMAGE = 141;
 const HEIGHT_CARDIMAGE = 85;
 const PADDING_CARD = 5;
-const OFFSET_DESCRIPTION = 20;
+const OFFSET_DESCRIPTION = 15;
 const SPACING_CARD = 10;
 
 const X_DISCARD_PLAYER = WIDTH_CANVAS - WIDTH_CARD/2 - PADDING_CANVAS;
@@ -30,20 +30,29 @@ const DEFAULT_ENERGY = 1;
 
 const random = new Random();
 
-const ANIM_DELAY = (1/60)*1000;
-
 let gameObjects = [];
 
 const ENCOUNTERS = [
 	{
 		name: "Grokthur's Demonic Embrace",
-		source_deck: [...new Array(4).fill(CARD_DATA.restore_sanity), ...new Array(4).fill(CARD_DATA.mind_blast), ...new Array(4).fill(CARD_DATA.submit_to_madness)],
-		starting_passives: []
+		source_deck: [
+			...new Array(0).fill(CARD_DATA.taste_of_flesh),
+			...new Array(10).fill(CARD_DATA.bump_in_the_night),
+			...new Array(0).fill(CARD_DATA.submit_to_madness)],
+		starting_passives: [],
+		bounty: 1
 	},
 	{
 		name: "Demetrion's Horrid Palace",
-		source_deck: [...new Array(4).fill(CARD_DATA.restore_sanity), ...new Array(4).fill(CARD_DATA.mind_blast), ...new Array(4).fill(CARD_DATA.submit_to_madness)],
-		starting_passives: [PASSIVE_DATA.mind_worm]
+		source_deck: [...new Array(4).fill(CARD_DATA.taste_of_flesh), ...new Array(4).fill(CARD_DATA.bump_in_the_night), ...new Array(4).fill(CARD_DATA.submit_to_madness)],
+		starting_passives: [PASSIVE_DATA.mind_worm],
+		bounty: 2
+	},
+	{
+		name: "The End of All Things",
+		source_deck: [...new Array(4).fill(CARD_DATA.mind_blast)],
+		starting_passives: [],
+		bounty: 1
 	}
 ];
 
@@ -135,9 +144,12 @@ StateController.prototype.gameobj_card = function(card, x, y, pointerCallback, f
 
 function determineWinner(state, caster)
 {
-	console.log(caster);
+	console.log('Determining winner:', caster);
 	if(caster === state.enemy)
+	{
 		state.caster_winner = state.player;
+		GameState.currency += state.enemy.bounty;
+	}
 	else
 		state.caster_winner = state.enemy;
 
@@ -152,13 +164,13 @@ function createCard(card_config)
 
 function enemyTurnLogic(state)
 {
-	if(state.enemy.energy > 0 && state.enemy.hand.length > 0)
+	if(!state.controller.locked)
 	{
-		if(!state.controller.locked)
+		if(state.enemy.energy > 0 && state.enemy.hand.length > 0 && state.caster_winner === null)
 			playCard(state, state.enemy, state.enemy.hand[Math.floor(Math.random()*(state.enemy.hand.length))]);
+		else
+			startTurn(state, state.player);
 	}
-	else
-		startTurn(state, state.player);
 }
 
 function startEncounter(state_run, encounter, scene)
@@ -187,6 +199,8 @@ function startEncounter(state_run, encounter, scene)
 			deck: encounter.source_deck.map(createCard),
 			discard_pile: [],
 			energy: 1,
+			bounty: encounter.bounty,
+			isFinalBoss: GameState.state_run.index_encounter === ENCOUNTERS.length - 1 ? true : false,
 			X_DISCARD: X_DISCARD_ENEMY,
 			Y_DISCARD: Y_DISCARD_ENEMY,
 			Y_HAND: Y_HAND_ENEMY,
@@ -195,7 +209,8 @@ function startEncounter(state_run, encounter, scene)
 		},
 		triggers: {
 			draw: [],
-			discard: []
+			discard: [],
+			start_turn: []
 		},
 		passives: [],
 		controller: new StateController(scene)
@@ -237,10 +252,22 @@ function discardCard(state, caster, card, guid)
 		}], guid ?? random.identifier());
 }
 
+function randomcard()
+{
+	let keys = Object.keys(CARD_DATA);
+	return CARD_DATA[keys[ keys.length * Math.random() << 0]];
+};
+
 function getTopCard(state, caster)
 {
-	const card = caster.deck.pop();
-	if(card === undefined)
+	let card;
+	// Generate "infinite" deck for final boss
+	if(caster.isFinalBoss)
+		card = randomcard();
+	else
+		card = caster.deck.pop();
+
+	if(card === undefined && state.caster_winner === null)
 		determineWinner(state, caster);
 
 	return card;
@@ -334,11 +361,22 @@ function startTurn(state, caster)
 {
 	console.log(`Starting ${caster.name}'s turn`);
 
+	// Increment bounty for final boss
+	if(caster === state.enemy && state.enemy.isFinalBoss)
+		state.enemy.bounty++;
+
 	state.caster_current = caster;
 	caster.energy = DEFAULT_ENERGY;
 	drawCard(state, caster);
 	if(state.caster_winner !== null) // Winner has been determined
 		return;
+
+	for(const trigger of state.triggers.start_turn)
+	{
+		if(state.caster_winner !== null)
+			return;
+		trigger.effect(state, caster, trigger.owner);
+	}
 }
 
 function makeCardContainer(scene, card, x, y)
@@ -358,22 +396,6 @@ function makeCardContainer(scene, card, x, y)
 	const cardcontainer = scene.add.container(x, y, [cardsprite, cardimage, cardname, carddescription]);
 
 	return cardcontainer;
-}
-
-function animateCard(scene, cardContainer, destination, duration)
-{
-	const tween = scene.tweens.add({
-		targets: cardContainer,
-		ease: Phaser.Math.Easing.Cubic.InOut,
-		duration,
-		x: destination.x,
-		y: destination.y,
-		onComplete: function(tween)
-		{
-			tweens = tweens.filter(activetween => activetween !== tween);
-		}
-	});
-	tweens.push(tween);
 }
 
 function redrawBoard(state_run, scene)
@@ -397,10 +419,13 @@ function redrawBoard(state_run, scene)
 	gameObjects.push(player_deck_container);
 
 	// enemy deck
+	const length_text = state.enemy.isFinalBoss ? "∞" : state.enemy.deck.length;
+	const font_size = state.enemy.isFinalBoss ? "40px" : "24px";
 	const enemy_deck_container = scene.add.container(
 		PADDING_CANVAS + WIDTH_CARD/2,
 		PADDING_CANVAS + HEIGHT_CARD/2,
-		[scene.add.text(0, PADDING_CARD + HEIGHT_CARD/2, state.enemy.deck.length, {color: "white", fontSize: "24px"}).setOrigin(0.5, 0)]
+		// [scene.add.text(0, PADDING_CARD + HEIGHT_CARD/2, state.enemy.deck.length, {color: "white", fontSize: "24px"}).setOrigin(0.5, 0)]
+		[scene.add.text(0, PADDING_CARD + HEIGHT_CARD/2, length_text, {color: "white", fontSize: font_size}).setOrigin(0.5, 0)]
 	);
 	if(state.enemy.deck.length > 0)
 		enemy_deck_container.add(scene.add.image(0, 0, "enemy_back").setDisplaySize(WIDTH_CARD, HEIGHT_CARD));
@@ -425,13 +450,13 @@ function redrawBoard(state_run, scene)
 	// End Turn button
 	if(state.caster_current === state.player)
 	{
-		const end_turn_btn = scene.add.image(0, 0, "end_turn_btn");
-		end_turn_btn.setDisplaySize(WIDTH_END_BUTTON, HEIGHT_END_BUTTON);
+		const button = scene.add.image(0, 0, "button");
+		button.setDisplaySize(WIDTH_END_BUTTON, HEIGHT_END_BUTTON);
 
 		const end_text = scene.add.text(0, 0, "END TURN", {color: "black", fontSize: "18px"});
 		end_text.setOrigin(0.5);
 
-		const end_turn_btn_container = scene.add.container(WIDTH_CANVAS - PADDING_CANVAS - WIDTH_END_BUTTON/2, HEIGHT_CANVAS/2, [end_turn_btn, end_text]);
+		const end_turn_btn_container = scene.add.container(WIDTH_CANVAS - PADDING_CANVAS - WIDTH_END_BUTTON/2, HEIGHT_CANVAS/2, [button, end_text]);
 		end_turn_btn_container.setSize(WIDTH_END_BUTTON, HEIGHT_END_BUTTON);
 		if(!state.caster_winner)
 		{
@@ -469,27 +494,27 @@ function redrawBoard(state_run, scene)
 	};
 	const enemy_passive_start = {
 		x: WIDTH_CANVAS/2 + 300,
-		y: PADDING_CANVAS
+		y: HEIGHT_CANVAS/2 - 50
 	};
 	for(let index_passive = 0; index_passive < state.passives.length; ++index_passive)
 	{
 		const passive = state.passives[index_passive];
 		if(passive.owner === state.enemy)
-			scene.add.text(enemy_passive_start.x, enemy_passive_start.y + (10 * index_passive), passive.config.name, {color: "white", fontSize: "12px", align: "center"});
+			gameObjects.push(scene.add.text(enemy_passive_start.x, enemy_passive_start.y + (10 * index_passive), passive.config.name, {color: "white", fontSize: "12px", align: "center"}));
 		else
-			scene.add.text(player_passive_start.x, player_passive_start.y + (10 * index_passive), passive.config.name, {color: "white", fontSize: "12px", align: "center"});
+			gameObjects.push(scene.add.text(player_passive_start.x, player_passive_start.y + (10 * index_passive), passive.config.name, {color: "white", fontSize: "12px", align: "center"}));
 	}
 
 	if(state.caster_winner !== null)
 		if(state.caster_winner === state.player)
 		{
-			const game_end_text = scene.add.text(WIDTH_CANVAS/2, HEIGHT_CANVAS/2, "Encounter Complete", {color: "white", fontSize: "32px", align: "center"}).setOrigin(0.5);
+			const game_end_text = scene.add.text(WIDTH_CANVAS/2, HEIGHT_CANVAS/2, "Victory! You claimed " + state.enemy.bounty + " gold.", {color: "white", fontSize: "32px", align: "center"}).setOrigin(0.5);
 			gameObjects.push(game_end_text);
 
-			const btn_next = scene.add.image(0, 0, "end_turn_btn");
+			const btn_next = scene.add.image(0, 0, "button");
 			btn_next.setDisplaySize(WIDTH_END_BUTTON, HEIGHT_END_BUTTON);
 
-			const text_next = scene.add.text(0, 0, "Next", {color: "white", fontSize: "18px"});
+			const text_next = scene.add.text(0, 0, "Next", {color: "black", fontSize: "18px"});
 			text_next.setOrigin(0.5);
 
 			const btn_next_container = scene.add.container(WIDTH_CANVAS/2, HEIGHT_CANVAS/2 + 50, [btn_next, text_next]);
@@ -505,10 +530,12 @@ function redrawBoard(state_run, scene)
 		}
 		else
 		{
-			const game_end_text = scene.add.text(WIDTH_CANVAS/2, HEIGHT_CANVAS/2, "You Lose", {color: "white", fontSize: "32px", align: "center"}).setOrigin(0.5);
+			const lose_text = state.enemy.isFinalBoss ? `You lost...but perhaps there is still hope. You gained ${state.enemy.bounty} gold.` : "You Lose";
+			state.player.currency += state.enemy.bounty;
+			const game_end_text = scene.add.text(WIDTH_CANVAS/2, HEIGHT_CANVAS/2, lose_text, {color: "white", fontSize: "32px", align: "center"}).setOrigin(0.5);
 			gameObjects.push(game_end_text);
 
-			const btn_menu = scene.add.image(0, 0, "end_turn_btn");
+			const btn_menu = scene.add.image(0, 0, "button");
 			btn_menu.setDisplaySize(WIDTH_END_BUTTON*2, HEIGHT_END_BUTTON);
 
 			const text_menu = scene.add.text(0, 0, "Main Menu", {color: "black", fontSize: "18px"});
