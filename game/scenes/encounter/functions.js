@@ -9,7 +9,7 @@ const DEFAULT_DURATION = 200;
 
 function determineWinner(state, caster)
 {
-	log('Determining winner:', caster);
+	log(`Determining winner: ${caster}`);
 	if(caster === state.enemy)
 	{
 		state.caster_winner = state.player;

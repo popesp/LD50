@@ -1,4 +1,4 @@
-const ALPHABET = '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz';
+const ALPHABET = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
 const DEFAULT_LENGTH_IDENTIFIER = 32;
 
 
@@ -38,7 +38,7 @@ Random.prototype.identifier = function(length)
 {
 	length = length || DEFAULT_LENGTH_IDENTIFIER;
 
-	let identifier = '';
+	let identifier = "";
 	for(let i = 0; i < length; ++i)
 		identifier += ALPHABET.charAt(Math.floor(this.fraction()*ALPHABET.length));
 

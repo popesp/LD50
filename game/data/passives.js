@@ -15,7 +15,7 @@ export const PASSIVE_DATA = {
 				{
 					if(caster !== owner)
 					{
-						log('worm trigger');
+						log("worm trigger");
 						discardCard(state, caster, getTopCard(state, caster), guid);
 						for(const trigger of state.triggers.maggot)
 						{
@@ -36,7 +36,7 @@ export const PASSIVE_DATA = {
 				action: "maggot",
 				effect: function(state, caster, owner, guid)
 				{
-					log('maggot trigger');
+					log("maggot trigger");
 					if(caster !== owner)
 					{
 						discardCard(state, caster, getTopCard(state, caster), guid);
@@ -60,7 +60,7 @@ export const PASSIVE_DATA = {
 				effect: function(state, caster, owner, guid)
 				{
 					log(state.triggers);
-					log('queen trigger');
+					log("queen trigger");
 					if(caster !== owner)
 						drawCard(state, caster, getTopCard(state, caster), guid);
 				}
