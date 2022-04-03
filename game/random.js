@@ -44,3 +44,6 @@ Random.prototype.identifier = function(length)
 
 	return identifier;
 };
+
+
+export default new Random();

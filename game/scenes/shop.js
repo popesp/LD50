@@ -1,3 +1,9 @@
+import {WIDTH_CANVAS, PADDING_CANVAS, OFFSET_DESCRIPTION_CARD} from "../globals.js";
+import {SHOP_DATA} from "../data/shop.js";
+import GameState from "../gamestate.js";
+import {log} from "../debug.js";
+
+
 const WIDTH_BACK_BUTTON = 200;
 const HEIGHT_BACK_BUTTON = 100;
 
@@ -23,23 +29,23 @@ function makeItemContainer(scene, item, x, y)
 	const itemname = scene.add.text(0, PADDING_ITEM - HEIGHT_ITEM/2, item.data.name, {color: "black", fontSize: "14px"});
 	itemname.setOrigin(0.5, 0);
 
-	const itemdescription = scene.add.text(0, OFFSET_DESCRIPTION, item.data.description, {color: "black", fontSize: "12px", align: "center", wordWrap: {width: WIDTH_ITEM - PADDING_ITEM*2}});
+	const itemdescription = scene.add.text(0, OFFSET_DESCRIPTION_CARD, item.data.description, {color: "black", fontSize: "12px", align: "center", wordWrap: {width: WIDTH_ITEM - PADDING_ITEM*2}});
 	itemdescription.setOrigin(0.5, 0);
 
-	const itemavailability = scene.add.text(0, HEIGHT_ITEM/2+PADDING_ITEM*2, `${item.bought}/${item.quantity}`, {color: "white", fontSize: "20px"})
+	const itemavailability = scene.add.text(0, HEIGHT_ITEM/2+PADDING_ITEM*2, `${item.bought}/${item.quantity}`, {color: "white", fontSize: "20px"});
 	itemavailability.setOrigin(0.5);
 
-	const itemcost = scene.add.text(0, -(HEIGHT_ITEM/2+PADDING_ITEM*2), `Cost: ${item.cost}`, {color: "white", fontSize: "20px"})
+	const itemcost = scene.add.text(0, -(HEIGHT_ITEM/2+PADDING_ITEM*2), `Cost: ${item.cost}`, {color: "white", fontSize: "20px"});
 	itemcost.setOrigin(0.5);
 
 	const itemcontainer = scene.add.container(x, y, [itemsprite, itemimage, itemname, itemdescription, itemavailability, itemcost]);
-	
+
 	return itemcontainer;
 }
 
 function buyItem(scene, item)
 {
-	console.log(item);
+	log(item);
 	if(item.bought < item.quantity && GameState.currency >= item.cost)
 	{
 		item.bought++;
@@ -47,18 +53,15 @@ function buyItem(scene, item)
 		GameState.unlocks.push(item.data);
 	}
 
-	drawShop(scene)
+	drawShop(scene);
 }
 
 function drawShop(scene)
 {
-	collectGarbage();
-
 	// Points remaining
 	const points_text = scene.add.text(WIDTH_CANVAS/2, PADDING_CANVAS*2, "Gold: " + GameState.currency, {color: "white", fontSize: "40px"});
 	points_text.setOrigin(1, 0);
 	points_text.setPosition(WIDTH_CANVAS - PADDING_CANVAS*2, PADDING_CANVAS*2);
-	garbageBin.push(points_text);
 
 	const ANCHOR_X = 300;
 	const ANCHOR_Y = 300;
@@ -75,11 +78,10 @@ function drawShop(scene)
 			itemcontainer.setInteractive({useHandCursor: true});
 			itemcontainer.on("pointerdown", () => buyItem(scene, item));
 		}
-		garbageBin.push(itemcontainer);
 	}
 }
 
-const upgrade_shop = new Phaser.Class({
+export default new Phaser.Class({
 	Extends: Phaser.Scene,
 	initialize: function()
 	{
@@ -87,32 +89,29 @@ const upgrade_shop = new Phaser.Class({
 	},
 	preload: function()
 	{
-		
 	},
 	create: function()
 	{
 		this.music = this.sound.add("thumpy");
 		this.music.loop = true;
-		this.music.play()
+		this.music.play();
 		// TITLE TEXT
 		const title_text = this.add.text(WIDTH_CANVAS/2, PADDING_CANVAS*2, "CARD SHOP", {color: "white", fontSize: "40px"});
 		title_text.setOrigin(0.5, 0);
-
-		
 
 		// Back Button
 		const back_btn = this.add.image(0, 0, "back_arrow");
 		back_btn.setOrigin(0);
 		back_btn.setDisplaySize(WIDTH_BACK_BUTTON, HEIGHT_BACK_BUTTON);
-		back_btn.setPosition(PADDING_CANVAS)
+		back_btn.setPosition(PADDING_CANVAS);
 		back_btn.setInteractive({useHandCursor: true});
-		back_btn.on("pointerdown", () => {
-			collectGarbage()
+		back_btn.on("pointerdown", () =>
+		{
 			this.music.stop();
-			this.scene.start("main_menu")
+			this.scene.start("main_menu");
 		});
 
-		drawShop(this);	
+		drawShop(this);
 
 	},
 	update: function()

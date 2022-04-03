@@ -1,21 +1,16 @@
+import {WIDTH_CANVAS, HEIGHT_CANVAS, PADDING_CANVAS} from "../globals.js";
+import {CARD_DATA} from "../data/cards.js";
+import GameState from "../gamestate.js";
+
+
 const WIDTH_START_BUTTON = 200;
 const HEIGHT_START_BUTTON = 50;
 
 const WIDTH_UPGRADE_BUTTON = 200;
 const HEIGHT_UPGRADE_BUTTON = 50;
 
-let garbageBin = [];
 
-function collectGarbage()
-{
-	// Clean up game objects
-	for(const trash of garbageBin)
-		trash.destroy();
-	garbageBin = [];
-}
-
-
-const main_menu = new Phaser.Class({
+export default new Phaser.Class({
 	Extends: Phaser.Scene,
 	initialize: function()
 	{
@@ -26,7 +21,7 @@ const main_menu = new Phaser.Class({
 		// UI
 		this.load.image("back_arrow", "assets/back_arrow.png");
 		this.load.image("button", "assets/button.png");
-		this.load.image("background", "assets/cthulhu.png")
+		this.load.image("background", "assets/cthulhu.png");
 
 		// Music
 		this.load.audio("spook", "assets/music/spook.mp3");
@@ -52,16 +47,15 @@ const main_menu = new Phaser.Class({
 		this.load.image("card_gaze_into_abyss", "assets/card-art/gaze-into-abyss.png");
 		this.load.image("card_the_lighthouse", "assets/card-art/the-lighthouse.png");
 		this.load.image("card_the_electric_chair", "assets/card-art/the-electric-chair.png");
-		
 	},
 	create: function()
 	{
 
 		this.music = this.sound.add("spook");
 		this.music.loop = true;
-		this.music.play()
-		this.add.image(WIDTH_CANVAS/2, HEIGHT_CANVAS/2, "background")
-		
+		this.music.play();
+		this.add.image(WIDTH_CANVAS/2, HEIGHT_CANVAS/2, "background");
+
 		// TITLE TEXT
 		const title_text = this.add.text(WIDTH_CANVAS/2, PADDING_CANVAS*6.66, "INFINITE RISING", {color: "white", fontSize: "40px"});
 		title_text.setOrigin(0.5);
@@ -74,14 +68,9 @@ const main_menu = new Phaser.Class({
 		const start_game_container = this.add.container(WIDTH_CANVAS/2, HEIGHT_CANVAS/2, [start_game_btn, start_game_text]);
 		start_game_container.setSize(WIDTH_START_BUTTON, HEIGHT_START_BUTTON);
 		start_game_container.setInteractive({useHandCursor: true});
-		garbageBin.push(start_game_container);
 
 		start_game_container.on("pointerdown", () =>
 		{
-			// Clean up game objects
-			for(const trash of garbageBin)
-				trash.destroy();
-			garbageBin = [];
 
 			GameState.state_run = {
 				source_deck: [
@@ -113,13 +102,8 @@ const main_menu = new Phaser.Class({
 		const upgrade_shop_container = this.add.container(WIDTH_CANVAS/2, HEIGHT_CANVAS/2 + HEIGHT_START_BUTTON*2, [upgrade_shop_btn, upgrade_shop_text]);
 		upgrade_shop_container.setSize(WIDTH_UPGRADE_BUTTON, HEIGHT_UPGRADE_BUTTON);
 		upgrade_shop_container.setInteractive({useHandCursor: true});
-		garbageBin.push(upgrade_shop_container);
 		upgrade_shop_container.on("pointerdown", () =>
 		{
-			// Clean up game objects
-			for(const trash of garbageBin)
-				trash.destroy();
-			garbageBin = [];
 			this.music.stop();
 			this.scene.start("upgrade_shop");
 		});

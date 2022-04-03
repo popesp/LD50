@@ -1,8 +1,7 @@
-const GameState = {
-	unlocks: [],
-	currency: 10,
-	state_run: null
-};
+import scene_mainmenu from "./scenes/mainmenu.js";
+import scene_encounter from "./scenes/encounter/encounter.js";
+import scene_shop from "./scenes/shop.js";
+import {WIDTH_CANVAS, HEIGHT_CANVAS} from "./globals.js";
 
 
 document.addEventListener("DOMContentLoaded", function()
@@ -15,7 +14,7 @@ document.addEventListener("DOMContentLoaded", function()
 		parent: dom_container,
 		width: WIDTH_CANVAS,
 		height: HEIGHT_CANVAS,
-		scene: [main_menu, encounter_scene, upgrade_shop],
+		scene: [scene_mainmenu, scene_encounter, scene_shop],
 		backgroundColor: 0x0a0808
 	});
 
