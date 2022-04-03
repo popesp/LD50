@@ -16,11 +16,12 @@ const main_menu = new Phaser.Class({
 	preload: function()
 	{
 		this.load.image("end_turn_btn", "assets/end_turn_btn.png");
+		this.load.audio("eldritchambience", "assets/music/eldritchambience.mp3");
 	},
 	create: function()
 	{
 
-		this.music = this.sound.add("thumpy");
+		this.music = this.sound.add("eldritchambience");
 		this.music.loop = true;
 		this.music.play()
 		
@@ -51,7 +52,7 @@ const main_menu = new Phaser.Class({
 				index_encounter: 0,
 				state_encounter: null
 			};
-
+			this.music.stop();
 			this.scene.start("encounter_scene");
 		});
 
