@@ -38,7 +38,7 @@ const CARD_DATA = Object.fromEntries(Object.entries({
 			caster.energy++;
 		}
 	},
-	blank: {
+	a_blank: {
 		name: "A Blank",
 		description: "[This card has no effect]",
 		type: "Action",
@@ -78,8 +78,8 @@ const CARD_DATA = Object.fromEntries(Object.entries({
 				caster.deck.push(caster.discard_pile.pop());
 		}
 	},
-	gaze_into_the_abyss: {
-		name: 'Gaze into the Abyss',
+	gaze_into_abyss: {
+		name: 'Gaze into Abyss',
 		description: "Play the top card of the enemy deck",
 		type: "Action",
 		effect: function(state, caster)

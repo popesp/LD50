@@ -1,6 +1,6 @@
 const SHOP_DATA = [
 	{
-		name: "Mind Blast",
+		name: CARD_DATA.mind_blast,
 		data: CARD_DATA.mind_blast,
 		cost: 1,
 		quantity: 1,
@@ -49,8 +49,22 @@ const SHOP_DATA = [
 		bought: 0
 	},
 	{
-		name: "Mind Blast",
-		data: CARD_DATA.mind_blast,
+		name: CARD_DATA.bump_in_the_night,
+		data: CARD_DATA.bump_in_the_night,
+		cost: 1,
+		quantity: 1,
+		bought: 0
+	},
+	{
+		name: CARD_DATA.gaze_into_abyss,
+		data: CARD_DATA.gaze_into_abyss,
+		cost: 1,
+		quantity: 1,
+		bought: 0
+	},
+	{
+		name: CARD_DATA.deja_vu,
+		data: CARD_DATA.deja_vu,
 		cost: 1,
 		quantity: 1,
 		bought: 0
