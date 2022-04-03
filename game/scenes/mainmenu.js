@@ -74,14 +74,14 @@ export default new Phaser.Class({
 
 			GameState.state_run = {
 				source_deck: [
-					...new Array(5).fill(CARD_DATA.feed_the_queen),
-					// ...new Array(10).fill(CARD_DATA.point_of_grace),
-					// ...new Array(5).fill(CARD_DATA.gaze_into_the_abyss),
-					// ...new Array(5).fill(CARD_DATA.deja_vu),
-					// ...new Array(5).fill(CARD_DATA.self_reflection),
+					// ...new Array(100).fill(CARD_DATA.candles_flicker),
+					// ...new Array(50).fill(CARD_DATA.mind_blast),
+					// ...new Array(100).fill(CARD_DATA.rope_burn),
+					...new Array(20).fill(CARD_DATA.shifting_shadows),
 					// ...new Array(5).fill(CARD_DATA.mind_blast),
-					...new Array(5).fill(CARD_DATA.mind_worm),
-					...new Array(5).fill(CARD_DATA.maggot_infestation),
+					// ...new Array(5).fill(CARD_DATA.mind_worm),
+					// ...new Array(5).fill(CARD_DATA.maggot_infestation),
+					// ...new Array(5).fill(
 					...GameState.unlocks
 				],
 				index_encounter: 0,

@@ -37,7 +37,7 @@ const ENCOUNTERS = [
 		name: "Grokthur's Demonic Embrace",
 		source_deck: [
 			...new Array(0).fill(CARD_DATA.taste_of_flesh),
-			...new Array(10).fill(CARD_DATA.bump_in_the_night),
+			...new Array(100).fill(CARD_DATA.the_electric_chair),
 			...new Array(0).fill(CARD_DATA.submit_to_madness)
 		],
 		starting_passives: [],
@@ -203,6 +203,7 @@ function startEncounter(state_run, encounter, scene)
 			maggot: [],
 			queen: [],
 			discard: [],
+			hand_size_discard: [],
 			start_turn: []
 		},
 		passives: [],

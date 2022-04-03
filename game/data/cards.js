@@ -214,6 +214,25 @@ export const CARD_DATA = Object.fromEntries(Object.entries({
 			addPassive(state, caster, PASSIVE_DATA.the_electric_chair, guid);
 		}
 	},
+	candles_flicker: {
+		//needs discard funtion rework to discard from hand
+		name: "Candle's Flicker",
+		description: "For the rest of the game, when your opponent would discard 1 or more cards from their deck, you draw a card",
+		type: "Passive",
+		effect: function(state, caster, guid)
+		{
+			addPassive(state, caster, PASSIVE_DATA.candles_flicker, guid);
+		}
+	},
+	rope_burn: {
+		name: "Rope Burn",
+		description: "For the rest of the game, if you would draw a card while your hand is full, discard a card from the enemy deck instead",
+		type: "Passive",
+		effect: function(state, caster, guid)
+		{
+			addPassive(state, caster, PASSIVE_DATA.rope_burn, guid);
+		}
+	},
 
 	//Enemy Only Cards
 	bump_in_the_night: {
@@ -251,6 +270,44 @@ export const CARD_DATA = Object.fromEntries(Object.entries({
 			discardCard(state, caster, getTopCard(state, caster), guid);
 			discardCard(state, caster, getTopCard(state, caster), guid);
 			discardCard(state, caster, getTopCard(state, caster), guid);
+		}
+	},
+	shifting_shadows: {
+		name: "Shifting Shadows",
+		description: "If you have less cards in your deck than your enemy discard the top 3 cards of their deck, otherwise draw 2.",
+		type: "Action",
+		effect: function(state, caster, guid)
+		{
+			if(state.caster_current.name === "Player")
+			{
+				if(state.player.deck.length < state.enemy.deck.length)
+				{
+					const target = state.player === caster ? state.enemy : state.player;
+					discardCard(state, target, getTopCard(state, target), guid);
+					discardCard(state, target, getTopCard(state, target), guid);
+					discardCard(state, target, getTopCard(state, target), guid);
+				}
+				else
+				{
+					drawCard(state, caster, guid);
+					drawCard(state, caster, guid);
+				}
+			}
+			else
+			{
+				if(state.enemy.deck.length < state.player.deck.length)
+				{
+					const target = state.player === caster ? state.enemy : state.player;
+					discardCard(state, target, getTopCard(state, target), guid);
+					discardCard(state, target, getTopCard(state, target), guid);
+					discardCard(state, target, getTopCard(state, target), guid);
+				}
+				else
+				{
+					drawCard(state, caster, guid);
+					drawCard(state, caster, guid);
+				}
+			}
 		}
 	}
 

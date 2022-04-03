@@ -38,6 +38,8 @@ export function getTopCard(state, caster)
 export function discardCard(state, caster, card, guid)
 {
 	if(card !== undefined)
+	{
+
 		state.controller.wrap(function()
 		{
 			caster.discard_pile.push(card);
@@ -49,6 +51,14 @@ export function discardCard(state, caster, card, guid)
 			x: caster.X_DISCARD,
 			y: caster.Y_DISCARD
 		}], guid ?? Random.identifier());
+
+		for(const trigger of state.triggers.discard)
+		{
+			if(state.caster_winner !== null)
+				return;
+			trigger.effect(state, caster, trigger.owner);
+		}
+	}
 }
 
 export function addPassive(state, caster, passive)
@@ -62,6 +72,18 @@ export function addPassive(state, caster, passive)
 
 export function drawCard(state, caster, guid)
 {
+	//rope burn replacement effect
+	if(caster.handlimit === caster.hand.length && state.triggers.hand_size_discard.length > 0)
+	{
+		console.log('in here')
+			for(const trigger of state.triggers.hand_size_discard)
+			{
+				if(state.caster_winner !== null)
+					return;
+				trigger.effect(state, caster, trigger.owner);
+			}
+	}
+
 	const card = getTopCard(state, caster);
 	if(card === undefined) // GAME IS OVER
 		return;
