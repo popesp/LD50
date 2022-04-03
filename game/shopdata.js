@@ -35,9 +35,9 @@ const SHOP_DATA = [
 		bought: 0
 	},
 	{
-		name: CARD_DATA.taste_of_flesh,
-		data: CARD_DATA.taste_of_flesh,
-		cost: 1,
+		name: CARD_DATA.the_electric_chair,
+		data: CARD_DATA.the_electric_chair,
+		cost: 10,
 		quantity: 1,
 		bought: 0
 	},
@@ -49,9 +49,9 @@ const SHOP_DATA = [
 		bought: 0
 	},
 	{
-		name: CARD_DATA.bump_in_the_night,
-		data: CARD_DATA.bump_in_the_night,
-		cost: 1,
+		name: CARD_DATA.the_lighthouse,
+		data: CARD_DATA.the_lighthouse,
+		cost: 10,
 		quantity: 1,
 		bought: 0
 	},

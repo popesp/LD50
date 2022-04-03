@@ -112,6 +112,38 @@ const CARD_DATA = Object.fromEntries(Object.entries({
 			}
 		}
 	},
+	spilt_beans: {
+		name: 'Spilt Beans',
+		description: "discard cards from the enemy deck equal to your hand size, then put your hand on the bottom of your deck",
+		type: "Action",
+		effect: function(state, caster, guid)
+		{
+			const target = state.player === caster ? state.enemy : state.player;
+			// animation not updating when card is being played
+			while (caster.hand.length > 0)
+			{
+				discardCard(state, target, getTopCard(state, target), guid);
+				caster.deck.push(caster.hand.splice(0, 1)[0]);
+			}
+		}
+	},
+	hysterical_whispers: {
+		name: "Hysterical Whispers",
+		description: "Each player discards a random card from their hand, then you draw a card",
+		type: "Action",
+		effect: function(state, caster, guid)
+		{
+			if(caster.hand.length > 0)
+				discardCard(state, caster, caster.hand.splice(0, 1)[0]);
+			
+			const target = state.player === caster ? state.enemy : state.player;
+			if(target.hand.length > 0)
+				discardCard(state, target, target.hand.splice(0, 1)[0]);
+			
+			
+			drawCard(state, caster, guid);
+		}
+	},
 	//Passive Cards
 	mind_worm: {
 		name: "Mind Worm",
@@ -131,8 +163,26 @@ const CARD_DATA = Object.fromEntries(Object.entries({
 			addPassive(state, caster, PASSIVE_DATA.cosmic_insight, guid);
 		}
 	},
+	the_lighthouse: {
+		name: "The Lighthouse",
+		description: "For the rest of the game, at the start of your turn gain an extra action",
+		type: "Passive",
+		effect: function(state, caster, guid)
+		{
+			addPassive(state, caster, PASSIVE_DATA.the_lighthouse, guid);
+		}
+	},
+	the_electric_chair: {
+		name: "The Electric Chair",
+		description: "For the rest of the game, at the start of your turn gain two extra actions, but you no longer draw a card for your turn",
+		type: "Passive",
+		effect: function(state, caster, guid)
+		{
+			addPassive(state, caster, PASSIVE_DATA.the_electric_chair, guid);
+		}
+	},
 
-	//Enemy Cards
+	//Enemy Only Cards
 	bump_in_the_night: {
 		name: "Bump in the Night",
 		description: "Discard the top card from the enemy deck",
@@ -153,5 +203,22 @@ const CARD_DATA = Object.fromEntries(Object.entries({
 			drawCard(state, caster, guid);
 			caster.energy++;
 		}
+	},
+	eye_for_an_eye:{
+		name: "Eye for an Eye",
+		description: "Each player discards the top 3 cards of their deck",
+		type: "Action",
+		effect: function(state, caster, guid)
+		{
+			const target = state.player === caster ? state.enemy : state.player;
+			discardCard(state, target, getTopCard(state, target), guid);
+			discardCard(state, target, getTopCard(state, target), guid);
+			discardCard(state, target, getTopCard(state, target), guid);
+			
+			discardCard(state, caster, getTopCard(state, caster), guid);
+			discardCard(state, caster, getTopCard(state, caster), guid);
+			discardCard(state, caster, getTopCard(state, caster), guid);
+		}
 	}
+
 }).map(([key, cardconfig]) => ([key, {...cardconfig, key}])));

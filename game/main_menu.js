@@ -50,6 +50,8 @@ const main_menu = new Phaser.Class({
 		this.load.image("card_deja_vu", "assets/card-art/deja-vu.png");
 		this.load.image("card_point_of_grace", "assets/card-art/point-of-grace.png");
 		this.load.image("card_gaze_into_abyss", "assets/card-art/gaze-into-abyss.png");
+		this.load.image("card_the_lighthouse", "assets/card-art/the-lighthouse.png");
+		this.load.image("card_the_electric_chair", "assets/card-art/the-electric-chair.png");
 		
 	},
 	create: function()
@@ -58,7 +60,7 @@ const main_menu = new Phaser.Class({
 		this.music = this.sound.add("spook");
 		this.music.loop = true;
 		this.music.play()
-		this.add.image(650, 360, "background")
+		this.add.image(WIDTH_CANVAS/2, HEIGHT_CANVAS/2, "background")
 		
 		// TITLE TEXT
 		const title_text = this.add.text(WIDTH_CANVAS/2, PADDING_CANVAS*6.66, "C'THULHU RISING", {color: "white", fontSize: "40px"});
@@ -83,14 +85,14 @@ const main_menu = new Phaser.Class({
 
 			GameState.state_run = {
 				source_deck: [
-					...new Array(10).fill(CARD_DATA.i_win),
+					...new Array(2).fill(CARD_DATA.i_win),
 					// ...new Array(10).fill(CARD_DATA.point_of_grace),
 					// ...new Array(5).fill(CARD_DATA.gaze_into_the_abyss),
 					// ...new Array(5).fill(CARD_DATA.deja_vu),
 					// ...new Array(5).fill(CARD_DATA.self_reflection),
 					// ...new Array(5).fill(CARD_DATA.mind_blast),
 					// ...new Array(5).fill(CARD_DATA.taste_of_flesh),
-					...new Array(5).fill(CARD_DATA.cosmic_insight)
+					...new Array(10).fill(CARD_DATA.the_electric_chair)
 				],
 				index_encounter: 0,
 				state_encounter: null
