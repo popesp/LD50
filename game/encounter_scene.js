@@ -195,6 +195,7 @@ function startEncounter(state_run, encounter, scene)
 			deck: state_run.source_deck.map(createCard),
 			discard_pile: [],
 			energy: 1,
+			skip_draw: false,
 			X_DISCARD: X_DISCARD_PLAYER,
 			Y_DISCARD: Y_DISCARD_PLAYER,
 			Y_HAND: Y_HAND_PLAYER,
@@ -208,6 +209,7 @@ function startEncounter(state_run, encounter, scene)
 			deck: encounter.source_deck.map(createCard),
 			discard_pile: [],
 			energy: 1,
+			skip_draw: false,
 			bounty: encounter.bounty,
 			isFinalBoss: GameState.state_run.index_encounter === ENCOUNTERS.length - 1 ? true : false,
 			X_DISCARD: X_DISCARD_ENEMY,
@@ -218,6 +220,8 @@ function startEncounter(state_run, encounter, scene)
 		},
 		triggers: {
 			draw: [],
+			maggot: [],
+			queen: [],
 			discard: [],
 			start_turn: []
 		},
@@ -247,18 +251,18 @@ function startEncounter(state_run, encounter, scene)
 
 function discardCard(state, caster, card, guid)
 {
-	if(card !== undefined)
-		state.controller.wrap(function()
-		{
-			caster.discard_pile.push(card);
-			state.needs_update = true;
-		}, [{
-			targets: card.gameobj,
-			ease: Phaser.Math.Easing.Cubic.InOut,
-			duration: 1000,
-			x: caster.X_DISCARD,
-			y: caster.Y_DISCARD
-		}], guid ?? random.identifier());
+		if(card !== undefined)
+			state.controller.wrap(function()
+			{
+				caster.discard_pile.push(card);
+				state.needs_update = true;
+			}, [{
+				targets: card.gameobj,
+				ease: Phaser.Math.Easing.Cubic.InOut,
+				duration: 1000,
+				x: caster.X_DISCARD,
+				y: caster.Y_DISCARD
+			}], guid ?? random.identifier());
 }
 
 function randomcard()
@@ -294,6 +298,9 @@ function drawCard(state, caster, guid)
 
 	state.controller.wrap(function()
 	{
+		for(const trigger of state.triggers.draw)
+			trigger.effect(state, caster, trigger.owner);
+			
 		if(caster.handlimit === caster.hand.length)
 			discardCard(state, caster, card, guid);
 		else
@@ -305,8 +312,7 @@ function drawCard(state, caster, guid)
 				caster.hand.push(card);
 
 				state.needs_update = true;
-				for(const trigger of state.triggers.draw)
-					trigger.effect(state, caster, trigger.owner);
+
 			}, [{
 				targets: gameobj,
 				ease: Phaser.Math.Easing.Cubic.InOut,
@@ -376,9 +382,6 @@ function startTurn(state, caster)
 
 	state.caster_current = caster;
 	caster.energy = DEFAULT_ENERGY;
-	drawCard(state, caster);
-	if(state.caster_winner !== null) // Winner has been determined
-		return;
 
 	for(const trigger of state.triggers.start_turn)
 	{
@@ -386,6 +389,13 @@ function startTurn(state, caster)
 			return;
 		trigger.effect(state, caster, trigger.owner);
 	}
+	//skip_draw is to handle electric chair, and setting it to false handles case where it is destroyed before next turn
+	if(caster.skip_draw !== true)
+		drawCard(state, caster);
+	else
+		caster.skip_draw = false;
+	if(state.caster_winner !== null) // Winner has been determined
+		return;
 }
 
 function makeCardContainer(scene, card, x, y)
