@@ -44,6 +44,7 @@ function buyItem(scene, item)
 	{
 		item.bought++;
 		GameState.currency -= item.cost;
+		GameState.unlocks.push(item.data);
 	}
 
 	drawShop(scene)

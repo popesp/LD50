@@ -1,13 +1,13 @@
 const SHOP_DATA = [
 	{
-		name: CARD_DATA.mind_blast,
+		name: CARD_DATA.mind_blast.name,
 		data: CARD_DATA.mind_blast,
 		cost: 1,
 		quantity: 1,
 		bought: 0
 	},
 	{
-		name: CARD_DATA.cosmic_insight,
+		name: CARD_DATA.cosmic_insight.name,
 		data: CARD_DATA.cosmic_insight,
 		cost: 2,
 		quantity: 1,
@@ -31,7 +31,7 @@ const SHOP_DATA = [
 		name: CARD_DATA.self_reflection,
 		data: CARD_DATA.self_reflection,
 		cost: 1,
-		quantity: 1,
+		quantity: 10,
 		bought: 0
 	},
 	{

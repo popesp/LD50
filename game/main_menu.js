@@ -83,14 +83,15 @@ const main_menu = new Phaser.Class({
 
 			GameState.state_run = {
 				source_deck: [
-					...new Array(10).fill(CARD_DATA.i_win),
+					...new Array(1).fill(CARD_DATA.i_win),
 					// ...new Array(10).fill(CARD_DATA.point_of_grace),
 					// ...new Array(5).fill(CARD_DATA.gaze_into_the_abyss),
 					// ...new Array(5).fill(CARD_DATA.deja_vu),
 					// ...new Array(5).fill(CARD_DATA.self_reflection),
 					// ...new Array(5).fill(CARD_DATA.mind_blast),
 					// ...new Array(5).fill(CARD_DATA.taste_of_flesh),
-					...new Array(5).fill(CARD_DATA.cosmic_insight)
+					...new Array(1).fill(CARD_DATA.cosmic_insight),
+					...GameState.unlocks
 				],
 				index_encounter: 0,
 				state_encounter: null
