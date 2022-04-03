@@ -285,7 +285,7 @@ function redrawBoard(state_run, scene)
 		const end_turn_btn = scene.add.image(0, 0, "end_turn_btn");
 		end_turn_btn.setDisplaySize(WIDTH_END_BUTTON, HEIGHT_END_BUTTON);
 
-		const end_text = scene.add.text(0, 0, "END TURN", {color: "white", fontSize: "18px"});
+		const end_text = scene.add.text(0, 0, "END TURN", {color: "black", fontSize: "18px"});
 		end_text.setOrigin(0.5);
 
 		const end_turn_btn_container = scene.add.container(WIDTH_CANVAS - PADDING_CANVAS - WIDTH_END_BUTTON/2, HEIGHT_CANVAS/2, [end_turn_btn, end_text]);
@@ -362,15 +362,19 @@ function redrawBoard(state_run, scene)
 			gameObjects.push(game_end_text);
 
 			const btn_menu = scene.add.image(0, 0, "end_turn_btn");
-			btn_menu.setDisplaySize(WIDTH_END_BUTTON, HEIGHT_END_BUTTON);
+			btn_menu.setDisplaySize(WIDTH_END_BUTTON*2, HEIGHT_END_BUTTON);
 
-			const text_menu = scene.add.text(0, 0, "Main Menu", {color: "white", fontSize: "18px"});
+			const text_menu = scene.add.text(0, 0, "Main Menu", {color: "black", fontSize: "18px"});
 			text_menu.setOrigin(0.5);
 
 			const btn_menu_container = scene.add.container(WIDTH_CANVAS/2, HEIGHT_CANVAS/2 + 50, [btn_menu, text_menu]);
-			btn_menu_container.setSize(WIDTH_END_BUTTON, HEIGHT_END_BUTTON);
+			btn_menu_container.setSize(WIDTH_END_BUTTON*2, HEIGHT_END_BUTTON);
 			btn_menu_container.setInteractive({useHandCursor: true});
-			btn_menu_container.on("pointerdown", () => scene.scene.start("main_menu"));
+			btn_menu_container.on("pointerdown", () => 
+			{
+				scene.music.stop();
+				scene.scene.start("main_menu");
+			});
 
 			gameObjects.push(btn_menu_container);
 		}
