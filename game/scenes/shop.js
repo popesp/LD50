@@ -9,8 +9,10 @@ const WIDTH_BACK_BUTTON = 200;
 const HEIGHT_BACK_BUTTON = 100;
 
 const ITEMS_PER_ROW = 5;
-const SPACING_ITEM_X = 20;
-const SPACING_ITEM_Y = 60;
+const X_ITEMSPACING = 20;
+const Y_ITEMSPACING = 60;
+
+const Y_ITEMSTART = 300;
 
 
 function buyItem(item)
@@ -66,16 +68,15 @@ export default new Phaser.Class({
 		text_gold = this.add.text(WIDTH_CANVAS - PADDING_CANVAS*2, PADDING_CANVAS*2, "Gold: " + GameState.currency, {color: "white", fontSize: "40px"}).setOrigin(1, 0);
 
 		// purchasable cards
-		const ANCHOR_X = 300;
-		const ANCHOR_Y = 300;
+		const x_itemstart = WIDTH_CANVAS/2 - (ITEMS_PER_ROW - 1)*(WIDTH_CARD + X_ITEMSPACING)/2;
 		for(let index_item = 0; index_item < SHOP_DATA.length; ++index_item)
 		{
 			const item = SHOP_DATA[index_item];
 			const row = Math.floor(index_item/ITEMS_PER_ROW);
 			const col = index_item%ITEMS_PER_ROW;
 
-			const ITEM_X = ANCHOR_X + col*(WIDTH_CARD + SPACING_ITEM_X);
-			const ITEM_Y = ANCHOR_Y + row*(HEIGHT_CARD + SPACING_ITEM_Y);
+			const ITEM_X = x_itemstart + col*(WIDTH_CARD + X_ITEMSPACING);
+			const ITEM_Y = Y_ITEMSTART + row*(HEIGHT_CARD + Y_ITEMSPACING);
 
 			const cardcontainer = makeCardContainer(this, item.card, ITEM_X, ITEM_Y);
 
