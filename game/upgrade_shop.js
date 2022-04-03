@@ -5,11 +5,11 @@ const ITEMS_PER_ROW = 5;
 
 const WIDTH_ITEM = 150;
 const HEIGHT_ITEM = 210;
-const PADDING_ITEM = 10;
+const PADDING_ITEM = 5;
 const SPACING_ITEM = 20;
 
-const WIDTH_ITEMIMAGE = 94;
-const HEIGHT_ITEMIMAGE = 56;
+const WIDTH_ITEMIMAGE = 141;
+const HEIGHT_ITEMIMAGE = 85;
 
 
 function makeItemContainer(scene, item, x, y)
@@ -17,7 +17,7 @@ function makeItemContainer(scene, item, x, y)
 	const itemsprite = scene.add.image(0, 0, "card");
 	itemsprite.setDisplaySize(WIDTH_ITEM, HEIGHT_ITEM);
 
-	const itemimage = scene.add.image(0, -20, `card_${item.data.key}`);
+	const itemimage = scene.add.image(0, -41, `card_${item.data.key}`);
 	itemimage.setDisplaySize(WIDTH_ITEMIMAGE, HEIGHT_ITEMIMAGE);
 
 	const itemname = scene.add.text(0, PADDING_ITEM - HEIGHT_ITEM/2, item.data.name, {color: "black", fontSize: "14px"});
@@ -26,7 +26,7 @@ function makeItemContainer(scene, item, x, y)
 	const itemdescription = scene.add.text(0, OFFSET_DESCRIPTION, item.data.description, {color: "black", fontSize: "12px", align: "center", wordWrap: {width: WIDTH_ITEM - PADDING_ITEM*2}});
 	itemdescription.setOrigin(0.5, 0);
 
-	const itemavailability = scene.add.text(0, HEIGHT_ITEM/2+PADDING_ITEM, `${item.bought}/${item.quantity}`, {color: "white", fontSize: "20px"})
+	const itemavailability = scene.add.text(0, HEIGHT_ITEM/2+PADDING_ITEM*2, `${item.bought}/${item.quantity}`, {color: "white", fontSize: "20px"})
 	itemavailability.setOrigin(0.5);
 
 	const itemcontainer = scene.add.container(x, y, [itemsprite, itemimage, itemname, itemdescription, itemavailability]);
@@ -61,7 +61,7 @@ function drawShop(scene)
 	for(let i = 0; i < SHOP_DATA.length; ++i)
 	{
 		const ITEM_X = ANCHOR_X + (WIDTH_ITEM*(i%ITEMS_PER_ROW)) + SPACING_ITEM*(i%ITEMS_PER_ROW);
-		const ITEM_Y = ANCHOR_Y + (HEIGHT_ITEM*Math.floor(i/ITEMS_PER_ROW)) + (SPACING_ITEM*Math.floor(i/ITEMS_PER_ROW));
+		const ITEM_Y = ANCHOR_Y + (HEIGHT_ITEM*Math.floor(i/ITEMS_PER_ROW)) + (SPACING_ITEM*Math.floor(i/ITEMS_PER_ROW)*2);
 		const item = SHOP_DATA[i];
 
 		const itemcontainer = makeItemContainer(scene, item, ITEM_X, ITEM_Y);
