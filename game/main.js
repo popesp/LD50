@@ -1,6 +1,6 @@
 const GameState = {
 	unlocks: [],
-	currency: 0,
+	currency: 10,
 	state_run: null
 };
 

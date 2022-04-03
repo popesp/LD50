@@ -36,7 +36,7 @@ const CARD_DATA = Object.fromEntries(Object.entries({
 		effect: function(state, caster, guid)
 		{
 			// TODO(shawn): animate this
-			caster.deck.push(createCard(CARD_DATA.blank));
+			caster.deck.push(createCard(CARD_DATA.a_blank));
 			caster.energy++;
 		}
 	},
