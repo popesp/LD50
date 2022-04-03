@@ -379,21 +379,21 @@ function redrawBoard(state_run, scene)
 	// End Turn button
 	if(state.caster_current === state.player)
 	{
-		const end_turn_btn = scene.add.image(0, 0, "end_turn_btn");
-		end_turn_btn.setDisplaySize(WIDTH_END_BUTTON, HEIGHT_END_BUTTON);
+		const button = scene.add.image(0, 0, "button");
+		button.setDisplaySize(WIDTH_END_BUTTON, HEIGHT_END_BUTTON);
 
 		const end_text = scene.add.text(0, 0, "END TURN", {color: "black", fontSize: "18px"});
 		end_text.setOrigin(0.5);
 
-		const end_turn_btn_container = scene.add.container(WIDTH_CANVAS - PADDING_CANVAS - WIDTH_END_BUTTON/2, HEIGHT_CANVAS/2, [end_turn_btn, end_text]);
-		end_turn_btn_container.setSize(WIDTH_END_BUTTON, HEIGHT_END_BUTTON);
+		const button_container = scene.add.container(WIDTH_CANVAS - PADDING_CANVAS - WIDTH_END_BUTTON/2, HEIGHT_CANVAS/2, [button, end_text]);
+		button_container.setSize(WIDTH_END_BUTTON, HEIGHT_END_BUTTON);
 		if(!state.caster_winner)
 		{
-			end_turn_btn_container.setInteractive({useHandCursor: true});
-			end_turn_btn_container.on("pointerdown", () => startTurn(state, state.enemy));
+			button_container.setInteractive({useHandCursor: true});
+			button_container.on("pointerdown", () => startTurn(state, state.enemy));
 		}
 
-		gameObjects.push(end_turn_btn_container);
+		gameObjects.push(button_container);
 	}
 
 	// Energy display
@@ -436,7 +436,7 @@ function redrawBoard(state_run, scene)
 			const game_end_text = scene.add.text(WIDTH_CANVAS/2, HEIGHT_CANVAS/2, "Victory! You claimed " + state.enemy.bounty + " gold.", {color: "white", fontSize: "32px", align: "center"}).setOrigin(0.5);
 			gameObjects.push(game_end_text);
 
-			const btn_next = scene.add.image(0, 0, "end_turn_btn");
+			const btn_next = scene.add.image(0, 0, "button");
 			btn_next.setDisplaySize(WIDTH_END_BUTTON, HEIGHT_END_BUTTON);
 
 			const text_next = scene.add.text(0, 0, "Next", {color: "black", fontSize: "18px"});
@@ -460,7 +460,7 @@ function redrawBoard(state_run, scene)
 			const game_end_text = scene.add.text(WIDTH_CANVAS/2, HEIGHT_CANVAS/2, lose_text, {color: "white", fontSize: "32px", align: "center"}).setOrigin(0.5);
 			gameObjects.push(game_end_text);
 
-			const btn_menu = scene.add.image(0, 0, "end_turn_btn");
+			const btn_menu = scene.add.image(0, 0, "button");
 			btn_menu.setDisplaySize(WIDTH_END_BUTTON*2, HEIGHT_END_BUTTON);
 
 			const text_menu = scene.add.text(0, 0, "Main Menu", {color: "black", fontSize: "18px"});

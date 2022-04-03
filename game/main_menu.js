@@ -25,7 +25,7 @@ const main_menu = new Phaser.Class({
 	{
 		// UI
 		this.load.image("back_arrow", "assets/back_arrow.png");
-		this.load.image("end_turn_btn", "assets/end_turn_btn.png");
+		this.load.image("button", "assets/button.png");
 		this.load.image("background", "assets/cthulhu.png")
 
 		// Music
@@ -65,7 +65,7 @@ const main_menu = new Phaser.Class({
 		title_text.setOrigin(0.5);
 
 		// Start New Run Button
-		const start_game_btn = this.add.image(0, 0, "end_turn_btn");
+		const start_game_btn = this.add.image(0, 0, "button");
 		start_game_btn.setDisplaySize(200, 50);
 		const start_game_text = this.add.text(0, 0, "START NEW RUN", {color: "black", fontSize: "24px"});
 		start_game_text.setOrigin(0.5);
@@ -99,11 +99,11 @@ const main_menu = new Phaser.Class({
 			this.scene.start("encounter_scene");
 		});
 
-		// gameObjects.push(end_turn_btn_container);
+		// gameObjects.push(button_container);
 
 
 		// Upgrade Shop Button
-		const upgrade_shop_btn = this.add.image(0, 0, "end_turn_btn");
+		const upgrade_shop_btn = this.add.image(0, 0, "button");
 		upgrade_shop_btn.setDisplaySize(200, 50);
 		const upgrade_shop_text = this.add.text(0, 0, "CARD SHOP", {color: "black", fontSize: "24px"});
 		upgrade_shop_text.setOrigin(0.5);
