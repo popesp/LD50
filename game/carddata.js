@@ -68,11 +68,54 @@ const CARD_DATA = Object.fromEntries(Object.entries({
 			caster.energy += 2;
 		}
 	},
+	deja_vu: {
+		name: 'Deja Vu',
+		description: "Place the top card of your discard pile on to the top of your deck",
+		type: "Action",
+		effect: function(state, caster)
+		{
+			if(caster.discard_pile.length)
+				caster.deck.push(caster.discard_pile.pop());
+		}
+	},
+	gaze_into_the_abyss: {
+		name: 'Gaze into the Abyss',
+		description: "Play the top card of the enemy deck",
+		type: "Action",
+		effect: function(state, caster)
+		{
+			const target = state.player === caster ? state.enemy : state.player;
+			const played_card = getTopCard(state, target);
+
+			caster.energy++; //increment energy to play the card
+			playCard(state, caster, played_card);
+			console.log(caster.discard_pile);
+		}
+	},
+	point_of_grace: {
+		name: 'Point of Grace',
+		description: "Add a random passive card from your deck to your hand",
+		type: "Action",
+		effect: function(state, caster)
+		{
+			for(let i = 0; i < caster.deck.length; ++i)
+			{
+				const card = caster.deck[i];
+				if(card.type === "Passive")
+				{
+					const totes_random_card = caster.deck.splice(i, 1);
+					console.log(totes_random_card);
+					caster.hand.push(totes_random_card[0])
+					break;
+				}
+			}
+		}
+	},
 	//Passive Cards
 	mind_worm: {
 		name: "Mind Worm",
 		description: "For the rest of the game, when your opponent draws a card, discard the top card of their deck",
-		type: "Action",
+		type: "Passive",
 		effect: function(state, caster)
 		{
 			addPassive(state, caster, PASSIVE_DATA.mind_worm);
@@ -81,7 +124,7 @@ const CARD_DATA = Object.fromEntries(Object.entries({
 	cosmic_insight: {
 		name: "Cosmic Insight",
 		description: "For the rest of the game, each player draws an extra card at the start of their turn",
-		type: "Action",
+		type: "Passive",
 		effect: function(state, caster)
 		{
 			addPassive(state, caster, PASSIVE_DATA.cosmic_insight);

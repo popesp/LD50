@@ -7,6 +7,13 @@ const SHOP_DATA = [
 		bought: 0
 	},
 	{
+		name: CARD_DATA.cosmic_insight,
+		data: CARD_DATA.cosmic_insight,
+		cost: 2,
+		quantity: 1,
+		bought: 0
+	},
+	{
 		name: CARD_DATA.mind_worm.name,
 		data: CARD_DATA.mind_worm,
 		cost: 1,
