@@ -94,7 +94,7 @@ const upgrade_shop = new Phaser.Class({
 		this.music.loop = true;
 		this.music.play()
 		// TITLE TEXT
-		const title_text = this.add.text(WIDTH_CANVAS/2, PADDING_CANVAS*2, "UPGRADE SHOP", {color: "white", fontSize: "40px"});
+		const title_text = this.add.text(WIDTH_CANVAS/2, PADDING_CANVAS*2, "CARD SHOP", {color: "white", fontSize: "40px"});
 		title_text.setOrigin(0.5, 0);
 
 		
