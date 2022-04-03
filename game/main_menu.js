@@ -6,6 +6,14 @@ const HEIGHT_UPGRADE_BUTTON = 50;
 
 let garbageBin = [];
 
+function collectGarbage()
+{
+	// Clean up game objects
+	for(const trash of garbageBin)
+		trash.destroy();
+	garbageBin = [];
+}
+
 
 const main_menu = new Phaser.Class({
 	Extends: Phaser.Scene,
