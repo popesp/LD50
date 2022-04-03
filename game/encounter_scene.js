@@ -158,7 +158,7 @@ function drawCard(state, caster)
 
 function playCard(state, caster, card)
 {
-	if(caster.energy === 0 || state.caster_current !== caster)
+	if(caster.energy === 0 || state.caster_current !== caster || state.caster_winner !== null)
 		return;
 
 	console.log(`${caster.name} played a ${card.name}`);
@@ -216,26 +216,24 @@ function redrawBoard(state_run, scene)
 	gameObjects = [];
 
 	// player deck
-	if(state.player.deck.length)
-		gameObjects.push(scene.add.container(
-			PADDING_CANVAS + WIDTH_CARD/2,
-			HEIGHT_CANVAS - PADDING_CANVAS - HEIGHT_CARD/2 - 0,
-			[
-				scene.add.image(0, 0, "player_back").setDisplaySize(WIDTH_CARD, HEIGHT_CARD),
-				scene.add.text(0, -PADDING_CARD - HEIGHT_CARD/2, state.player.deck.length, {color: "white", fontSize: "24px"}).setOrigin(0.5, 1)
-			]
-		));
+	const player_deck_container = scene.add.container(
+		PADDING_CANVAS + WIDTH_CARD/2,
+		HEIGHT_CANVAS - PADDING_CANVAS - HEIGHT_CARD/2 - 0,
+		[scene.add.text(0, -PADDING_CARD - HEIGHT_CARD/2, state.player.deck.length, {color: "white", fontSize: "24px"}).setOrigin(0.5, 1)]
+	);
+	if(state.player.deck.length > 0)
+		player_deck_container.add(scene.add.image(0, 0, "player_back").setDisplaySize(WIDTH_CARD, HEIGHT_CARD));
+	gameObjects.push(player_deck_container);
 
 	// enemy deck
-	if(state.enemy.deck.length)
-		gameObjects.push(scene.add.container(
-			PADDING_CANVAS + WIDTH_CARD/2,
-			PADDING_CANVAS + HEIGHT_CARD/2,
-			[
-				scene.add.image(0, 0, "enemy_back").setDisplaySize(WIDTH_CARD, HEIGHT_CARD),
-				scene.add.text(0, PADDING_CARD + HEIGHT_CARD/2, state.enemy.deck.length, {color: "white", fontSize: "24px"}).setOrigin(0.5, 0)
-			]
-		));
+	const enemy_deck_container = scene.add.container(
+		PADDING_CANVAS + WIDTH_CARD/2,
+		PADDING_CANVAS + HEIGHT_CARD/2,
+		[scene.add.text(0, PADDING_CARD + HEIGHT_CARD/2, state.enemy.deck.length, {color: "white", fontSize: "24px"}).setOrigin(0.5, 0)]
+	);
+	if(state.enemy.deck.length > 0)
+		enemy_deck_container.add(scene.add.image(0, 0, "enemy_back").setDisplaySize(WIDTH_CARD, HEIGHT_CARD));
+	gameObjects.push(enemy_deck_container);
 
 	// player hand
 	const min_x_player = WIDTH_CANVAS/2 - (state.player.hand.length - 1)*(WIDTH_CARD/2 + SPACING_CARD/2);
@@ -246,8 +244,11 @@ function redrawBoard(state_run, scene)
 
 		const cardcontainer = makeCardContainer(scene, card, x, HEIGHT_CANVAS - HEIGHT_CARD/2 - PADDING_CANVAS);
 		cardcontainer.setSize(WIDTH_CARD, HEIGHT_CARD);
-		cardcontainer.setInteractive({useHandCursor: true});
-		cardcontainer.on("pointerdown", () => playCard(state, state.player, card));
+		if(!state.caster_winner)
+		{
+			cardcontainer.setInteractive({useHandCursor: true});
+			cardcontainer.on("pointerdown", () => playCard(state, state.player, card));
+		}
 
 		gameObjects.push(cardcontainer);
 	}
@@ -335,7 +336,8 @@ function redrawBoard(state_run, scene)
 	if(state.caster_winner !== null)
 		if(state.caster_winner === state.player)
 		{
-			scene.add.text(WIDTH_CANVAS/2, HEIGHT_CANVAS/2, "Encounter Complete", {color: "white", fontSize: "32px", align: "center"}).setOrigin(0.5);
+			const game_end_text = scene.add.text(WIDTH_CANVAS/2, HEIGHT_CANVAS/2, "Encounter Complete", {color: "white", fontSize: "32px", align: "center"}).setOrigin(0.5);
+			gameObjects.push(game_end_text);
 
 			const btn_next = scene.add.image(0, 0, "end_turn_btn");
 			btn_next.setDisplaySize(WIDTH_END_BUTTON, HEIGHT_END_BUTTON);
@@ -356,7 +358,8 @@ function redrawBoard(state_run, scene)
 		}
 		else
 		{
-			scene.add.text(WIDTH_CANVAS/2, HEIGHT_CANVAS/2, "You Lose", {color: "white", fontSize: "32px", align: "center"}).setOrigin(0.5);
+			const game_end_text = scene.add.text(WIDTH_CANVAS/2, HEIGHT_CANVAS/2, "You Lose", {color: "white", fontSize: "32px", align: "center"}).setOrigin(0.5);
+			gameObjects.push(game_end_text);
 
 			const btn_menu = scene.add.image(0, 0, "end_turn_btn");
 			btn_menu.setDisplaySize(WIDTH_END_BUTTON, HEIGHT_END_BUTTON);
