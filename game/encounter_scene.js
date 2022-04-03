@@ -38,7 +38,8 @@ const ENCOUNTERS = [
 		source_deck: [
 			...new Array(0).fill(CARD_DATA.taste_of_flesh),
 			...new Array(10).fill(CARD_DATA.bump_in_the_night),
-			...new Array(0).fill(CARD_DATA.submit_to_madness)],
+			...new Array(0).fill(CARD_DATA.submit_to_madness)
+		],
 		starting_passives: [],
 		bounty: 1
 	},
@@ -175,6 +176,14 @@ function enemyTurnLogic(state)
 
 function startEncounter(state_run, encounter, scene)
 {
+	if(state_run.state_encounter !== null)
+	{
+		state_run.state_encounter.player.hand.forEach(card => card.gameobj?.destroy());
+		state_run.state_encounter.enemy.hand.forEach(card => card.gameobj?.destroy());
+		state_run.state_encounter.player.discard_pile.forEach(card => card.gameobj?.destroy());
+		state_run.state_encounter.enemy.discard_pile.forEach(card => card.gameobj?.destroy());
+	}
+
 	const state = {
 		caster_current: null,
 		caster_winner: null,
