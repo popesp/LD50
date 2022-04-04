@@ -161,7 +161,7 @@ export const CARD_DATA = Object.fromEntries(Object.entries({
 	},
 	//Passive Cards
 	flawed_wisdom: {
-		name: "Deep Insight",
+		name: "Flawed Wisdom",
 		description: "For the rest of the game, when your opponent draws a card, discard the top card of their deck",
 		type: "Passive",
 		effect: function(state, caster, child)
@@ -171,7 +171,7 @@ export const CARD_DATA = Object.fromEntries(Object.entries({
 	},
 	mind_flood: {
 		name: "Mind Flood",
-		description: "For the rest of the game, anytime Deep Insight would discard a card, it discards that many cards +1",
+		description: "For the rest of the game, anytime Flawed Wisdom would discard a card, it discards that many cards +1",
 		type: "Passive",
 		effect: function(state, caster, child)
 		{
