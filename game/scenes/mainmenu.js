@@ -28,6 +28,9 @@ export default new Phaser.Class({
 		this.load.audio("thumpy", "assets/music/thumpy.mp3");
 		this.load.audio("eldritchambience", "assets/music/eldritchambience.mp3");
 
+		// Sounds
+		this.load.audio("button-press", "assets/sounds/button-press.mp3");
+
 		// Cards
 		this.load.image("card", "assets/card_front.png");
 		this.load.image("player_back", "assets/player_back.png");
@@ -67,6 +70,9 @@ export default new Phaser.Class({
 		this.music.loop = true;
 		this.music.play();
 		this.add.image(WIDTH_CANVAS/2, HEIGHT_CANVAS/2, "background");
+		
+		this.sound.add("button-press");
+		
 
 		// TITLE TEXT
 		const title_text = this.add.text(WIDTH_CANVAS/2, PADDING_CANVAS*6.66, "INFINITE RISING", {color: "white", fontSize: "40px"});
@@ -83,7 +89,7 @@ export default new Phaser.Class({
 
 		start_game_container.on("pointerdown", () =>
 		{
-
+			this.sound.play("button-press");
 			GameState.state_run = {
 				source_deck: [
 					// ...new Array(6).fill(CARD_DATA.mind_blast),
@@ -119,6 +125,7 @@ export default new Phaser.Class({
 		upgrade_shop_container.setInteractive({useHandCursor: true});
 		upgrade_shop_container.on("pointerdown", () =>
 		{
+			this.sound.play("button-press");
 			this.music.stop();
 			this.scene.start("upgrade_shop");
 		});
