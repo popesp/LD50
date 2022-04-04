@@ -43,39 +43,39 @@ const ENCOUNTERS = [
 		starting_passives: [],
 		bounty: 2
 	},
-	{
-		name: "Demetrion's Horrid Palace",
-		source_deck: [
-			...new Array(2).fill(CARD_DATA.taste_of_flesh),
-			...new Array(12).fill(CARD_DATA.eye_for_an_eye)
-		],
-		starting_passives: [],
-		bounty: 4
-	},
-	{
-		name: "baddie",
-		source_deck: [
-			...new Array(15).fill(CARD_DATA.shifting_shadows)
-		],
-		starting_passives: [],
-		bounty: 8
-	},
-	{
-		name: "spooky",
-		source_deck: [
-			...new Array(8).fill(CARD_DATA.dark_expanse)
-		],
-		starting_passives: [],
-		bounty: 16
-	},
-	{
-		name: "another guy",
-		source_deck: [
-			...new Array(30).fill(CARD_DATA.encroaching_mist)
-		],
-		starting_passives: [],
-		bounty: 32
-	},
+	// {
+	// 	name: "Demetrion's Horrid Palace",
+	// 	source_deck: [
+	// 		...new Array(2).fill(CARD_DATA.taste_of_flesh),
+	// 		...new Array(12).fill(CARD_DATA.eye_for_an_eye)
+	// 	],
+	// 	starting_passives: [],
+	// 	bounty: 4
+	// },
+	// {
+	// 	name: "baddie",
+	// 	source_deck: [
+	// 		...new Array(15).fill(CARD_DATA.shifting_shadows)
+	// 	],
+	// 	starting_passives: [],
+	// 	bounty: 8
+	// },
+	// {
+	// 	name: "spooky",
+	// 	source_deck: [
+	// 		...new Array(8).fill(CARD_DATA.dark_expanse)
+	// 	],
+	// 	starting_passives: [],
+	// 	bounty: 16
+	// },
+	// {
+	// 	name: "another guy",
+	// 	source_deck: [
+	// 		...new Array(30).fill(CARD_DATA.encroaching_mist)
+	// 	],
+	// 	starting_passives: [],
+	// 	bounty: 32
+	// },
 	{
 		name: "The End of All Things",
 		source_deck: [...new Array(4).fill(CARD_DATA.mind_blast)],
@@ -320,7 +320,6 @@ function redrawBoard(state_run, scene)
 
 	// enemy deck
 	const length_text = state.enemy.isFinalBoss ? "∞" : state.enemy.deck.length;
-	const font_size = state.enemy.isFinalBoss ? "40px" : "24px";
 	const enemy_deck_container = scene.add.container(
 		PADDING_CANVAS + WIDTH_CARD/2,
 		PADDING_CANVAS + HEIGHT_CARD/2,
@@ -417,8 +416,13 @@ function redrawBoard(state_run, scene)
 		{
 			scene.sound.add("defeat_boss");
 			let victory_text = "Victory! You claimed " + state.enemy.bounty + " gold.";
+			
 			if(GameState.state_run.index_encounter === ENCOUNTERS.length-1)
+			{
+				scene.sound.play("ticking");
 				victory_text = "Congratulations! You have delayed the inevitable...for all time...";
+				scene.cameras.main.fadeOut(2000, 0, 0, 0);
+			}
 
 			const game_end_text = scene.add.text(WIDTH_CANVAS/2, HEIGHT_CANVAS/2, victory_text, {fontFamily: "insert font", color: "white", fontSize: "32px", align: "center"}).setOrigin(0.5);
 			gameObjects.push(game_end_text);
@@ -486,9 +490,11 @@ export default new Phaser.Class({
 		this.load.audio("play_card", "assets/sounds/play-card.mp3");
 		this.load.audio("remove_card", "assets/sounds/remove-card.mp3");
 		this.load.audio("invalid_action", "assets/sounds/invalid-action.mp3");
+		this.load.audio("ticking", "assets/sounds/ticking.mp3");
 	},
 	create: function()
 	{
+		
 		const bg = this.add.image(0, 0, "background");
 		bg.setOrigin(0);
 		bg.setDisplaySize(WIDTH_CANVAS, HEIGHT_CANVAS);
@@ -497,8 +503,7 @@ export default new Phaser.Class({
 		this.music = this.sound.add("eldritchambience");
 		this.music.loop = true;
 		this.music.play();
-
-		
+		this.cameras.main.setBackgroundColor("#421278");
 	},
 	update: function()
 	{
