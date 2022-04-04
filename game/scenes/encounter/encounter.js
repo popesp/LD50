@@ -46,8 +46,8 @@ const ENCOUNTERS = [
 	{
 		name: "Demetrion's Horrid Palace",
 		source_deck: [
-			...new Array(3).fill(CARD_DATA.taste_of_flesh),
-			...new Array(10).fill(CARD_DATA.eye_for_an_eye)
+			...new Array(2).fill(CARD_DATA.taste_of_flesh),
+			...new Array(12).fill(CARD_DATA.eye_for_an_eye)
 		],
 		starting_passives: [],
 		bounty: 4
