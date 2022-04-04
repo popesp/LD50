@@ -2,6 +2,7 @@ import scene_mainmenu from "./scenes/mainmenu.js";
 import scene_encounter from "./scenes/encounter/encounter.js";
 import scene_shop from "./scenes/shop.js";
 import scene_howtoplay from "./scenes/howtoplay.js";
+import scene_rewards from "./scenes/rewards.js";
 import {WIDTH_CANVAS, HEIGHT_CANVAS} from "./globals.js";
 
 
@@ -15,7 +16,7 @@ document.addEventListener("DOMContentLoaded", function()
 		parent: dom_container,
 		width: WIDTH_CANVAS,
 		height: HEIGHT_CANVAS,
-		scene: [scene_mainmenu, scene_encounter, scene_shop, scene_howtoplay],
+		scene: [scene_mainmenu, scene_encounter, scene_shop, scene_howtoplay, scene_rewards],
 		backgroundColor: 0x0a0808
 	});
 
