@@ -40,10 +40,10 @@ export default new Phaser.Class({
 		SLUMBER, HAVE BEGUN THEIR ASSAULT ON YOUR \nWORLD... IT IS UP TO YOU TO FIGHT BACK AND \nTRY TO DELAY THE INEVITABLE...\n\
 		\nGameplay:\n\
 		1. Try to make your opponent run out of cards before you do\n\
-		2. Use STATIC cards to \n\
-		3. \n\
-		", 
-		{color: "white", fontSize: "40px"});
+		2. Use STATIC cards to create persistent effects on the field\n\
+		3. Gain gold by deating enemies and spend it in the CARD SHOP\n\
+		4. Find a way to defeat THE END OF ALL THINGS with his INFINITE deck...", 
+		{color: "white", fontSize: "24px"});
 		help_text.setOrigin(0, 0);
 
 		
