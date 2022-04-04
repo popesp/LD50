@@ -15,7 +15,7 @@ export const PASSIVE_DATA = {
 				{
 					if(caster !== owner)
 					{
-						discardCard(state, caster, getTopCard(state, caster), guid);
+						discardCard(state, caster, getTopCard(state, caster, guid), guid);
 						for(const trigger of state.triggers.maggot)
 						{
 							trigger.effect(state, caster, trigger.owner);
@@ -37,7 +37,7 @@ export const PASSIVE_DATA = {
 				{
 					if(caster !== owner)
 					{
-						discardCard(state, caster, getTopCard(state, caster), guid);
+						discardCard(state, caster, getTopCard(state, caster, guid), guid);
 						for(const trigger of state.triggers.queen)
 						{
 							trigger.effect(state, caster, trigger.owner);
@@ -58,7 +58,7 @@ export const PASSIVE_DATA = {
 				effect: function(state, caster, owner, guid)
 				{
 					if(caster !== owner)
-						drawCard(state, caster, getTopCard(state, caster), guid);
+						drawCard(state, caster, guid);
 				}
 			}
 		]
@@ -145,7 +145,7 @@ export const PASSIVE_DATA = {
 				action: "hand_size_discard",
 				effect: function(state, caster, owner, guid)
 				{
-					console.log('in here!!!')
+					log("in here!!!");
 					if(caster !== owner)
 					{
 						discardCard(state, caster, getTopCard(state, caster), guid);

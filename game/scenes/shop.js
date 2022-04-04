@@ -1,4 +1,5 @@
-import {WIDTH_CANVAS, PADDING_CANVAS, OFFSET_DESCRIPTION_CARD} from "../globals.js";
+import {WIDTH_CANVAS, PADDING_CANVAS, WIDTH_CARD, HEIGHT_CARD, PADDING_CARD} from "../globals.js";
+import {makeCardContainer} from "../helpers.js";
 import {SHOP_DATA} from "../data/shop.js";
 import GameState from "../gamestate.js";
 import {log} from "../debug.js";
@@ -8,14 +9,10 @@ const WIDTH_BACK_BUTTON = 200;
 const HEIGHT_BACK_BUTTON = 100;
 
 const ITEMS_PER_ROW = 5;
+const X_ITEMSPACING = 20;
+const Y_ITEMSPACING = 60;
 
-const WIDTH_ITEM = 150;
-const HEIGHT_ITEM = 210;
-const PADDING_ITEM = 5;
-const SPACING_ITEM = 20;
-
-const WIDTH_ITEMIMAGE = 141;
-const HEIGHT_ITEMIMAGE = 85;
+const Y_ITEMSTART = 300;
 
 const ANCHOR_X = 300;
 const ANCHOR_Y = 310;
@@ -27,8 +24,13 @@ function buyItem(item)
 	{
 		item.bought++;
 		GameState.currency -= item.cost;
-		GameState.unlocks.push(item.data);
+		GameState.unlocks.push(item.card);
 	}
+
+	text_gold.setText("Gold: " + GameState.currency);
+
+	for(const item of SHOP_DATA)
+		item.availability.setText(`${item.bought}/${item.quantity}`);
 }
 
 let text_gold = null;
@@ -67,7 +69,6 @@ export default new Phaser.Class({
 		// gold amount
 		text_gold = this.add.text(WIDTH_CANVAS - PADDING_CANVAS*2, PADDING_CANVAS*2, "Gold: " + GameState.currency, {color: "white", fontSize: "40px"}).setOrigin(1, 0);
 
-		// remove sold out cards
 		const display_shop = [];
 		for(let i = 0; i < SHOP_DATA.length; ++i)
 		{
@@ -77,29 +78,23 @@ export default new Phaser.Class({
 			}
 		}
 		// purchasable cards
-		for(let i = 0; i < display_shop.length; ++i)
+		const x_itemstart = WIDTH_CANVAS/2 - (ITEMS_PER_ROW - 1)*(WIDTH_CARD + X_ITEMSPACING)/2;
+		for(let index_item = 0; index_item < display_shop.length; ++index_item)
 		{
-			const item = display_shop[i];
-			const ITEM_X = ANCHOR_X + (WIDTH_ITEM*(i%ITEMS_PER_ROW)) + SPACING_ITEM*(i%ITEMS_PER_ROW);
-			const ITEM_Y = ANCHOR_Y + (HEIGHT_ITEM*Math.floor(i/ITEMS_PER_ROW)) + (SPACING_ITEM*Math.floor(i/ITEMS_PER_ROW)*3);
+			const item = display_shop[index_item];
+			const row = Math.floor(index_item/ITEMS_PER_ROW);
+			const col = index_item%ITEMS_PER_ROW;
 
-			const itemsprite = this.add.image(0, 0, "card").setDisplaySize(WIDTH_ITEM, HEIGHT_ITEM);
-			const itemimage = this.add.image(0, -41, `card_${item.data.key}`).setDisplaySize(WIDTH_ITEMIMAGE, HEIGHT_ITEMIMAGE);
-			const itemname = this.add.text(0, PADDING_ITEM - HEIGHT_ITEM/2, item.data.name, {color: "black", fontSize: "14px"}).setOrigin(0.5, 0);
-			const itemdescription = this.add.text(0, OFFSET_DESCRIPTION_CARD, item.data.description, {color: "black", fontSize: "12px", align: "center", wordWrap: {width: WIDTH_ITEM - PADDING_ITEM*2}}).setOrigin(0.5, 0);
-			const itemcost = this.add.text(0, -(HEIGHT_ITEM/2 + PADDING_ITEM), `Cost: ${item.cost}`, {color: "white", fontSize: "20px"}).setOrigin(0.5, 1);
+			const ITEM_X = x_itemstart + col*(WIDTH_CARD + X_ITEMSPACING);
+			const ITEM_Y = Y_ITEMSTART + row*(HEIGHT_CARD + Y_ITEMSPACING);
 
-			item.availability = this.add.text(0, HEIGHT_ITEM/2 + PADDING_ITEM, `${item.bought}/${item.quantity}`, {color: "white", fontSize: "20px"}).setOrigin(0.5, 0);
+			const cardcontainer = makeCardContainer(this, item.card, ITEM_X, ITEM_Y);
 
-			const container = this.add.container(ITEM_X, ITEM_Y, [itemsprite, itemimage, itemname, itemdescription, itemcost, item.availability]).setSize(WIDTH_ITEM, HEIGHT_ITEM);
-			container.setInteractive({useHandCursor: true}).on("pointerdown", () => buyItem(item));
-			}
-	},
-	update: function()
-	{
-		text_gold.setText("Gold: " + GameState.currency);
+			cardcontainer.add(this.add.text(0, -(HEIGHT_CARD/2 + PADDING_CARD), `Cost: ${item.cost}`, {color: "white", fontSize: "20px"}).setOrigin(0.5, 1));
+			item.availability = this.add.text(0, HEIGHT_CARD/2 + PADDING_CARD, `${item.bought}/${item.quantity}`, {color: "white", fontSize: "20px"}).setOrigin(0.5, 0);
+			cardcontainer.add(item.availability);
 
-		for(const item of SHOP_DATA)
-			item.availability.setText(`${item.bought}/${item.quantity}`);
+			cardcontainer.setInteractive({useHandCursor: true}).on("pointerdown", () => buyItem(item));
+		}
 	}
 });

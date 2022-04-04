@@ -22,28 +22,37 @@ function determineWinner(state, caster)
 	log(`${state.caster_winner.name} won the game.`);
 }
 
-export function getTopCard(state, caster)
+export function getTopCard(state, caster, guid)
 {
-	let card;
 	// Generate "infinite" deck for final boss
-	if(caster.isFinalBoss)
-		card = randomCard();
-	else
-		card = caster.deck.pop();
-
+	const card = caster.isFinalBoss ? randomCard() : caster.deck.pop();
 	if(card === undefined && state.caster_winner === null)
 		determineWinner(state, caster);
+
+	card.gameobj = state.controller.gameobj_card(card, caster.X_DECK, caster.Y_DECK, () => playCard(state, state.player, card), caster === state.player);
+
+	log(`queuing lift ${card.name} for ${caster.name}`);
+	state.controller.wrap(function()
+	{}, [{
+		targets: card.gameobj,
+		ease: Phaser.Math.Easing.Cubic.Out,
+		duration: 200,
+		x: WIDTH_CANVAS/2,
+		y: HEIGHT_CANVAS/2
+	}], guid ?? Random.identifier());
 
 	return card;
 }
 
 export function discardCard(state, caster, card, guid)
 {
-	const anim_duration = caster.drawn_cards > 10 ? DEFAULT_DURATION*5 / (caster.drawn_cards-10) : DEFAULT_DURATION*5
+	const anim_duration = caster.drawn_cards > 10 ? DEFAULT_DURATION*5 / (caster.drawn_cards-10) : DEFAULT_DURATION*5;
 
 	if(card !== undefined)
 	{
+		card.gameobj.removeInteractive();
 
+		log(`queuing discard ${card.name} for ${caster.name}`);
 		state.controller.wrap(function()
 		{
 			caster.discard_pile.push(card);
@@ -79,7 +88,6 @@ export function drawCard(state, caster, guid)
 	//rope burn replacement effect
 	if(caster.handlimit === caster.hand.length && state.triggers.hand_size_discard.length > 0)
 	{
-		console.log('in here')
 		for(const trigger of state.triggers.hand_size_discard)
 		{
 			if(state.caster_winner !== null)
@@ -89,7 +97,7 @@ export function drawCard(state, caster, guid)
 		return;
 	}
 
-	const card = getTopCard(state, caster);
+	const card = getTopCard(state, caster, guid);
 	if(card === undefined) // GAME IS OVER
 		return;
 	caster.drawn_cards++;
@@ -98,53 +106,43 @@ export function drawCard(state, caster, guid)
 		state.caster_winner = state.player;
 		return;
 	}
-	const anim_duration = caster.drawn_cards > 10 ? DEFAULT_DURATION / (caster.drawn_cards-10) : DEFAULT_DURATION
+	const anim_duration = caster.drawn_cards > 10 ? DEFAULT_DURATION / (caster.drawn_cards-10) : DEFAULT_DURATION;
 
 	guid = guid ?? Random.identifier();
-	const gameobj = state.controller.gameobj_card(card, caster.X_DECK, caster.Y_DECK, () => playCard(state, state.player, card), caster === state.player);
-	card.gameobj = gameobj;
 
-	state.controller.wrap(function()
+	for(const trigger of state.triggers.draw)
+		trigger.effect(state, caster, trigger.owner);
+
+	if(caster.handlimit === caster.hand.length)
+		discardCard(state, caster, card, guid);
+	else
 	{
-		for(const trigger of state.triggers.draw)
-			trigger.effect(state, caster, trigger.owner);
+		log(`${caster.name} drew a ${card.name}`);
+		const min_x = WIDTH_CANVAS/2 - caster.hand.length*(WIDTH_CARD/2 + SPACING_CARD/2);
+		caster.hand.push(card);
 
-		if(caster.handlimit === caster.hand.length)
-			discardCard(state, caster, card, guid);
-		else
+		state.controller.wrap(function()
 		{
-			const min_x = WIDTH_CANVAS/2 - caster.hand.length*(WIDTH_CARD/2 + SPACING_CARD/2);
-			state.controller.wrap(function()
-			{
-				log(`${caster.name} drew a ${card.name}`);
-				caster.hand.push(card);
 
-				state.needs_update = true;
+			state.needs_update = true;
 
-			}, [{
-				targets: gameobj,
+		}, [{
+			targets: card.gameobj,
+			ease: Phaser.Math.Easing.Cubic.InOut,
+			duration: 200,
+			x: min_x + caster.hand.length*(WIDTH_CARD + SPACING_CARD),
+			y: caster.Y_HAND
+		}, ...caster.hand.map(function(card, index_card)
+		{
+			return {
+				targets: card.gameobj,
 				ease: Phaser.Math.Easing.Cubic.InOut,
 				duration: anim_duration,
-				x: min_x + caster.hand.length*(WIDTH_CARD + SPACING_CARD),
+				x: min_x + index_card*(WIDTH_CARD + SPACING_CARD),
 				y: caster.Y_HAND
-			}, ...caster.hand.map(function(card, index_card)
-			{
-				return {
-					targets: card.gameobj,
-					ease: Phaser.Math.Easing.Cubic.InOut,
-					duration: anim_duration,
-					x: min_x + index_card*(WIDTH_CARD + SPACING_CARD),
-					y: caster.Y_HAND
-				};
-			})], guid);
-		}
-	}, [{
-		targets: gameobj,
-		ease: Phaser.Math.Easing.Cubic.Out,
-		duration: anim_duration,
-		x: WIDTH_CANVAS/2,
-		y: HEIGHT_CANVAS/2
-	}], guid);
+			};
+		})], guid);
+	}
 }
 
 export function playCard(state, caster, card, guid)
@@ -152,11 +150,17 @@ export function playCard(state, caster, card, guid)
 	if(caster.energy === 0 || state.caster_current !== caster || state.caster_winner !== null)
 		return;
 
+	if(caster === state.enemy)
+	{
+		card.gameobj.destroy();
+		card.gameobj = state.controller.gameobj_card(card, card.gameobj.x, card.gameobj.y, undefined, true);
+	}
+
 	caster.energy--;
 	caster.hand = caster.hand.filter(handcard => handcard !== card);
 	guid = guid ?? Random.identifier();
 
-	const anim_duration = caster.drawn_cards > 10 ? DEFAULT_DURATION / (caster.drawn_cards-10) : DEFAULT_DURATION
+	const anim_duration = caster.drawn_cards > 10 ? DEFAULT_DURATION / (caster.drawn_cards-10) : DEFAULT_DURATION;
 
 	const min_x = WIDTH_CANVAS/2 - (caster.hand.length - 1)*(WIDTH_CARD/2 + SPACING_CARD/2);
 	state.controller.wrap(function()

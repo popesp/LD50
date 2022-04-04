@@ -22,17 +22,17 @@ export const CARD_DATA = Object.fromEntries(Object.entries({
 		effect: function(state, caster, guid)
 		{
 			const target = state.player === caster ? state.enemy : state.player;
-			discardCard(state, target, getTopCard(state, target), guid);
-			discardCard(state, target, getTopCard(state, target), guid);
-			discardCard(state, target, getTopCard(state, target), guid);
-			discardCard(state, target, getTopCard(state, target), guid);
-			discardCard(state, target, getTopCard(state, target), guid);
-			discardCard(state, target, getTopCard(state, target), guid);
-			discardCard(state, target, getTopCard(state, target), guid);
-			discardCard(state, target, getTopCard(state, target), guid);
-			discardCard(state, target, getTopCard(state, target), guid);
-			discardCard(state, target, getTopCard(state, target), guid);
-			discardCard(state, target, getTopCard(state, target), guid);
+			discardCard(state, target, getTopCard(state, target, guid), guid);
+			discardCard(state, target, getTopCard(state, target, guid), guid);
+			discardCard(state, target, getTopCard(state, target, guid), guid);
+			discardCard(state, target, getTopCard(state, target, guid), guid);
+			discardCard(state, target, getTopCard(state, target, guid), guid);
+			discardCard(state, target, getTopCard(state, target, guid), guid);
+			discardCard(state, target, getTopCard(state, target, guid), guid);
+			discardCard(state, target, getTopCard(state, target, guid), guid);
+			discardCard(state, target, getTopCard(state, target, guid), guid);
+			discardCard(state, target, getTopCard(state, target, guid), guid);
+			discardCard(state, target, getTopCard(state, target, guid), guid);
 		}
 	},
 	restore_sanity: {
@@ -71,8 +71,8 @@ export const CARD_DATA = Object.fromEntries(Object.entries({
 		effect: function(state, caster, guid)
 		{
 			const target = state.player === caster ? state.enemy : state.player;
-			discardCard(state, target, getTopCard(state, target), guid);
-			discardCard(state, target, getTopCard(state, target), guid);
+			discardCard(state, target, getTopCard(state, target, guid), guid);
+			discardCard(state, target, getTopCard(state, target, guid), guid);
 		}
 	},
 	submit_to_madness: {
@@ -81,7 +81,7 @@ export const CARD_DATA = Object.fromEntries(Object.entries({
 		type: "Action",
 		effect: function(state, caster, guid)
 		{
-			discardCard(state, caster, getTopCard(state, caster), guid);
+			discardCard(state, caster, getTopCard(state, caster, guid), guid);
 			caster.energy += 2;
 		}
 	},
@@ -103,7 +103,7 @@ export const CARD_DATA = Object.fromEntries(Object.entries({
 		effect: function(state, caster, guid)
 		{
 			const target = state.player === caster ? state.enemy : state.player;
-			const played_card = getTopCard(state, target);
+			const played_card = getTopCard(state, target, guid);
 
 			caster.energy++; //increment energy to play the card
 			playCard(state, caster, played_card, guid);
@@ -138,7 +138,7 @@ export const CARD_DATA = Object.fromEntries(Object.entries({
 			// animation not updating when card is being played
 			while(caster.hand.length > 0)
 			{
-				discardCard(state, target, getTopCard(state, target), guid);
+				discardCard(state, target, getTopCard(state, target, guid), guid);
 				caster.deck.push(caster.hand.splice(0, 1)[0]);
 			}
 		}
@@ -150,11 +150,11 @@ export const CARD_DATA = Object.fromEntries(Object.entries({
 		effect: function(state, caster, guid)
 		{
 			if(caster.hand.length > 0)
-				discardCard(state, caster, caster.hand.splice(0, 1)[0]);
+				discardCard(state, caster, caster.hand.splice(0, 1)[0], guid);
 
 			const target = state.player === caster ? state.enemy : state.player;
 			if(target.hand.length > 0)
-				discardCard(state, target, target.hand.splice(0, 1)[0]);
+				discardCard(state, target, target.hand.splice(0, 1)[0], guid);
 
 			drawCard(state, caster, guid);
 		}
@@ -242,7 +242,7 @@ export const CARD_DATA = Object.fromEntries(Object.entries({
 		effect: function(state, caster, guid)
 		{
 			const target = state.player === caster ? state.enemy : state.player;
-			discardCard(state, target, getTopCard(state, target), guid);
+			discardCard(state, target, getTopCard(state, target, guid), guid);
 		}
 	},
 	taste_of_flesh: {
@@ -263,13 +263,13 @@ export const CARD_DATA = Object.fromEntries(Object.entries({
 		effect: function(state, caster, guid)
 		{
 			const target = state.player === caster ? state.enemy : state.player;
-			discardCard(state, target, getTopCard(state, target), guid);
-			discardCard(state, target, getTopCard(state, target), guid);
-			discardCard(state, target, getTopCard(state, target), guid);
+			discardCard(state, target, getTopCard(state, target, guid), guid);
+			discardCard(state, target, getTopCard(state, target, guid), guid);
+			discardCard(state, target, getTopCard(state, target, guid), guid);
 
-			discardCard(state, caster, getTopCard(state, caster), guid);
-			discardCard(state, caster, getTopCard(state, caster), guid);
-			discardCard(state, caster, getTopCard(state, caster), guid);
+			discardCard(state, caster, getTopCard(state, caster, guid), guid);
+			discardCard(state, caster, getTopCard(state, caster, guid), guid);
+			discardCard(state, caster, getTopCard(state, caster, guid), guid);
 		}
 	},
 	shifting_shadows: {
@@ -293,20 +293,17 @@ export const CARD_DATA = Object.fromEntries(Object.entries({
 					drawCard(state, caster, guid);
 				}
 			}
+			else if(state.enemy.deck.length < state.player.deck.length)
+			{
+				const target = state.player === caster ? state.enemy : state.player;
+				discardCard(state, target, getTopCard(state, target), guid);
+				discardCard(state, target, getTopCard(state, target), guid);
+				discardCard(state, target, getTopCard(state, target), guid);
+			}
 			else
 			{
-				if(state.enemy.deck.length < state.player.deck.length)
-				{
-					const target = state.player === caster ? state.enemy : state.player;
-					discardCard(state, target, getTopCard(state, target), guid);
-					discardCard(state, target, getTopCard(state, target), guid);
-					discardCard(state, target, getTopCard(state, target), guid);
-				}
-				else
-				{
-					drawCard(state, caster, guid);
-					drawCard(state, caster, guid);
-				}
+				drawCard(state, caster, guid);
+				drawCard(state, caster, guid);
 			}
 		}
 	},
@@ -325,7 +322,7 @@ export const CARD_DATA = Object.fromEntries(Object.entries({
 		name: "Dark Expanse",
 		description: "Place three 'Dark Expanse' cards on the bottom of your deck",
 		type: "Action",
-		effect: function(state, caster, guid)
+		effect: function(state, caster)
 		{
 			caster.deck.unshift(createCard(CARD_DATA.dark_expanse), createCard(CARD_DATA.dark_expanse), createCard(CARD_DATA.dark_expanse));
 		}
