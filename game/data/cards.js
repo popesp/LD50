@@ -298,38 +298,14 @@ export const CARD_DATA = Object.fromEntries(Object.entries({
 	},
 	shifting_shadows: {
 		name: "Shifting Shadows",
-		description: "If you have less cards in your deck than your enemy, discard the top 3 cards of their deck, otherwise draw 2.",
+		description: "Each player draws a card",
 		type: "Action",
 		class: "Monster",
 		effect: function(state, caster, child)
 		{
-			if(state.caster_current.name === "Player")
-			{
-				if(state.player.deck.length < state.enemy.deck.length)
-				{
-					const target = state.player === caster ? state.enemy : state.player;
-					discardCard(state, target, getTopCard(state, target, child), child);
-					discardCard(state, target, getTopCard(state, target, child), child);
-					discardCard(state, target, getTopCard(state, target, child), child);
-				}
-				else
-				{
-					drawCard(state, caster, child);
-					drawCard(state, caster, child);
-				}
-			}
-			else if(state.enemy.deck.length < state.player.deck.length)
-			{
-				const target = state.player === caster ? state.enemy : state.player;
-				discardCard(state, target, getTopCard(state, target, child), child);
-				discardCard(state, target, getTopCard(state, target, child), child);
-				discardCard(state, target, getTopCard(state, target, child), child);
-			}
-			else
-			{
-				drawCard(state, caster, child);
-				drawCard(state, caster, child);
-			}
+			drawCard(state, caster, child);
+			const target = state.player === caster ? state.enemy : state.player;
+			drawCard(state, target, child);
 		}
 	},
 	encroaching_mist: {
@@ -346,7 +322,7 @@ export const CARD_DATA = Object.fromEntries(Object.entries({
 	},
 	the_inevitable: {
 		name: "The Inevitable",
-		description: "Discard the top 2 cards from the enemy deck",
+		description: "Discard the top 2 cards from the enemy deck, and then draw a card",
 		type: "Action",
 		class: "Monster",
 		effect: function(state, caster, child)
@@ -354,6 +330,7 @@ export const CARD_DATA = Object.fromEntries(Object.entries({
 			const target = state.player === caster ? state.enemy : state.player;
 			discardCard(state, target, getTopCard(state, target, child), child);
 			discardCard(state, target, getTopCard(state, target, child), child);
+			drawCard(state, caster, child);
 		}
 	},
 	dark_expanse: {
