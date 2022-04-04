@@ -37,7 +37,7 @@ export const CARD_DATA = Object.fromEntries(Object.entries({
 	},
 	restore_sanity: {
 		name: "Restore Sanity",
-		description: "Place two 'Self Reflection' cards on the bottom of your deck",
+		description: "Place 2 'Self Reflection' cards on the bottom of your deck",
 		type: "Action",
 		effect: function(state, caster)
 		{
@@ -47,17 +47,17 @@ export const CARD_DATA = Object.fromEntries(Object.entries({
 	},
 	self_reflection: {
 		name: "Self Reflection",
-		description: "Gain one energy, and place a blank card on the top of your deck",
+		description: "Gain 1 energy and place a 'Blank' on the top of your deck",
 		type: "Action",
 		effect: function(state, caster)
 		{
 			// TODO(shawn): animate this
-			caster.deck.push(createCard(CARD_DATA.a_blank));
+			caster.deck.push(createCard(CARD_DATA.blank));
 			caster.energy++;
 		}
 	},
-	a_blank: {
-		name: "A Blank",
+	blank: {
+		name: "Blank",
 		description: "[This card has no effect]",
 		type: "Action",
 		effect: function()
@@ -77,7 +77,7 @@ export const CARD_DATA = Object.fromEntries(Object.entries({
 	},
 	submit_to_madness: {
 		name: "Submit to Madness",
-		description: "Discard the top card of your deck and gain two energy",
+		description: "Discard the top card of your deck and gain 2 energy",
 		type: "Action",
 		effect: function(state, caster, guid)
 		{
@@ -87,7 +87,7 @@ export const CARD_DATA = Object.fromEntries(Object.entries({
 	},
 	deja_vu: {
 		name: "Deja Vu",
-		description: "Place the top card of your discard pile on to the top of your deck",
+		description: "Place the top card of your discard pile on the top of your deck",
 		type: "Action",
 		effect: function(state, caster)
 		{
@@ -130,7 +130,7 @@ export const CARD_DATA = Object.fromEntries(Object.entries({
 	},
 	spilt_beans: {
 		name: "Spilt Beans",
-		description: "discard cards from the enemy deck equal to your hand size, then put your hand on the bottom of your deck",
+		description: "Discard cards from the enemy deck equal to your hand size, then put your hand on the bottom of your deck",
 		type: "Action",
 		effect: function(state, caster, guid)
 		{
@@ -180,7 +180,7 @@ export const CARD_DATA = Object.fromEntries(Object.entries({
 	},
 	feed_the_queen: {
 		name: "Feed the Queen",
-		description: "For the rest of the game, when an enemy discards 2 or more cards from their deck, they also draw a card",
+		description: "For the rest of the game, when the enemy discards 2 or more cards from their deck, they also draw a card",
 		type: "Passive",
 		effect: function(state, caster, guid)
 		{
@@ -198,7 +198,7 @@ export const CARD_DATA = Object.fromEntries(Object.entries({
 	},
 	the_lighthouse: {
 		name: "The Lighthouse",
-		description: "For the rest of the game, at the start of your turn gain an extra action",
+		description: "For the rest of the game, gain 1 energy at the start of each turn",
 		type: "Passive",
 		effect: function(state, caster, guid)
 		{
@@ -207,7 +207,7 @@ export const CARD_DATA = Object.fromEntries(Object.entries({
 	},
 	the_electric_chair: {
 		name: "The Electric Chair",
-		description: "For the rest of the game, at the start of your turn gain two extra actions, but you no longer draw a card for your turn",
+		description: "For the rest of the game, at the start of your turn gain 2 extra actions, but you no longer draw a card for your turn",
 		type: "Passive",
 		effect: function(state, caster, guid)
 		{
@@ -247,7 +247,7 @@ export const CARD_DATA = Object.fromEntries(Object.entries({
 	},
 	taste_of_flesh: {
 		name: "Taste of Flesh",
-		description: "Draw two cards and gain one energy",
+		description: "Draw 2 cards and gain 1 energy",
 		type: "Action",
 		effect: function(state, caster, guid)
 		{
