@@ -5,31 +5,91 @@ export const SHOP_DATA = [
 	{
 		card: CARD_DATA.mind_blast,
 		cost: 1,
-		quantity: 1,
+		quantity: 3,
 		bought: 0
 	},
 	{
 		card: CARD_DATA.cosmic_insight,
 		cost: 2,
-		quantity: 1,
+		quantity: 4,
 		bought: 0
 	},
 	{
 		card: CARD_DATA.mind_worm,
-		cost: 1,
-		quantity: 1,
+		cost: 2,
+		quantity: 10,
+		bought: 0
+	},
+	{
+		card: CARD_DATA.maggot_infestation,
+		cost: 3,
+		quantity: 10,
 		bought: 0
 	},
 	{
 		card: CARD_DATA.submit_to_madness,
 		cost: 2,
-		quantity: 1,
+		quantity: 2,
 		bought: 0
 	},
 	{
 		card: CARD_DATA.self_reflection,
 		cost: 1,
+		quantity: 3,
+		bought: 0
+	},
+	{
+		card: CARD_DATA.restore_sanity,
+		cost: 1,
+		quantity: 3,
+		bought: 0
+	},
+	{
+		card: CARD_DATA.feed_the_queen,
+		cost: 2,
+		quantity: 5,
+		bought: 0
+	},
+	{
+		card: CARD_DATA.hysterical_whispers,
+		cost: 2,
+		quantity: 2,
+		bought: 0
+	},
+	{
+		card: CARD_DATA.gaze_into_abyss,
+		cost: 2,
+		quantity: 2,
+		bought: 0
+	},
+	{
+		card: CARD_DATA.spilt_beans,
+		cost: 3,
+		quantity: 2,
+		bought: 0
+	},
+	{
+		card: CARD_DATA.deja_vu,
+		cost: 1,
+		quantity: 2,
+		bought: 0
+	},
+	{
+		card: CARD_DATA.the_lighthouse,
+		cost: 5,
+		quantity: 1,
+		bought: 0
+	},
+	{
+		card: CARD_DATA.point_of_grace,
+		cost: 2,
 		quantity: 10,
+		bought: 0
+	},
+	{
+		card: CARD_DATA.deja_vu,
+		cost: 1,
+		quantity: 1,
 		bought: 0
 	},
 	{
@@ -38,28 +98,4 @@ export const SHOP_DATA = [
 		quantity: 1,
 		bought: 0
 	},
-	{
-		card: CARD_DATA.restore_sanity,
-		cost: 1,
-		quantity: 1,
-		bought: 0
-	},
-	{
-		card: CARD_DATA.the_lighthouse,
-		cost: 10,
-		quantity: 1,
-		bought: 0
-	},
-	{
-		card: CARD_DATA.gaze_into_abyss,
-		cost: 1,
-		quantity: 1,
-		bought: 0
-	},
-	{
-		card: CARD_DATA.deja_vu,
-		cost: 1,
-		quantity: 1,
-		bought: 0
-	}
 ];

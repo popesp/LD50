@@ -14,6 +14,8 @@ const Y_ITEMSPACING = 60;
 
 const Y_ITEMSTART = 300;
 
+const ANCHOR_X = 300;
+const ANCHOR_Y = 310;
 
 function buyItem(item)
 {
@@ -67,11 +69,19 @@ export default new Phaser.Class({
 		// gold amount
 		text_gold = this.add.text(WIDTH_CANVAS - PADDING_CANVAS*2, PADDING_CANVAS*2, "Gold: " + GameState.currency, {color: "white", fontSize: "40px"}).setOrigin(1, 0);
 
+		const display_shop = [];
+		for(let i = 0; i < SHOP_DATA.length; ++i)
+		{
+			if(SHOP_DATA[i].bought !== SHOP_DATA[i].quantity)
+			{
+				display_shop.push(SHOP_DATA[i])
+			}
+		}
 		// purchasable cards
 		const x_itemstart = WIDTH_CANVAS/2 - (ITEMS_PER_ROW - 1)*(WIDTH_CARD + X_ITEMSPACING)/2;
-		for(let index_item = 0; index_item < SHOP_DATA.length; ++index_item)
+		for(let index_item = 0; index_item < display_shop.length; ++index_item)
 		{
-			const item = SHOP_DATA[index_item];
+			const item = display_shop[index_item];
 			const row = Math.floor(index_item/ITEMS_PER_ROW);
 			const col = index_item%ITEMS_PER_ROW;
 

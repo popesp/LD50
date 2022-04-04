@@ -88,13 +88,13 @@ export function drawCard(state, caster, guid)
 	//rope burn replacement effect
 	if(caster.handlimit === caster.hand.length && state.triggers.hand_size_discard.length > 0)
 	{
-		log("in here");
 		for(const trigger of state.triggers.hand_size_discard)
 		{
 			if(state.caster_winner !== null)
 				return;
 			trigger.effect(state, caster, trigger.owner);
 		}
+		return;
 	}
 
 	const card = getTopCard(state, caster, guid);

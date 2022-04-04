@@ -35,18 +35,43 @@ const ENCOUNTERS = [
 	{
 		name: "Grokthur's Demonic Embrace",
 		source_deck: [
-			...new Array(0).fill(CARD_DATA.taste_of_flesh),
-			...new Array(100).fill(CARD_DATA.dark_expanse),
-			...new Array(0).fill(CARD_DATA.submit_to_madness)
+			...new Array(10).fill(CARD_DATA.bump_in_the_night),
 		],
 		starting_passives: [],
-		bounty: 1
+		bounty: 2
 	},
 	{
 		name: "Demetrion's Horrid Palace",
-		source_deck: [...new Array(4).fill(CARD_DATA.taste_of_flesh), ...new Array(4).fill(CARD_DATA.bump_in_the_night), ...new Array(4).fill(CARD_DATA.submit_to_madness)],
-		starting_passives: [PASSIVE_DATA.mind_worm],
-		bounty: 2
+		source_deck: [
+			...new Array(3).fill(CARD_DATA.taste_of_flesh),
+			...new Array(10).fill(CARD_DATA.eye_for_an_eye),
+		],
+		starting_passives: [],
+		bounty: 4
+	},
+	{
+		name: "baddie",
+		source_deck: [
+			...new Array(15).fill(CARD_DATA.shifting_shadows),
+		],
+		starting_passives: [],
+		bounty: 8
+	},
+	{
+		name: "spooky",
+		source_deck: [
+			...new Array(8).fill(CARD_DATA.dark_expanse),
+		],
+		starting_passives: [],
+		bounty: 16,
+	},
+	{
+		name: "another guy",
+		source_deck: [
+			...new Array(30).fill(CARD_DATA.encroaching_mist),
+		],
+		starting_passives: [],
+		bounty: 32,
 	},
 	{
 		name: "The End of All Things",
@@ -259,6 +284,10 @@ function redrawBoard(state_run, scene)
 	for(const obj of gameObjects)
 		obj.destroy();
 	gameObjects = [];
+
+	// bounty text
+	const bounty_text = scene.add.text(0, HEIGHT_CANVAS/2, `Gold Bounty: ${state.enemy.bounty}`, {color: "white", fontSize: "18px"});
+	gameObjects.push(bounty_text);
 
 	// player deck
 	const player_deck_container = scene.add.container(
