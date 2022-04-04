@@ -42,7 +42,7 @@ export const PASSIVE_DATA = Object.fromEntries(Object.entries({
 	},
 	mind_flood: {
 		name: "Mind Flood",
-		description: "For the rest of the game, if your opponent discards a card, they discard an additional card",
+		description: "For the rest of the game, if your opponent discards a card from their deck, they discard an additional card",
 		type: "relic",
 		triggers: [
 			{

@@ -56,7 +56,7 @@ export default new Phaser.Class({
 		this.load.image("card_spilled_beans", "assets/card-art/spilled-beans.png");
 		this.load.image("card_eye_for_an_eye", "assets/card-art/eye-for-an-eye.png");
 		this.load.image("card_shifting_shadows", "assets/card-art/shifting-shadows.png");
-		this.load.image("card_encroaching_mist", "assets/card-art/encroaching-mist.png");
+		this.load.image("card_the_inevitable", "assets/card-art/encroaching-mist.png");
 		this.load.image("card_dark_expanse", "assets/card-art/dark-expanse.png");
 		this.load.image("card_candles_flicker", "assets/card-art/candles-flicker.png");
 		this.load.image("card_rope_burn", "assets/card-art/rope-burn.png");
@@ -72,7 +72,7 @@ export default new Phaser.Class({
 		this.music.play();
 
 		// TITLE TEXT
-		const title_text = this.add.text(WIDTH_CANVAS/2, PADDING_CANVAS*6.66, "Cards of the Cosmos", {fontFamily: FONT_TITLE, color: "white", fontSize: "50px"});
+		const title_text = this.add.text(WIDTH_CANVAS/2, PADDING_CANVAS*6.66, "CARDS OF THE COSMOS", {fontFamily: FONT_TITLE, color: "white", fontSize: "50px"});
 		title_text.setOrigin(0.5);
 
 		// Start New Run Button
@@ -105,6 +105,8 @@ export default new Phaser.Class({
 				index_encounter: 0,
 				state_encounter: null
 			};
+
+			this.sound.play("button-press");
 			this.music.stop();
 			this.scene.start("encounter_scene");
 		});
@@ -137,6 +139,7 @@ export default new Phaser.Class({
 		how_to_play_container.setInteractive({useHandCursor: true});
 		how_to_play_container.on("pointerdown", () =>
 		{
+			this.sound.play("button-press");
 			this.scene.start("how_to_play");
 			this.music.stop();
 		});

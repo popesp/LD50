@@ -21,13 +21,13 @@ export const SHOP_DATA = [
 	// 	bought: 0
 	// },
 	{
-		card: CARD_DATA.see_beyond,
+		card: CARD_DATA.mind_flood,
 		cost: 2,
 		quantity: 5,
 		bought: 0
 	},
 	{
-		card: CARD_DATA.mind_flood,
+		card: CARD_DATA.see_beyond,
 		cost: 2,
 		quantity: 5,
 		bought: 0

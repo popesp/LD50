@@ -30,6 +30,7 @@ export default new Phaser.Class({
 		{
 			this.music.stop();
 			this.scene.start("main_menu");
+			this.sound.play("button-press");
 		});
 
 		// Text
@@ -38,6 +39,7 @@ export default new Phaser.Class({
 		// \nGameplay:\n\
 		const help_text = this.add.text(100, 200,
 			"			Click on cards in your hand to play them\n\
+			Every card cost 1 action energy to play\n\
 			Try to make your opponent run out of cards before you do\n\
 			Use STATIC cards to create persistent effects on the field\n\
 			Gain gold by deating enemies and spend it in the CARD SHOP\n\
