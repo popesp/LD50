@@ -52,7 +52,7 @@ export default new Phaser.Class({
 		this.sound.add("buy-card");
 
 		// TITLE TEXT
-		const title_text = this.add.text(WIDTH_CANVAS/2, PADDING_CANVAS*2, "CARD SHOP", {color: "white", fontSize: "40px"});
+		const title_text = this.add.text(WIDTH_CANVAS/2, PADDING_CANVAS*2, "CARD SHOP", {fontFamily: "insert font", color: "white", fontSize: "40px"});
 		title_text.setOrigin(0.5, 0);
 
 		// Back Button
@@ -69,7 +69,7 @@ export default new Phaser.Class({
 		});
 
 		// gold amount
-		text_gold = this.add.text(WIDTH_CANVAS - PADDING_CANVAS*2, PADDING_CANVAS*2, "Gold: " + GameState.currency, {color: "white", fontSize: "40px"}).setOrigin(1, 0);
+		text_gold = this.add.text(WIDTH_CANVAS - PADDING_CANVAS*2, PADDING_CANVAS*2, "Gold: " + GameState.currency, {fontFamily: "insert font", color: "white", fontSize: "40px"}).setOrigin(1, 0);
 
 		const display_shop = [];
 		for(let i = 0; i < SHOP_DATA.length; ++i)
@@ -92,8 +92,8 @@ export default new Phaser.Class({
 
 			const cardcontainer = makeCardContainer(this, item.card, ITEM_X, ITEM_Y);
 
-			cardcontainer.add(this.add.text(0, -(HEIGHT_CARD/2 + PADDING_CARD), `Cost: ${item.cost}`, {color: "white", fontSize: "20px"}).setOrigin(0.5, 1));
-			item.availability = this.add.text(0, HEIGHT_CARD/2 + PADDING_CARD, `${item.bought}/${item.quantity}`, {color: "white", fontSize: "20px"}).setOrigin(0.5, 0);
+			cardcontainer.add(this.add.text(0, -(HEIGHT_CARD/2 + PADDING_CARD), `Cost: ${item.cost}`, {fontFamily: "insert font", color: "white", fontSize: "20px"}).setOrigin(0.5, 1));
+			item.availability = this.add.text(0, HEIGHT_CARD/2 + PADDING_CARD, `${item.bought}/${item.quantity}`, {fontFamily: "insert font", color: "white", fontSize: "20px"}).setOrigin(0.5, 0);
 			cardcontainer.add(item.availability);
 
 			cardcontainer.setInteractive({useHandCursor: true}).on("pointerdown", () => buyItem(item, this));

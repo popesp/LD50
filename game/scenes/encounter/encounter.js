@@ -308,15 +308,11 @@ function redrawBoard(state_run, scene)
 		obj.destroy();
 	gameObjects = [];
 
-	// bounty text
-	const bounty_text = scene.add.text(0, HEIGHT_CANVAS/2, `Gold Bounty: ${state.enemy.bounty}`, {color: "white", fontSize: "18px"});
-	gameObjects.push(bounty_text);
-
 	// player deck
 	const player_deck_container = scene.add.container(
 		PADDING_CANVAS + WIDTH_CARD/2,
 		HEIGHT_CANVAS - PADDING_CANVAS - HEIGHT_CARD/2 - 0,
-		[scene.add.text(0, -OFFSET_DECKCOUNT, state.player.deck.length, {color: "white", fontSize: "24px"}).setOrigin(0.5, 1)]
+		[scene.add.text(0, -OFFSET_DECKCOUNT, state.player.deck.length, {fontFamily: "insert font", color: "white", fontSize: "24px"}).setOrigin(0.5, 1)]
 	);
 	if(state.player.deck.length > 0)
 		player_deck_container.add(scene.add.image(0, 0, "player_back").setDisplaySize(WIDTH_CARD, HEIGHT_CARD));
@@ -328,7 +324,7 @@ function redrawBoard(state_run, scene)
 	const enemy_deck_container = scene.add.container(
 		PADDING_CANVAS + WIDTH_CARD/2,
 		PADDING_CANVAS + HEIGHT_CARD/2,
-		[scene.add.text(0, OFFSET_DECKCOUNT, length_text, {color: "white", fontSize: font_size}).setOrigin(0.5, 0)]
+		[scene.add.text(0, OFFSET_DECKCOUNT, length_text, {fontFamily: "insert font", color: "white", fontSize: font_size}).setOrigin(0.5, 0)]
 	);
 	if(state.enemy.deck.length > 0)
 		enemy_deck_container.add(scene.add.image(0, 0, "enemy_back").setDisplaySize(WIDTH_CARD, HEIGHT_CARD));
@@ -356,7 +352,7 @@ function redrawBoard(state_run, scene)
 		const button = scene.add.image(0, 0, "button");
 		button.setDisplaySize(WIDTH_END_BUTTON, HEIGHT_END_BUTTON);
 
-		const end_text = scene.add.text(0, 0, "END TURN", {color: "black", fontSize: "18px"});
+		const end_text = scene.add.text(0, 0, "END TURN", {fontFamily: "insert font", color: "black", fontSize: "18px"});
 		end_text.setOrigin(0.5);
 
 		const end_turn_btn_container = scene.add.container(WIDTH_CANVAS - PADDING_CANVAS - WIDTH_END_BUTTON/2, HEIGHT_CANVAS/2, [button, end_text]);
@@ -381,14 +377,14 @@ function redrawBoard(state_run, scene)
 	// player
 	const player_energy_icon = scene.add.image(0, 0, "energy");
 	player_energy_icon.setDisplaySize(25, 25);
-	const player_energy_text = scene.add.text(15, 0, state.player.energy, {color: "white", fontSize: "18px"});
+	const player_energy_text = scene.add.text(15, 0, state.player.energy, {fontFamily: "insert font", color: "white", fontSize: "18px"});
 	player_energy_text.setOrigin(0, 0.5);
 	const player_energy_container = scene.add.container(WIDTH_CANVAS - PADDING_CANVAS - 50, HEIGHT_CANVAS/2 + 50, [player_energy_icon, player_energy_text]);
 	gameObjects.push(player_energy_container);
 	// enemy
 	const enemy_energy_icon = scene.add.image(0, 0, "energy");
 	enemy_energy_icon.setDisplaySize(25, 25);
-	const enemy_energy_text = scene.add.text(15, 0, state.enemy.energy, {color: "white", fontSize: "18px"});
+	const enemy_energy_text = scene.add.text(15, 0, state.enemy.energy, {fontFamily: "insert font", fontFamily: "insert font", color: "white", fontSize: "18px"});
 	enemy_energy_text.setOrigin(0, 0.5);
 	const enemy_energy_container = scene.add.container(WIDTH_CANVAS - PADDING_CANVAS - 50, HEIGHT_CANVAS/2 - 50, [enemy_energy_icon, enemy_energy_text]);
 	gameObjects.push(enemy_energy_container);
@@ -406,9 +402,9 @@ function redrawBoard(state_run, scene)
 	{
 		const passive = state.passives[index_passive];
 		if(passive.owner === state.enemy)
-			gameObjects.push(scene.add.text(enemy_passive_start.x, enemy_passive_start.y + (10 * index_passive), passive.config.name, {color: "white", fontSize: "12px", align: "center"}));
+			gameObjects.push(scene.add.text(enemy_passive_start.x, enemy_passive_start.y + (10 * index_passive), passive.config.name, {fontFamily: "insert font", color: "white", fontSize: "12px", align: "center"}));
 		else
-			gameObjects.push(scene.add.text(player_passive_start.x, player_passive_start.y + (10 * index_passive), passive.config.name, {color: "white", fontSize: "12px", align: "center"}));
+			gameObjects.push(scene.add.text(player_passive_start.x, player_passive_start.y + (10 * index_passive), passive.config.name, {fontFamily: "insert font", color: "white", fontSize: "12px", align: "center"}));
 	}
 
 	if(state.caster_winner !== null)
@@ -419,7 +415,7 @@ function redrawBoard(state_run, scene)
 			if(GameState.state_run.index_encounter === ENCOUNTERS.length-1)
 				victory_text = "Congratulations! You have delayed the inevitable...for all time...";
 
-			const game_end_text = scene.add.text(WIDTH_CANVAS/2, HEIGHT_CANVAS/2, victory_text, {color: "white", fontSize: "32px", align: "center"}).setOrigin(0.5);
+			const game_end_text = scene.add.text(WIDTH_CANVAS/2, HEIGHT_CANVAS/2, victory_text, {fontFamily: "insert font", color: "white", fontSize: "32px", align: "center"}).setOrigin(0.5);
 			gameObjects.push(game_end_text);
 
 			if(GameState.state_run.index_encounter !== ENCOUNTERS.length-1)
@@ -427,7 +423,7 @@ function redrawBoard(state_run, scene)
 				const btn_next = scene.add.image(0, 0, "button");
 				btn_next.setDisplaySize(WIDTH_END_BUTTON, HEIGHT_END_BUTTON);
 
-				const text_next = scene.add.text(0, 0, "Next", {color: "black", fontSize: "18px"});
+				const text_next = scene.add.text(0, 0, "Next", {fontFamily: "insert font", color: "black", fontSize: "18px"});
 				text_next.setOrigin(0.5);
 
 				const btn_next_container = scene.add.container(WIDTH_CANVAS/2, HEIGHT_CANVAS/2 + 50, [btn_next, text_next]);
@@ -446,13 +442,13 @@ function redrawBoard(state_run, scene)
 		{
 			const lose_text = state.enemy.isFinalBoss ? `You lost...but perhaps there is still hope. You gained ${state.enemy.bounty} gold.` : "You Lose";
 			state.player.currency += state.enemy.bounty;
-			const game_end_text = scene.add.text(WIDTH_CANVAS/2, HEIGHT_CANVAS/2, lose_text, {color: "white", fontSize: "32px", align: "center"}).setOrigin(0.5);
+			const game_end_text = scene.add.text(WIDTH_CANVAS/2, HEIGHT_CANVAS/2, lose_text, {fontFamily: "insert font", color: "white", fontSize: "32px", align: "center"}).setOrigin(0.5);
 			gameObjects.push(game_end_text);
 
 			const btn_menu = scene.add.image(0, 0, "button");
 			btn_menu.setDisplaySize(WIDTH_END_BUTTON*2, HEIGHT_END_BUTTON);
 
-			const text_menu = scene.add.text(0, 0, "Main Menu", {color: "black", fontSize: "18px"});
+			const text_menu = scene.add.text(0, 0, "Main Menu", {fontFamily: "insert font", color: "black", fontSize: "18px"});
 			text_menu.setOrigin(0.5);
 
 			const btn_menu_container = scene.add.container(WIDTH_CANVAS/2, HEIGHT_CANVAS/2 + 50, [btn_menu, text_menu]);

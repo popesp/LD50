@@ -17,7 +17,7 @@ export default new Phaser.Class({
 		this.music.play();
 
 		// TITLE TEXT
-		const title_text = this.add.text(WIDTH_CANVAS/2, PADDING_CANVAS*2, "HOW TO PLAY", {color: "white", fontSize: "40px"});
+		const title_text = this.add.text(WIDTH_CANVAS/2, PADDING_CANVAS*2, "HOW TO PLAY", {fontFamily: "insert font", color: "white", fontSize: "40px"});
 		title_text.setOrigin(0.5, 0);
 
 		// Back Button
@@ -41,7 +41,7 @@ export default new Phaser.Class({
 			2. Use STATIC cards to create persistent effects on the field\n\
 			3. Gain gold by deating enemies and spend it in the CARD SHOP\n\
 			4. Find a way to defeat THE END OF ALL THINGS with his INFINITE deck...",
-			{color: "white", fontSize: "24px"});
+			{fontFamily: "insert font", color: "white", fontSize: "24px"});
 		help_text.setOrigin(0, 0);
 	}
 });
