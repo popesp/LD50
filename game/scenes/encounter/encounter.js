@@ -486,7 +486,7 @@ export default new Phaser.Class({
 		this.load.audio("play_card", "assets/sounds/play-card.mp3");
 		this.load.audio("remove_card", "assets/sounds/remove-card.mp3");
 		this.load.audio("button-press", "assets/sounds/button-press.mp3");
-
+		this.load.audio("invalid_action", "assets/sounds/invalid-action.mp3");
 	},
 	create: function()
 	{

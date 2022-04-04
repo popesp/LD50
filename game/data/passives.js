@@ -154,7 +154,6 @@ export const PASSIVE_DATA = Object.fromEntries(Object.entries({
 				action: "hand_size_discard",
 				effect: function(state, caster, owner, child)
 				{
-					log("in here!!!");
 					if(caster !== owner)
 					{
 						discardCard(state, caster, getTopCard(state, caster, child), child);

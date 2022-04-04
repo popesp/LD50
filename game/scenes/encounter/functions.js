@@ -171,8 +171,23 @@ export function drawCard(state, caster, child)
 export function playCard(state, caster, card, child)
 {
 	state.turn_actions++;
-	if(caster.energy === 0 || state.caster_current !== caster || state.caster_winner !== null)
+
+	if(caster.energy === 0 && state.caster_current.name === "Player")
+	{
+		//please make this sound play shawn
+		log("fuck this :'(");
+		state.controller.wrap(child, [], 
+		function()
+		{
+		}, "invalid_action");
 		return;
+	}
+
+	if(state.caster_current !== caster || state.caster_winner !== null)
+	{
+		return;
+	}
+		
 
 	if(caster === state.enemy)
 	{

@@ -225,7 +225,7 @@ export const CARD_DATA = Object.fromEntries(Object.entries({
 	},
 	the_electric_chair: {
 		name: "The Electric Chair",
-		description: "For the rest of the game, at the start of your turn gain 2 extra actions, but you no longer draw a card for your turn",
+		description: "For the rest of the game, at the start of your turn gain 2 extra energy, but you no longer draw a card for your turn",
 		type: "Passive",
 		class: "Player",
 		effect: function(state, caster, child)
