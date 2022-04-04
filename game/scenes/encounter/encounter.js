@@ -87,43 +87,38 @@ const ENCOUNTERS = [
 function StateController(scene)
 {
 	this.scene = scene;
-	this.queue = [];
 	this.node_current = null;
+	this.root = {parent: null, queue: []};
 }
 
 StateController.prototype.wrap = function(child, tc_before = [], tc_after = [], fn)
 {
-	const node = {fn, tc_before, tc_after, queue: [], parent: null};
+	const node = {fn, tc_before, tc_after, queue: [], parent: this.root};
 
 	if(child && this.node_current !== null)
 	{
 		node.parent = this.node_current;
 		this.node_current.queue.push(node);
 	}
-	else if(this.node_current.parent !== null)
+	else if(this.node_current !== null)
 		this.node_current.parent.queue.push(node);
 	else
-		this.queue.push(node);
+		this.root.queue.push(node);
 
 	if(this.node_current === null)
-		this.process(this.queue);
+		this.process(this.root);
 };
 
-StateController.prototype.process = function(queue)
+StateController.prototype.process = function(parent)
 {
 	const controller = this;
-
-	controller.node_current = queue.shift() ?? null;
+	controller.node_current = parent.queue.shift() ?? null;
 	if(controller.node_current === null)
 	{
-		if(controller.node_current.parent !== null)
-		{
-			controller.node_current = parent;
-			queue = controller.node_current.parent?.queue ?? controller.queue;
-			controller.process(queue);
-
-			return;
-		}
+		if(parent.parent !== null)
+			controller.process(parent.parent);
+		
+		return;
 	}
 
 	let tweens_before = controller.node_current.tc_before.map(config => controller.scene.tweens.add({
@@ -137,10 +132,10 @@ StateController.prototype.process = function(queue)
 				controller.node_current.fn?.();
 
 				if(controller.node_current.queue.length > 0)
-					queue = controller.node_current.queue;
+					parent = controller.node_current;
 
 				controller.node_current = null;
-				controller.process(queue);
+				controller.process(parent);
 			}
 		}
 	}));

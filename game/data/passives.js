@@ -3,6 +3,24 @@ import {log} from "../debug.js";
 
 
 export const PASSIVE_DATA = {
+	fuck_yo_deck: {
+		name: "Git Fuk",
+		description: "When opponent discards, draw a card",
+		type: "relic",
+		key: "fuck_yo_deck",
+		triggers: [
+			{
+				action: "discard",
+				effect: function(state, caster, owner, child)
+				{
+					if(caster !== owner)
+					{
+						drawCard(state, owner, child);
+					}
+				}
+			}
+		]
+	},
 	flawed_wisdom: {
 		name: "Flawed Wisdom",
 		description: "Everytime your opponent draws a card, discard a card from the top of their deck",

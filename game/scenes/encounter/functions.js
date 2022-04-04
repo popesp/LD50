@@ -51,7 +51,7 @@ export function getTopCard(state, caster, child)
 	return card;
 }
 
-export function discardCard(state, caster, card, child)
+export function discardCard(state, caster, card, child, activate_triggers = true)
 {
 	const anim_duration = caster.drawn_cards > 10 ? DURATION_DISCARD*5 / (caster.drawn_cards-10) : DURATION_DISCARD*5;
 
@@ -72,12 +72,13 @@ export function discardCard(state, caster, card, child)
 		{
 			caster.discard_pile.push(card);
 
-			for(const trigger of state.triggers.discard)
-			{
-				if(state.caster_winner !== null)
-					return;
-				trigger.effect(state, caster, trigger.owner, child);
-			}
+			if(activate_triggers)
+				for(const trigger of state.triggers.discard)
+				{
+					if(state.caster_winner !== null)
+						return;
+					trigger.effect(state, caster, trigger.owner, child);
+				}
 
 			state.needs_update = true;
 		});
@@ -108,7 +109,7 @@ export function drawCard(state, caster, child)
 	const anim_duration = caster.drawn_cards > 10 ? DURATION_DRAW / (caster.drawn_cards-10) : DURATION_DRAW;
 
 	if(caster.handlimit === caster.hand.length)
-		discardCard(state, caster, card, child);
+		discardCard(state, caster, card, child, false);
 	else
 	{
 		const min_x = WIDTH_CANVAS/2 - caster.hand.length*(WIDTH_CARD/2 + SPACING_CARD/2);
@@ -179,6 +180,6 @@ export function playCard(state, caster, card, child)
 	{
 		card.effect.bind(card)(state, caster, true);
 		log(`${caster.name} played a ${card.name}`);
-		discardCard(state, caster, card, false);
+		discardCard(state, caster, card, false, false);
 	});
 }
