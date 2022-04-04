@@ -292,9 +292,9 @@ export const CARD_DATA = Object.fromEntries(Object.entries({
 				if(state.player.deck.length < state.enemy.deck.length)
 				{
 					const target = state.player === caster ? state.enemy : state.player;
-					discardCard(state, target, getTopCard(state, target), child);
-					discardCard(state, target, getTopCard(state, target), child);
-					discardCard(state, target, getTopCard(state, target), child);
+					discardCard(state, target, getTopCard(state, target, child), child);
+					discardCard(state, target, getTopCard(state, target, child), child);
+					discardCard(state, target, getTopCard(state, target, child), child);
 				}
 				else
 				{
@@ -305,9 +305,9 @@ export const CARD_DATA = Object.fromEntries(Object.entries({
 			else if(state.enemy.deck.length < state.player.deck.length)
 			{
 				const target = state.player === caster ? state.enemy : state.player;
-				discardCard(state, target, getTopCard(state, target), child);
-				discardCard(state, target, getTopCard(state, target), child);
-				discardCard(state, target, getTopCard(state, target), child);
+				discardCard(state, target, getTopCard(state, target, child), child);
+				discardCard(state, target, getTopCard(state, target, child), child);
+				discardCard(state, target, getTopCard(state, target, child), child);
 			}
 			else
 			{
@@ -324,7 +324,7 @@ export const CARD_DATA = Object.fromEntries(Object.entries({
 		{
 			const target = state.player === caster ? state.enemy : state.player;
 			for(let i = 1; i < caster.turn_count; i++)
-				discardCard(state, target, getTopCard(state, target), child);
+				discardCard(state, target, getTopCard(state, target, child), child);
 		}
 	},
 	dark_expanse: {

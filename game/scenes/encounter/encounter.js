@@ -52,30 +52,30 @@ const ENCOUNTERS = [
 		starting_passives: [],
 		bounty: 4
 	},
-	{
-		name: "baddie",
-		source_deck: [
-			...new Array(15).fill(CARD_DATA.shifting_shadows)
-		],
-		starting_passives: [],
-		bounty: 8
-	},
-	{
-		name: "spooky",
-		source_deck: [
-			...new Array(8).fill(CARD_DATA.dark_expanse)
-		],
-		starting_passives: [],
-		bounty: 16
-	},
-	{
-		name: "another guy",
-		source_deck: [
-			...new Array(30).fill(CARD_DATA.encroaching_mist)
-		],
-		starting_passives: [],
-		bounty: 32
-	},
+	// {
+	// 	name: "baddie",
+	// 	source_deck: [
+	// 		...new Array(15).fill(CARD_DATA.shifting_shadows)
+	// 	],
+	// 	starting_passives: [],
+	// 	bounty: 8
+	// },
+	// {
+	// 	name: "spooky",
+	// 	source_deck: [
+	// 		...new Array(8).fill(CARD_DATA.dark_expanse)
+	// 	],
+	// 	starting_passives: [],
+	// 	bounty: 16
+	// },
+	// {
+	// 	name: "another guy",
+	// 	source_deck: [
+	// 		...new Array(30).fill(CARD_DATA.encroaching_mist)
+	// 	],
+	// 	starting_passives: [],
+	// 	bounty: 32
+	// },
 	{
 		name: "The End of All Things",
 		source_deck: [...new Array(4).fill(CARD_DATA.mind_blast)],
