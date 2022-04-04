@@ -35,47 +35,47 @@ const DEFAULT_ENERGY = 1;
 let gameObjects = [];
 
 const ENCOUNTERS = [
-	// {
-	// 	name: "Grokthur's Demonic Embrace",
-	// 	source_deck: [
-	// 		...new Array(10).fill(CARD_DATA.bump_in_the_night)
-	// 	],
-	// 	starting_passives: [],
-	// 	bounty: 2
-	// },
-	// {
-	// 	name: "Demetrion's Horrid Palace",
-	// 	source_deck: [
-	// 		...new Array(2).fill(CARD_DATA.taste_of_flesh),
-	// 		...new Array(12).fill(CARD_DATA.eye_for_an_eye)
-	// 	],
-	// 	starting_passives: [],
-	// 	bounty: 4
-	// },
-	// {
-	// 	name: "baddie",
-	// 	source_deck: [
-	// 		...new Array(15).fill(CARD_DATA.shifting_shadows)
-	// 	],
-	// 	starting_passives: [],
-	// 	bounty: 8
-	// },
-	// {
-	// 	name: "spooky",
-	// 	source_deck: [
-	// 		...new Array(8).fill(CARD_DATA.dark_expanse)
-	// 	],
-	// 	starting_passives: [],
-	// 	bounty: 16
-	// },
-	// {
-	// 	name: "another guy",
-	// 	source_deck: [
-	// 		...new Array(30).fill(CARD_DATA.encroaching_mist)
-	// 	],
-	// 	starting_passives: [],
-	// 	bounty: 32
-	// },
+	{
+		name: "Grokthur's Demonic Embrace",
+		source_deck: [
+			...new Array(10).fill(CARD_DATA.bump_in_the_night)
+		],
+		starting_passives: [],
+		bounty: 2
+	},
+	{
+		name: "Demetrion's Horrid Palace",
+		source_deck: [
+			...new Array(2).fill(CARD_DATA.taste_of_flesh),
+			...new Array(12).fill(CARD_DATA.eye_for_an_eye)
+		],
+		starting_passives: [],
+		bounty: 4
+	},
+	{
+		name: "baddie",
+		source_deck: [
+			...new Array(15).fill(CARD_DATA.shifting_shadows)
+		],
+		starting_passives: [],
+		bounty: 8
+	},
+	{
+		name: "spooky",
+		source_deck: [
+			...new Array(8).fill(CARD_DATA.dark_expanse)
+		],
+		starting_passives: [],
+		bounty: 16
+	},
+	{
+		name: "another guy",
+		source_deck: [
+			...new Array(30).fill(CARD_DATA.encroaching_mist)
+		],
+		starting_passives: [],
+		bounty: 32
+	},
 	{
 		name: "The End of All Things",
 		source_deck: [...new Array(4).fill(CARD_DATA.mind_blast)],
@@ -117,14 +117,6 @@ StateController.prototype.wrap = function(child, tc_before = [], fn, sound)
 
 StateController.prototype.process = function(parent)
 {
-	// let parent_length = 0;
-	// let current_shit = parent;
-	// while(current_shit)
-	// {
-	// 	current_shit = parent.parent;
-	// 	parent_length++;
-	// }
-	// console.log(parent_length)
 	const controller = this;
 	controller.node_current = parent.queue.shift() ?? null;
 	if(controller.node_current === null)
@@ -229,8 +221,7 @@ function startEncounter(state_run, encounter, scene)
 			X_DECK: X_DECK_PLAYER,
 			Y_DECK: Y_DECK_PLAYER,
 			X_PLAY: X_PLAY_PLAYER,
-			Y_PLAY: Y_PLAY_PLAYER,
-			drawn_cards: 0
+			Y_PLAY: Y_PLAY_PLAYER
 		},
 		enemy: {
 			name: "Enemy",
@@ -249,8 +240,7 @@ function startEncounter(state_run, encounter, scene)
 			X_DECK: X_DECK_ENEMY,
 			Y_DECK: Y_DECK_ENEMY,
 			X_PLAY: X_PLAY_ENEMY,
-			Y_PLAY: Y_PLAY_ENEMY,
-			drawn_cards: 0
+			Y_PLAY: Y_PLAY_ENEMY
 		},
 		triggers: {
 			draw: [],
@@ -261,7 +251,8 @@ function startEncounter(state_run, encounter, scene)
 			start_turn: []
 		},
 		passives: [],
-		controller: new StateController(scene)
+		controller: new StateController(scene),
+		turn_actions: 0
 	};
 
 	log("=== Starting encounter ===");
@@ -287,9 +278,9 @@ function startEncounter(state_run, encounter, scene)
 function startTurn(state, caster)
 {
 	caster.turn_count ++;
+	state.turn_actions = 0;
 
 	log(`Starting ${caster.name}'s turn`);
-	caster.drawn_cards = 0;
 
 	// Increment bounty for final boss
 	if(caster === state.enemy && state.enemy.isFinalBoss)
