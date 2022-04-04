@@ -10,10 +10,6 @@ export default new Phaser.Class({
 	{
 		Phaser.Scene.call(this, {"key": "how_to_play"});
 	},
-	preload: function()
-	{
-
-	},
 	create: function()
 	{
 		this.music = this.sound.add("spook");
@@ -47,9 +43,5 @@ export default new Phaser.Class({
 			4. Find a way to defeat THE END OF ALL THINGS with his INFINITE deck...",
 			{color: "white", fontSize: "24px"});
 		help_text.setOrigin(0, 0);
-	},
-	update: function()
-	{
-
 	}
 });

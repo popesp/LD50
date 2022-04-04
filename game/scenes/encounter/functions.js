@@ -25,7 +25,7 @@ function calculate_animation_duration(base_duration, num_actions)
 	else if(num_actions >= MAX_ACTION_SPEED_COUNT)
 		return base_duration * MAX_DURATION_MULTIPLIER;
 
-	return base_duration
+	return base_duration;
 }
 
 function determineWinner(state, caster)
@@ -46,7 +46,7 @@ function determineWinner(state, caster)
 export function getTopCard(state, caster, child)
 {
 	// Generate "infinite" deck for final boss
-	const card = caster.isFinalBoss ?  createCard(caster.deck[Random.int(0, caster.deck.length)]) : caster.deck.pop();
+	const card = caster.isFinalBoss ? createCard(caster.deck[Random.int(0, caster.deck.length)]) : caster.deck.pop();
 	if(card === undefined)
 	{
 		if(state.caster_winner === null)
@@ -63,10 +63,7 @@ export function getTopCard(state, caster, child)
 		duration: calculate_animation_duration(DURATION_LIFT, state.turn_actions),
 		x: WIDTH_CANVAS/2,
 		y: HEIGHT_CANVAS/2
-	}],
-	function(){},
-	"draw_card"
-	);
+	}], null, "draw_card");
 
 	return card;
 }
@@ -101,8 +98,7 @@ export function discardCard(state, caster, card, child, activate_triggers = true
 				}
 
 			state.needs_update = true;
-		},
-		"remove_card");
+		}, "remove_card");
 	}
 }
 
@@ -211,7 +207,5 @@ export function playCard(state, caster, card, child)
 		card.effect.bind(card)(state, caster, true);
 		log(`${caster.name} played a ${card.name}`);
 		discardCard(state, caster, card, false, false);
-	},
-	"play_card"
-	);
+	}, "play_card");
 }

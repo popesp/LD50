@@ -1,6 +1,5 @@
 import {PASSIVE_DATA} from "./passives.js";
 import {discardCard, getTopCard, addPassive, drawCard, playCard} from "../scenes/encounter/functions.js";
-import Random from "../random.js";
 
 
 export function createCard(config)

@@ -2,12 +2,11 @@ import {discardCard, getTopCard, drawCard} from "../scenes/encounter/functions.j
 import {log} from "../debug.js";
 
 
-export const PASSIVE_DATA = {
+export const PASSIVE_DATA = Object.fromEntries(Object.entries({
 	fuck_yo_deck: {
 		name: "Git Fuk",
 		description: "When your opponent discards, draw a card",
 		type: "relic",
-		key: "fuck_yo_deck",
 		triggers: [
 			{
 				action: "discard",
@@ -25,7 +24,6 @@ export const PASSIVE_DATA = {
 		name: "Flawed Wisdom",
 		description: "Everytime your opponent draws a card, discard a card from the top of their deck",
 		type: "relic",
-		key: "flawed_wisdom",
 		triggers: [
 			{
 				action: "draw",
@@ -47,7 +45,6 @@ export const PASSIVE_DATA = {
 		name: "Mind Flood",
 		description: "For the rest of the game, if your opponent discards a card, they discard an additional card",
 		type: "relic",
-		key: "mind_flood",
 		triggers: [
 			{
 				action: "discard",
@@ -69,7 +66,6 @@ export const PASSIVE_DATA = {
 		name: "See Beyond",
 		description: "For the rest of the game, when 'Mind Flood' would discard a card from your opponents deck, they also draw a card",
 		type: "relic",
-		key: "see_beyond",
 		triggers: [
 			{
 				action: "see_beyond",
@@ -85,7 +81,6 @@ export const PASSIVE_DATA = {
 		name: "Cosmic Insight",
 		description: "For the rest of the game, each player draws an extra card at the start of their turn",
 		type: "relic",
-		key: "cosmic_insight",
 		triggers: [
 			{
 				action: "start_turn",
@@ -100,7 +95,6 @@ export const PASSIVE_DATA = {
 		name: "The Lighthouse",
 		description: "For the rest of the game, at the start of your turn gain an extra action",
 		type: "relic",
-		key: "the_lighthouse",
 		triggers: [
 			{
 				action: "start_turn",
@@ -117,7 +111,6 @@ export const PASSIVE_DATA = {
 		name: "The Electric Chair",
 		description: "For the rest of the game, at the start of your turn gain two extra actions, but you no longer draw a card for your turn",
 		type: "relic",
-		key: "the_electric_chair",
 		triggers: [
 			{
 				action: "start_turn",
@@ -137,7 +130,6 @@ export const PASSIVE_DATA = {
 		name: "Candle's Flicker",
 		description: "For the rest of the game, when your opponent would discard 1 or more cards from their deck, you draw a card",
 		type: "relic",
-		key: "candles_flicker",
 		triggers: [
 			{
 				//needs discard funtion rework to discard from hand
@@ -157,7 +149,6 @@ export const PASSIVE_DATA = {
 		name: "Rope Burn",
 		description: "For the rest of the game, if you would draw a card while your hand is full, discard a card from the enemy deck instead",
 		type: "relic",
-		key: "rope_burn",
 		triggers: [
 			{
 				action: "hand_size_discard",
@@ -172,4 +163,4 @@ export const PASSIVE_DATA = {
 			}
 		]
 	}
-};
+}).map(([key, cardconfig]) => ([key, {...cardconfig, key}])));

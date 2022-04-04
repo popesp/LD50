@@ -65,14 +65,10 @@ export default new Phaser.Class({
 	},
 	create: function()
 	{
-
 		this.music = this.sound.add("spook");
 		this.music.loop = true;
 		this.music.play();
 		this.add.image(WIDTH_CANVAS/2, HEIGHT_CANVAS/2, "background");
-		
-		this.sound.add("button-press");
-		
 
 		// TITLE TEXT
 		const title_text = this.add.text(WIDTH_CANVAS/2, PADDING_CANVAS*6.66, "INFINITE RISING", {color: "white", fontSize: "40px"});
@@ -143,9 +139,5 @@ export default new Phaser.Class({
 			this.scene.start("how_to_play");
 			this.music.stop();
 		});
-	},
-	update: function()
-	{
-
 	}
 });
