@@ -128,7 +128,7 @@ export const CARD_DATA = Object.fromEntries(Object.entries({
 			}
 		}
 	},
-	spilt_beans: {
+	spilled_beans: {
 		name: "Spilled Beans",
 		description: "Discard cards from the enemy deck equal to your hand size, then put your hand on the bottom of your deck",
 		type: "Action",
@@ -143,8 +143,8 @@ export const CARD_DATA = Object.fromEntries(Object.entries({
 			}
 		}
 	},
-	hysterical_whispers: {
-		name: "Hysterical Whispers",
+	hysteric_whisper: {
+		name: "Hysteric Whisper",
 		description: "Each player discards a random card from their hand, then you draw a card",
 		type: "Action",
 		effect: function(state, caster, child)
@@ -160,31 +160,31 @@ export const CARD_DATA = Object.fromEntries(Object.entries({
 		}
 	},
 	//Passive Cards
-	mind_worm: {
-		name: "Mind Worm",
+	deep_insight: {
+		name: "Deep Insight",
 		description: "For the rest of the game, when your opponent draws a card, discard the top card of their deck",
 		type: "Passive",
 		effect: function(state, caster, child)
 		{
-			addPassive(state, caster, PASSIVE_DATA.mind_worm, child);
+			addPassive(state, caster, PASSIVE_DATA.deep_insight, child);
 		}
 	},
-	maggot_infestation: {
-		name: "Maggot Infestation",
-		description: "For the rest of the game, anytime Mind Worm would discard a card, it discards that many cards +1",
+	mind_flood: {
+		name: "Mind Flood",
+		description: "For the rest of the game, anytime Deep Insight would discard a card, it discards that many cards +1",
 		type: "Passive",
 		effect: function(state, caster, child)
 		{
-			addPassive(state, caster, PASSIVE_DATA.maggot_infestation, child);
+			addPassive(state, caster, PASSIVE_DATA.mind_flood, child);
 		}
 	},
-	feed_the_queen: {
-		name: "Feed the Queen",
+	see_beyond: {
+		name: "See Beyond",
 		description: "For the rest of the game, when the enemy discards 2 or more cards from their deck, they also draw a card",
 		type: "Passive",
 		effect: function(state, caster, child)
 		{
-			addPassive(state, caster, PASSIVE_DATA.feed_the_queen, child);
+			addPassive(state, caster, PASSIVE_DATA.see_beyond, child);
 		}
 	},
 	cosmic_insight: {

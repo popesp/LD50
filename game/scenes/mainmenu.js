@@ -40,7 +40,7 @@ export default new Phaser.Class({
 		this.load.image("card_submit_to_madness", "assets/card-art/submit-to-madness.png");
 		this.load.image("card_mind_worm", "assets/card-art/mind-worm.png");
 		this.load.image("card_cosmic_insight", "assets/card-art/cosmic-insight.png");
-		this.load.image("card_a_blank", "assets/card-art/a_blank.png");
+		this.load.image("card_blank", "assets/card-art/a_blank.png");
 		this.load.image("card_bump_in_the_night", "assets/card-art/bump-in-the-night.png");
 		this.load.image("card_deja_vu", "assets/card-art/deja-vu.png");
 		this.load.image("card_point_of_grace", "assets/card-art/point-of-grace.png");
@@ -76,13 +76,13 @@ export default new Phaser.Class({
 				source_deck: [
 					...new Array(5).fill(CARD_DATA.mind_blast),
 					...new Array(3).fill(CARD_DATA.self_reflection),
-					...new Array(2).fill(CARD_DATA.submit_to_madness),
+					...new Array(2).fill(CARD_DATA.hysteric_whisper),
 					// ...new Array(50).fill(CARD_DATA.mind_blast),
 					// ...new Array(100).fill(CARD_DATA.rope_burn),
 					// ...new Array(20).fill(CARD_DATA.encroaching_mist),
 					// ...new Array(5).fill(CARD_DATA.mind_blast),
-					// ...new Array(5).fill(CARD_DATA.mind_worm),
-					// ...new Array(5).fill(CARD_DATA.maggot_infestation),
+					// ...new Array(5).fill(CARD_DATA.deep_insight),
+					// ...new Array(5).fill(CARD_DATA.mind_flood),
 					// ...new Array(5).fill(
 					...GameState.unlocks
 				],
@@ -108,6 +108,20 @@ export default new Phaser.Class({
 		{
 			this.music.stop();
 			this.scene.start("upgrade_shop");
+		});
+
+		// How To Button
+		const how_to_play_btn = this.add.image(0, 0, "button");
+		how_to_play_btn.setDisplaySize(200, 50);
+		const how_to_play_text = this.add.text(0, 0, "HOW TO PLAY", {color: "black", fontSize: "24px"});
+		how_to_play_text.setOrigin(0.5);
+		const how_to_play_container = this.add.container(WIDTH_CANVAS/2, HEIGHT_CANVAS/2 + HEIGHT_START_BUTTON*4, [how_to_play_btn, how_to_play_text]);
+		how_to_play_container.setSize(WIDTH_UPGRADE_BUTTON, HEIGHT_UPGRADE_BUTTON);
+		how_to_play_container.setInteractive({useHandCursor: true});
+		how_to_play_container.on("pointerdown", () =>
+		{
+			this.scene.start("how_to_play");
+			this.music.stop();
 		});
 	},
 	update: function()

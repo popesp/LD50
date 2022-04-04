@@ -1,7 +1,6 @@
 import {WIDTH_CANVAS, HEIGHT_CANVAS, WIDTH_CARD, HEIGHT_CARD, SPACING_CARD} from "../../globals.js";
 import {randomCard} from "../../data/cards.js";
 import GameState from "../../gamestate.js";
-import Random from "../../random.js";
 import {log} from "../../debug.js";
 
 const DURATION_DRAW = 200;
