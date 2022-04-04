@@ -287,13 +287,12 @@ export const CARD_DATA = Object.fromEntries(Object.entries({
 		effect: function(state, caster, child)
 		{
 			const target = state.player === caster ? state.enemy : state.player;
-			discardCard(state, target, getTopCard(state, target, child), child);
-			discardCard(state, target, getTopCard(state, target, child), child);
-			discardCard(state, target, getTopCard(state, target, child), child);
-
 			discardCard(state, caster, getTopCard(state, caster, child), child);
+			discardCard(state, target, getTopCard(state, target, child), child);
 			discardCard(state, caster, getTopCard(state, caster, child), child);
+			discardCard(state, target, getTopCard(state, target, child), child);
 			discardCard(state, caster, getTopCard(state, caster, child), child);
+			discardCard(state, target, getTopCard(state, target, child), child);	
 		}
 	},
 	shifting_shadows: {
