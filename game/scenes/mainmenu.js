@@ -40,7 +40,7 @@ export default new Phaser.Class({
 		this.load.image("card_submit_to_madness", "assets/card-art/submit-to-madness.png");
 		this.load.image("card_mind_worm", "assets/card-art/mind-worm.png");
 		this.load.image("card_cosmic_insight", "assets/card-art/cosmic-insight.png");
-		this.load.image("card_blank", "assets/card-art/a_blank.png");
+		this.load.image("card_blank", "assets/card-art/a-blank.png");
 		this.load.image("card_bump_in_the_night", "assets/card-art/bump-in-the-night.png");
 		this.load.image("card_deja_vu", "assets/card-art/deja-vu.png");
 		this.load.image("card_point_of_grace", "assets/card-art/point-of-grace.png");
