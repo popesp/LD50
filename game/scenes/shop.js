@@ -10,12 +10,12 @@ const HEIGHT_BACK_BUTTON = 100;
 
 const ITEMS_PER_ROW = 5;
 const X_ITEMSPACING = 20;
-const Y_ITEMSPACING = 60;
+const Y_ITEMSPACING = 100;
 
-const Y_ITEMSTART = 300;
+const Y_ITEMSTART = 250;
 
 const ANCHOR_X = 300;
-const ANCHOR_Y = 310;
+const ANCHOR_Y = 300;
 
 function buyItem(item)
 {

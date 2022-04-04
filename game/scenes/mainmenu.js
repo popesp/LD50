@@ -40,7 +40,7 @@ export default new Phaser.Class({
 		this.load.image("card_submit_to_madness", "assets/card-art/submit-to-madness.png");
 		this.load.image("card_mind_worm", "assets/card-art/mind-worm.png");
 		this.load.image("card_cosmic_insight", "assets/card-art/cosmic-insight.png");
-		this.load.image("card_a_blank", "assets/card-art/a_blank.png");
+		this.load.image("card_blank", "assets/card-art/a_blank.png");
 		this.load.image("card_bump_in_the_night", "assets/card-art/bump-in-the-night.png");
 		this.load.image("card_deja_vu", "assets/card-art/deja-vu.png");
 		this.load.image("card_point_of_grace", "assets/card-art/point-of-grace.png");
@@ -76,13 +76,13 @@ export default new Phaser.Class({
 				source_deck: [
 					...new Array(5).fill(CARD_DATA.mind_blast),
 					...new Array(3).fill(CARD_DATA.self_reflection),
-					...new Array(2).fill(CARD_DATA.submit_to_madness),
+					...new Array(2).fill(CARD_DATA.hysteric_whisper),
 					// ...new Array(50).fill(CARD_DATA.mind_blast),
 					// ...new Array(100).fill(CARD_DATA.rope_burn),
 					// ...new Array(20).fill(CARD_DATA.encroaching_mist),
 					// ...new Array(5).fill(CARD_DATA.mind_blast),
 					// ...new Array(5).fill(CARD_DATA.mind_worm),
-					// ...new Array(5).fill(CARD_DATA.maggot_infestation),
+					// ...new Array(5).fill(CARD_DATA.infesting_maggot),
 					// ...new Array(5).fill(
 					...GameState.unlocks
 				],

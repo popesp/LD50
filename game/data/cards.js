@@ -128,8 +128,8 @@ export const CARD_DATA = Object.fromEntries(Object.entries({
 			}
 		}
 	},
-	spilt_beans: {
-		name: "Spilt Beans",
+	spilled_beans: {
+		name: "Spilled Beans",
 		description: "Discard cards from the enemy deck equal to your hand size, then put your hand on the bottom of your deck",
 		type: "Action",
 		effect: function(state, caster, guid)
@@ -143,8 +143,8 @@ export const CARD_DATA = Object.fromEntries(Object.entries({
 			}
 		}
 	},
-	hysterical_whispers: {
-		name: "Hysterical Whispers",
+	hysteric_whisper: {
+		name: "Hysteric Whisper",
 		description: "Each player discards a random card from their hand, then you draw a card",
 		type: "Action",
 		effect: function(state, caster, guid)
@@ -169,13 +169,13 @@ export const CARD_DATA = Object.fromEntries(Object.entries({
 			addPassive(state, caster, PASSIVE_DATA.mind_worm, guid);
 		}
 	},
-	maggot_infestation: {
-		name: "Maggot Infestation",
+	infesting_maggot: {
+		name: "Infesting Maggot",
 		description: "For the rest of the game, anytime Mind Worm would discard a card, it discards that many cards +1",
 		type: "Passive",
 		effect: function(state, caster, guid)
 		{
-			addPassive(state, caster, PASSIVE_DATA.maggot_infestation, guid);
+			addPassive(state, caster, PASSIVE_DATA.infesting_maggot, guid);
 		}
 	},
 	feed_the_queen: {
