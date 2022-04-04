@@ -5,19 +5,25 @@ export const SHOP_DATA = [
 	{
 		card: CARD_DATA.mind_blast,
 		cost: 1,
-		quantity: 3,
+		quantity: 2,
+		bought: 0
+	},
+	{
+		card: CARD_DATA.self_reflection,
+		cost: 1,
+		quantity: 2,
 		bought: 0
 	},
 	{
 		card: CARD_DATA.cosmic_insight,
 		cost: 2,
-		quantity: 4,
+		quantity: 2,
 		bought: 0
 	},
 	{
 		card: CARD_DATA.flawed_wisdom,
 		cost: 2,
-		quantity: 10,
+		quantity: 2,
 		bought: 0
 	},
 	{
@@ -36,6 +42,12 @@ export const SHOP_DATA = [
 		card: CARD_DATA.self_reflection,
 		cost: 1,
 		quantity: 3,
+		bought: 0
+	},
+	{
+		card: CARD_DATA.flawed_wisdom,
+		cost: 2,
+		quantity: 10,
 		bought: 0
 	},
 	{
