@@ -312,7 +312,7 @@ function redrawBoard(state_run, scene)
 	const player_deck_container = scene.add.container(
 		PADDING_CANVAS + WIDTH_CARD/2,
 		HEIGHT_CANVAS - PADDING_CANVAS - HEIGHT_CARD/2 - 0,
-		[scene.add.text(0, -OFFSET_DECKCOUNT, state.player.deck.length, {fontFamily: "insert font", color: "white", fontSize: "24px"}).setOrigin(0.5, 1)]
+		[scene.add.text(0, -OFFSET_DECKCOUNT, state.player.deck.length, {fontFamily: "insert font", color: "#8c5114", fontSize: "72px"}).setOrigin(0.5, 1)]
 	);
 	if(state.player.deck.length > 0)
 		player_deck_container.add(scene.add.image(0, 0, "player_back").setDisplaySize(WIDTH_CARD, HEIGHT_CARD));
@@ -324,7 +324,7 @@ function redrawBoard(state_run, scene)
 	const enemy_deck_container = scene.add.container(
 		PADDING_CANVAS + WIDTH_CARD/2,
 		PADDING_CANVAS + HEIGHT_CARD/2,
-		[scene.add.text(0, OFFSET_DECKCOUNT, length_text, {fontFamily: "insert font", color: "white", fontSize: font_size}).setOrigin(0.5, 0)]
+		[scene.add.text(0, OFFSET_DECKCOUNT, length_text, {fontFamily: "insert font", color: "#8c5114", fontSize: "72px"}).setOrigin(0.5, 0)]
 	);
 	if(state.enemy.deck.length > 0)
 		enemy_deck_container.add(scene.add.image(0, 0, "enemy_back").setDisplaySize(WIDTH_CARD, HEIGHT_CARD));
