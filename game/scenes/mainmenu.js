@@ -105,6 +105,8 @@ export default new Phaser.Class({
 				index_encounter: 0,
 				state_encounter: null
 			};
+
+			this.sound.play("button-press");
 			this.music.stop();
 			this.scene.start("encounter_scene");
 		});
@@ -137,6 +139,7 @@ export default new Phaser.Class({
 		how_to_play_container.setInteractive({useHandCursor: true});
 		how_to_play_container.on("pointerdown", () =>
 		{
+			this.sound.play("button-press");
 			this.scene.start("how_to_play");
 			this.music.stop();
 		});
