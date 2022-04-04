@@ -95,7 +95,7 @@ StateController.prototype.wrap = function(child, tc_before = [], tc_after = [], 
 {
 	const node = {fn, tc_before, tc_after, queue: [], parent: null};
 
-	console.log(JSON.parse(JSON.stringify(this.queue)));
+	log(JSON.parse(JSON.stringify(this.queue)));
 
 	if(child && this.node_current !== null)
 	{
@@ -113,7 +113,7 @@ StateController.prototype.process = function(queue)
 {
 	const controller = this;
 
-	controller.node_current = controller.node_current ?? controller.queue.shift() ?? null;
+	controller.node_current = controller.node_current ?? queue.shift() ?? null;
 	if(controller.node_current === null)
 		return;
 
@@ -124,11 +124,14 @@ StateController.prototype.process = function(queue)
 			tweens_before = tweens_before.filter(activetween => activetween !== tween);
 			if(tweens_before.length === 0)
 			{
-				console.log("animation done");
+				log("animation done");
 				controller.node_current.fn?.();
 
+				if(controller.node_current.queue.length > 0)
+					queue = controller.node_current.queue;
+
 				controller.node_current = null;
-				controller.process();
+				controller.process(queue);
 			}
 		}
 	}));
@@ -155,7 +158,7 @@ StateController.prototype.gameobj_card = function(card, x, y, pointerCallback, f
 
 function enemyTurnLogic(state)
 {
-	if(!state.controller.locked)
+	if(!state.controller.node_current)
 	{
 		if(state.enemy.energy > 0 && state.enemy.hand.length > 0 && state.caster_winner === null)
 			playCard(state, state.enemy, state.enemy.hand[Random.int(0, state.enemy.hand.length)]);
@@ -345,7 +348,7 @@ function redrawBoard(state_run, scene)
 			end_turn_btn_container.setInteractive({useHandCursor: true});
 			end_turn_btn_container.on("pointerdown", function()
 			{
-				if(!state.controller.locked)
+				if(!state.controller.node_current)
 					startTurn(state, state.enemy);
 			});
 		}

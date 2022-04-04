@@ -97,5 +97,5 @@ export const SHOP_DATA = [
 		cost: 10,
 		quantity: 1,
 		bought: 0
-	},
+	}
 ];
