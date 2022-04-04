@@ -2,7 +2,7 @@ import {WIDTH_CANVAS, PADDING_CANVAS} from "../globals.js";
 
 
 const WIDTH_BACK_BUTTON = 200;
-const HEIGHT_BACK_BUTTON = 100;
+const HEIGHT_BACK_BUTTON = 50;
 
 export default new Phaser.Class({
 	Extends: Phaser.Scene,

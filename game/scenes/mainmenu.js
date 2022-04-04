@@ -5,6 +5,7 @@ import GameState from "../gamestate.js";
 
 const WIDTH_START_BUTTON = 200;
 const HEIGHT_START_BUTTON = 50;
+const Y_START_BUTTON = -70;
 
 const WIDTH_UPGRADE_BUTTON = 200;
 const HEIGHT_UPGRADE_BUTTON = 50;
@@ -21,7 +22,7 @@ export default new Phaser.Class({
 		// UI
 		this.load.image("back_arrow", "assets/back_arrow.png");
 		this.load.image("button", "assets/button.png");
-		this.load.image("background", "assets/cthulhu.png");
+		this.load.image("background", "assets/main_bg.png");
 
 		// Music
 		this.load.audio("spook", "assets/music/spook.mp3");
@@ -29,7 +30,8 @@ export default new Phaser.Class({
 		this.load.audio("eldritchambience", "assets/music/eldritchambience.mp3");
 
 		// Sounds
-		this.load.audio("button-press", "assets/sounds/button-press.mp3");
+		this.load.audio("button-press", "assets/sounds/invalid-action.mp3");
+		this.load.audio("pass_turn", "assets/sounds/button-press.mp3");
 
 		// Cards
 		this.load.image("card", "assets/card_front.png");
@@ -68,7 +70,6 @@ export default new Phaser.Class({
 		this.music = this.sound.add("spook");
 		this.music.loop = true;
 		this.music.play();
-		this.add.image(WIDTH_CANVAS/2, HEIGHT_CANVAS/2, "background");
 
 		// TITLE TEXT
 		const title_text = this.add.text(WIDTH_CANVAS/2, PADDING_CANVAS*6.66, "INFINITE RISING", {fontFamily: "insert font", color: "white", fontSize: "50px"});
@@ -79,13 +80,13 @@ export default new Phaser.Class({
 		start_game_btn.setDisplaySize(200, 50);
 		const start_game_text = this.add.text(0, 0, "START NEW RUN", {fontFamily: "insert font", color: "black", fontSize: "24px"});
 		start_game_text.setOrigin(0.5);
-		const start_game_container = this.add.container(WIDTH_CANVAS/2, HEIGHT_CANVAS/2, [start_game_btn, start_game_text]);
+		const start_game_container = this.add.container(WIDTH_CANVAS/2, HEIGHT_CANVAS/2+Y_START_BUTTON, [start_game_btn, start_game_text]);
 		start_game_container.setSize(WIDTH_START_BUTTON, HEIGHT_START_BUTTON);
 		start_game_container.setInteractive({useHandCursor: true});
 
 		start_game_container.on("pointerdown", () =>
 		{
-			this.sound.play("button-press");
+			this.sound.play("pass_turn");
 			GameState.state_run = {
 				source_deck: [
 					// ...new Array(6).fill(CARD_DATA.mind_blast),
@@ -116,7 +117,7 @@ export default new Phaser.Class({
 		upgrade_shop_btn.setDisplaySize(200, 50);
 		const upgrade_shop_text = this.add.text(0, 0, "CARD SHOP", {fontFamily: "insert font", color: "black", fontSize: "24px"});
 		upgrade_shop_text.setOrigin(0.5);
-		const upgrade_shop_container = this.add.container(WIDTH_CANVAS/2, HEIGHT_CANVAS/2 + HEIGHT_START_BUTTON*2, [upgrade_shop_btn, upgrade_shop_text]);
+		const upgrade_shop_container = this.add.container(WIDTH_CANVAS/2, HEIGHT_CANVAS/2 + HEIGHT_START_BUTTON*2+Y_START_BUTTON, [upgrade_shop_btn, upgrade_shop_text]);
 		upgrade_shop_container.setSize(WIDTH_UPGRADE_BUTTON, HEIGHT_UPGRADE_BUTTON);
 		upgrade_shop_container.setInteractive({useHandCursor: true});
 		upgrade_shop_container.on("pointerdown", () =>
@@ -131,7 +132,7 @@ export default new Phaser.Class({
 		how_to_play_btn.setDisplaySize(200, 50);
 		const how_to_play_text = this.add.text(0, 0, "HOW TO PLAY", {fontFamily: "insert font", color: "black", fontSize: "24px"});
 		how_to_play_text.setOrigin(0.5);
-		const how_to_play_container = this.add.container(WIDTH_CANVAS/2, HEIGHT_CANVAS/2 + HEIGHT_START_BUTTON*4, [how_to_play_btn, how_to_play_text]);
+		const how_to_play_container = this.add.container(WIDTH_CANVAS/2, HEIGHT_CANVAS/2 + HEIGHT_START_BUTTON*4+Y_START_BUTTON, [how_to_play_btn, how_to_play_text]);
 		how_to_play_container.setSize(WIDTH_UPGRADE_BUTTON, HEIGHT_UPGRADE_BUTTON);
 		how_to_play_container.setInteractive({useHandCursor: true});
 		how_to_play_container.on("pointerdown", () =>
@@ -139,5 +140,8 @@ export default new Phaser.Class({
 			this.scene.start("how_to_play");
 			this.music.stop();
 		});
+
+		const credit_text = this.add.text(WIDTH_CANVAS/2, 650, "BY: DAN, MATT, STEPHEN, SHAWN & VNU", {fontFamily: "insert font", color: "white", fontSize: "20px"});
+		credit_text.setOrigin(0.5);
 	}
 });

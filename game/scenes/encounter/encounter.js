@@ -364,7 +364,7 @@ function redrawBoard(state_run, scene)
 			{
 				if(!state.controller.node_current)
 				{
-					scene.sound.play("button-press");
+					scene.sound.play("pass_turn");
 					startTurn(state, state.enemy);
 				}
 			});
@@ -391,11 +391,11 @@ function redrawBoard(state_run, scene)
 
 	// Passive Display
 	const player_passive_start = {
-		x: WIDTH_CANVAS/2 - 450,
+		x: WIDTH_CANVAS/2,
 		y: HEIGHT_CANVAS/2 + 100
 	};
 	const enemy_passive_start = {
-		x: WIDTH_CANVAS/2 - 450,
+		x: WIDTH_CANVAS/2,
 		y: HEIGHT_CANVAS/2 - 100
 	};
 	const player_passives = [];
@@ -409,8 +409,8 @@ function redrawBoard(state_run, scene)
 			enemy_passives.push(" " + passive.config.name);
 	}
 
-	gameObjects.push(scene.add.text(enemy_passive_start.x, enemy_passive_start.y, enemy_passives.toString(), {fontFamily: "insert font", color: "white", fontSize: "18px", align: "center"}));
-	gameObjects.push(scene.add.text(player_passive_start.x, player_passive_start.y, player_passives.toString(), {fontFamily: "insert font", color: "white", fontSize: "18px", align: "center"}));
+	gameObjects.push(scene.add.text(enemy_passive_start.x, enemy_passive_start.y, enemy_passives.toString(), {fontFamily: "insert font", color: "white", fontSize: "18px", align: "center"}).setOrigin(0.5));
+	gameObjects.push(scene.add.text(player_passive_start.x, player_passive_start.y, player_passives.toString(), {fontFamily: "insert font", color: "white", fontSize: "18px", align: "center"}).setOrigin(0.5));
 
 	if(state.caster_winner !== null)
 		if(state.caster_winner === state.player)
@@ -485,15 +485,20 @@ export default new Phaser.Class({
 		this.load.audio("draw_card", "assets/sounds/draw-card.mp3");
 		this.load.audio("play_card", "assets/sounds/play-card.mp3");
 		this.load.audio("remove_card", "assets/sounds/remove-card.mp3");
-		this.load.audio("button-press", "assets/sounds/button-press.mp3");
 		this.load.audio("invalid_action", "assets/sounds/invalid-action.mp3");
 	},
 	create: function()
 	{
+		const bg = this.add.image(0, 0, "background");
+		bg.setOrigin(0);
+		bg.setDisplaySize(WIDTH_CANVAS, HEIGHT_CANVAS);
+		bg.setPosition(0);
 		GameState.state_run.state_encounter = startEncounter(GameState.state_run, ENCOUNTERS[GameState.state_run.index_encounter], this);
 		this.music = this.sound.add("eldritchambience");
 		this.music.loop = true;
 		this.music.play();
+
+		
 	},
 	update: function()
 	{
