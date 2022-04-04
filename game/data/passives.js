@@ -25,11 +25,11 @@ export const PASSIVE_DATA = {
 			}
 		]
 	},
-	maggot_infestation: {
-		name: "Maggot Infestation",
+	infesting_maggot: {
+		name: "Infesting Maggot",
 		description: "For the rest of the game, anytime Mind Worm would discard a card, it discards that many cards +1",
 		type: "relic",
-		key: "maggot_infestation",
+		key: "infesting_maggot",
 		triggers: [
 			{
 				action: "maggot",

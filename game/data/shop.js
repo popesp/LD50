@@ -21,7 +21,7 @@ export const SHOP_DATA = [
 		bought: 0
 	},
 	{
-		card: CARD_DATA.maggot_infestation,
+		card: CARD_DATA.infesting_maggot,
 		cost: 3,
 		quantity: 10,
 		bought: 0
@@ -51,7 +51,7 @@ export const SHOP_DATA = [
 		bought: 0
 	},
 	{
-		card: CARD_DATA.hysterical_whispers,
+		card: CARD_DATA.hysteric_whisper,
 		cost: 2,
 		quantity: 2,
 		bought: 0
@@ -63,7 +63,7 @@ export const SHOP_DATA = [
 		bought: 0
 	},
 	{
-		card: CARD_DATA.spilt_beans,
+		card: CARD_DATA.spilled_beans,
 		cost: 3,
 		quantity: 2,
 		bought: 0
