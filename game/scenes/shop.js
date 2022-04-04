@@ -8,11 +8,11 @@ import {log} from "../debug.js";
 const WIDTH_BACK_BUTTON = 200;
 const HEIGHT_BACK_BUTTON = 50;
 
-const ITEMS_PER_ROW = 3;
+const ITEMS_PER_ROW = 5;
 const X_ITEMSPACING = 100;
-const Y_ITEMSPACING = 300;
+const Y_ITEMSPACING = 100;
 
-const Y_ITEMSTART = 400;
+const Y_ITEMSTART = 250;
 
 function buyItem(item, scene)
 {
@@ -79,15 +79,16 @@ export default new Phaser.Class({
 				display_shop.push(SHOP_DATA[i]);
 			}
 		}
+		console.log(display_shop);
 		// purchasable cards
-		const x_itemstart = WIDTH_CANVAS/2 - (ITEMS_PER_ROW - 1)*(WIDTH_CARD + X_ITEMSPACING)/2;
+		const X_ITEMSTART = WIDTH_CANVAS/2 - (ITEMS_PER_ROW - 1)*(WIDTH_CARD + X_ITEMSPACING)/2;
 		for(let index_item = 0; index_item < display_shop.length; ++index_item)
 		{
 			const item = display_shop[index_item];
 			const row = Math.floor(index_item/ITEMS_PER_ROW);
 			const col = index_item%ITEMS_PER_ROW;
 
-			const ITEM_X = x_itemstart + col*(WIDTH_CARD + X_ITEMSPACING);
+			const ITEM_X = X_ITEMSTART + col*(WIDTH_CARD + X_ITEMSPACING);
 			const ITEM_Y = Y_ITEMSTART + row*(HEIGHT_CARD + Y_ITEMSPACING);
 
 			const cardcontainer = makeCardContainer(this, item.card, ITEM_X, ITEM_Y);
