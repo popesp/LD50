@@ -49,11 +49,6 @@ export default new Phaser.Class({
 		this.music.loop = true;
 		this.music.play();
 
-		const bg = this.add.image(0, 0, "menu_bg");
-		bg.setOrigin(0);
-		bg.setDisplaySize(WIDTH_CANVAS, HEIGHT_CANVAS);
-		bg.setPosition(0);
-
 		this.sound.add("buy-card");
 
 		// TITLE TEXT

@@ -78,8 +78,10 @@ export default new Phaser.Class({
 		bg.setDisplaySize(WIDTH_CANVAS, HEIGHT_CANVAS);
 		bg.setPosition(0);
 
+		const title_box = this.add.rectangle(WIDTH_CANVAS/2, PADDING_CANVAS*6.66, 800, 100, '0x000000');
+
 		// TITLE TEXT
-		const title_text = this.add.text(WIDTH_CANVAS/2, PADDING_CANVAS*6.66, "CARDS OF THE COSMOS", {fontFamily: FONT_TITLE, color: "white", fontSize: "50px"});
+		const title_text = this.add.text(WIDTH_CANVAS/2, PADDING_CANVAS*6.66, "CARDS OF THE COSMOS", {fontFamily: FONT_TITLE, color: "white", fontSize: "60px"});
 		title_text.setOrigin(0.5);
 
 		// Start New Run Button
@@ -151,7 +153,7 @@ export default new Phaser.Class({
 			this.music.stop();
 		});
 
-		const credit_text = this.add.text(WIDTH_CANVAS/2, 650, "BY: DAN, MATT, STEPHEN, SHAWN & VNU", {fontFamily: FONT_DEFAULT, color: "white", fontSize: "20px"});
+		const credit_text = this.add.text(WIDTH_CANVAS/2, 640, "BY: DAN, MATT, STEPHEN, SHAWN & VNU", {fontFamily: FONT_DEFAULT, color: "white", fontSize: "20px"});
 		credit_text.setOrigin(0.5);
 	}
 });
