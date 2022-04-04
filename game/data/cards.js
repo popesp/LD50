@@ -19,20 +19,20 @@ export const CARD_DATA = Object.fromEntries(Object.entries({
 		name: "I Win Button",
 		description: "Devs hold all the power",
 		type: "Action",
-		effect: function(state, caster, guid)
+		effect: function(state, caster, child)
 		{
 			const target = state.player === caster ? state.enemy : state.player;
-			discardCard(state, target, getTopCard(state, target, guid), guid);
-			discardCard(state, target, getTopCard(state, target, guid), guid);
-			discardCard(state, target, getTopCard(state, target, guid), guid);
-			discardCard(state, target, getTopCard(state, target, guid), guid);
-			discardCard(state, target, getTopCard(state, target, guid), guid);
-			discardCard(state, target, getTopCard(state, target, guid), guid);
-			discardCard(state, target, getTopCard(state, target, guid), guid);
-			discardCard(state, target, getTopCard(state, target, guid), guid);
-			discardCard(state, target, getTopCard(state, target, guid), guid);
-			discardCard(state, target, getTopCard(state, target, guid), guid);
-			discardCard(state, target, getTopCard(state, target, guid), guid);
+			discardCard(state, target, getTopCard(state, target, child), child);
+			discardCard(state, target, getTopCard(state, target, child), child);
+			discardCard(state, target, getTopCard(state, target, child), child);
+			discardCard(state, target, getTopCard(state, target, child), child);
+			discardCard(state, target, getTopCard(state, target, child), child);
+			discardCard(state, target, getTopCard(state, target, child), child);
+			discardCard(state, target, getTopCard(state, target, child), child);
+			discardCard(state, target, getTopCard(state, target, child), child);
+			discardCard(state, target, getTopCard(state, target, child), child);
+			discardCard(state, target, getTopCard(state, target, child), child);
+			discardCard(state, target, getTopCard(state, target, child), child);
 		}
 	},
 	restore_sanity: {
@@ -68,20 +68,20 @@ export const CARD_DATA = Object.fromEntries(Object.entries({
 		name: "Mind Blast",
 		description: "Discard the top 2 cards from the enemy deck",
 		type: "Action",
-		effect: function(state, caster, guid)
+		effect: function(state, caster, child)
 		{
 			const target = state.player === caster ? state.enemy : state.player;
-			discardCard(state, target, getTopCard(state, target, guid), guid);
-			discardCard(state, target, getTopCard(state, target, guid), guid);
+			discardCard(state, target, getTopCard(state, target, child), child);
+			discardCard(state, target, getTopCard(state, target, child), child);
 		}
 	},
 	submit_to_madness: {
 		name: "Submit to Madness",
 		description: "Discard the top card of your deck and gain 2 energy",
 		type: "Action",
-		effect: function(state, caster, guid)
+		effect: function(state, caster, child)
 		{
-			discardCard(state, caster, getTopCard(state, caster, guid), guid);
+			discardCard(state, caster, getTopCard(state, caster, child), child);
 			caster.energy += 2;
 		}
 	},
@@ -100,13 +100,13 @@ export const CARD_DATA = Object.fromEntries(Object.entries({
 		name: "Gaze into Abyss",
 		description: "Play the top card of the enemy deck",
 		type: "Action",
-		effect: function(state, caster, guid)
+		effect: function(state, caster, child)
 		{
 			const target = state.player === caster ? state.enemy : state.player;
-			const played_card = getTopCard(state, target, guid);
+			const played_card = getTopCard(state, target, child);
 
 			caster.energy++; //increment energy to play the card
-			playCard(state, caster, played_card, guid);
+			playCard(state, caster, played_card, child);
 		}
 	},
 	point_of_grace: {
@@ -129,16 +129,16 @@ export const CARD_DATA = Object.fromEntries(Object.entries({
 		}
 	},
 	spilt_beans: {
-		name: "Spilt Beans",
+		name: "Spilled Beans",
 		description: "Discard cards from the enemy deck equal to your hand size, then put your hand on the bottom of your deck",
 		type: "Action",
-		effect: function(state, caster, guid)
+		effect: function(state, caster, child)
 		{
 			const target = state.player === caster ? state.enemy : state.player;
 			// animation not updating when card is being played
 			while(caster.hand.length > 0)
 			{
-				discardCard(state, target, getTopCard(state, target, guid), guid);
+				discardCard(state, target, getTopCard(state, target, child), child);
 				caster.deck.push(caster.hand.splice(0, 1)[0]);
 			}
 		}
@@ -147,16 +147,16 @@ export const CARD_DATA = Object.fromEntries(Object.entries({
 		name: "Hysterical Whispers",
 		description: "Each player discards a random card from their hand, then you draw a card",
 		type: "Action",
-		effect: function(state, caster, guid)
+		effect: function(state, caster, child)
 		{
 			if(caster.hand.length > 0)
-				discardCard(state, caster, caster.hand.splice(0, 1)[0], guid);
+				discardCard(state, caster, caster.hand.splice(0, 1)[0], child);
 
 			const target = state.player === caster ? state.enemy : state.player;
 			if(target.hand.length > 0)
-				discardCard(state, target, target.hand.splice(0, 1)[0], guid);
+				discardCard(state, target, target.hand.splice(0, 1)[0], child);
 
-			drawCard(state, caster, guid);
+			drawCard(state, caster, child);
 		}
 	},
 	//Passive Cards
@@ -164,54 +164,54 @@ export const CARD_DATA = Object.fromEntries(Object.entries({
 		name: "Mind Worm",
 		description: "For the rest of the game, when your opponent draws a card, discard the top card of their deck",
 		type: "Passive",
-		effect: function(state, caster, guid)
+		effect: function(state, caster, child)
 		{
-			addPassive(state, caster, PASSIVE_DATA.mind_worm, guid);
+			addPassive(state, caster, PASSIVE_DATA.mind_worm, child);
 		}
 	},
 	maggot_infestation: {
 		name: "Maggot Infestation",
 		description: "For the rest of the game, anytime Mind Worm would discard a card, it discards that many cards +1",
 		type: "Passive",
-		effect: function(state, caster, guid)
+		effect: function(state, caster, child)
 		{
-			addPassive(state, caster, PASSIVE_DATA.maggot_infestation, guid);
+			addPassive(state, caster, PASSIVE_DATA.maggot_infestation, child);
 		}
 	},
 	feed_the_queen: {
 		name: "Feed the Queen",
 		description: "For the rest of the game, when the enemy discards 2 or more cards from their deck, they also draw a card",
 		type: "Passive",
-		effect: function(state, caster, guid)
+		effect: function(state, caster, child)
 		{
-			addPassive(state, caster, PASSIVE_DATA.feed_the_queen, guid);
+			addPassive(state, caster, PASSIVE_DATA.feed_the_queen, child);
 		}
 	},
 	cosmic_insight: {
 		name: "Cosmic Insight",
 		description: "For the rest of the game, each player draws an extra card at the start of their turn",
 		type: "Passive",
-		effect: function(state, caster, guid)
+		effect: function(state, caster, child)
 		{
-			addPassive(state, caster, PASSIVE_DATA.cosmic_insight, guid);
+			addPassive(state, caster, PASSIVE_DATA.cosmic_insight, child);
 		}
 	},
 	the_lighthouse: {
 		name: "The Lighthouse",
 		description: "For the rest of the game, gain 1 energy at the start of each turn",
 		type: "Passive",
-		effect: function(state, caster, guid)
+		effect: function(state, caster, child)
 		{
-			addPassive(state, caster, PASSIVE_DATA.the_lighthouse, guid);
+			addPassive(state, caster, PASSIVE_DATA.the_lighthouse, child);
 		}
 	},
 	the_electric_chair: {
 		name: "The Electric Chair",
 		description: "For the rest of the game, at the start of your turn gain 2 extra actions, but you no longer draw a card for your turn",
 		type: "Passive",
-		effect: function(state, caster, guid)
+		effect: function(state, caster, child)
 		{
-			addPassive(state, caster, PASSIVE_DATA.the_electric_chair, guid);
+			addPassive(state, caster, PASSIVE_DATA.the_electric_chair, child);
 		}
 	},
 	candles_flicker: {
@@ -219,18 +219,18 @@ export const CARD_DATA = Object.fromEntries(Object.entries({
 		name: "Candle's Flicker",
 		description: "For the rest of the game, when your opponent would discard 1 or more cards from their deck, you draw a card",
 		type: "Passive",
-		effect: function(state, caster, guid)
+		effect: function(state, caster, child)
 		{
-			addPassive(state, caster, PASSIVE_DATA.candles_flicker, guid);
+			addPassive(state, caster, PASSIVE_DATA.candles_flicker, child);
 		}
 	},
 	rope_burn: {
 		name: "Rope Burn",
 		description: "For the rest of the game, if you would draw a card while your hand is full, discard a card from the enemy deck instead",
 		type: "Passive",
-		effect: function(state, caster, guid)
+		effect: function(state, caster, child)
 		{
-			addPassive(state, caster, PASSIVE_DATA.rope_burn, guid);
+			addPassive(state, caster, PASSIVE_DATA.rope_burn, child);
 		}
 	},
 
@@ -239,20 +239,20 @@ export const CARD_DATA = Object.fromEntries(Object.entries({
 		name: "Bump in the Night",
 		description: "Discard the top card from the enemy deck",
 		type: "Action",
-		effect: function(state, caster, guid)
+		effect: function(state, caster, child)
 		{
 			const target = state.player === caster ? state.enemy : state.player;
-			discardCard(state, target, getTopCard(state, target, guid), guid);
+			discardCard(state, target, getTopCard(state, target, child), child);
 		}
 	},
 	taste_of_flesh: {
 		name: "Taste of Flesh",
 		description: "Draw 2 cards and gain 1 energy",
 		type: "Action",
-		effect: function(state, caster, guid)
+		effect: function(state, caster, child)
 		{
-			drawCard(state, caster, guid);
-			drawCard(state, caster, guid);
+			drawCard(state, caster, child);
+			drawCard(state, caster, child);
 			caster.energy++;
 		}
 	},
@@ -260,50 +260,50 @@ export const CARD_DATA = Object.fromEntries(Object.entries({
 		name: "Eye for an Eye",
 		description: "Each player discards the top 3 cards of their deck",
 		type: "Action",
-		effect: function(state, caster, guid)
+		effect: function(state, caster, child)
 		{
 			const target = state.player === caster ? state.enemy : state.player;
-			discardCard(state, target, getTopCard(state, target, guid), guid);
-			discardCard(state, target, getTopCard(state, target, guid), guid);
-			discardCard(state, target, getTopCard(state, target, guid), guid);
+			discardCard(state, target, getTopCard(state, target, child), child);
+			discardCard(state, target, getTopCard(state, target, child), child);
+			discardCard(state, target, getTopCard(state, target, child), child);
 
-			discardCard(state, caster, getTopCard(state, caster, guid), guid);
-			discardCard(state, caster, getTopCard(state, caster, guid), guid);
-			discardCard(state, caster, getTopCard(state, caster, guid), guid);
+			discardCard(state, caster, getTopCard(state, caster, child), child);
+			discardCard(state, caster, getTopCard(state, caster, child), child);
+			discardCard(state, caster, getTopCard(state, caster, child), child);
 		}
 	},
 	shifting_shadows: {
 		name: "Shifting Shadows",
 		description: "If you have less cards in your deck than your enemy discard the top 3 cards of their deck, otherwise draw 2.",
 		type: "Action",
-		effect: function(state, caster, guid)
+		effect: function(state, caster, child)
 		{
 			if(state.caster_current.name === "Player")
 			{
 				if(state.player.deck.length < state.enemy.deck.length)
 				{
 					const target = state.player === caster ? state.enemy : state.player;
-					discardCard(state, target, getTopCard(state, target), guid);
-					discardCard(state, target, getTopCard(state, target), guid);
-					discardCard(state, target, getTopCard(state, target), guid);
+					discardCard(state, target, getTopCard(state, target), child);
+					discardCard(state, target, getTopCard(state, target), child);
+					discardCard(state, target, getTopCard(state, target), child);
 				}
 				else
 				{
-					drawCard(state, caster, guid);
-					drawCard(state, caster, guid);
+					drawCard(state, caster, child);
+					drawCard(state, caster, child);
 				}
 			}
 			else if(state.enemy.deck.length < state.player.deck.length)
 			{
 				const target = state.player === caster ? state.enemy : state.player;
-				discardCard(state, target, getTopCard(state, target), guid);
-				discardCard(state, target, getTopCard(state, target), guid);
-				discardCard(state, target, getTopCard(state, target), guid);
+				discardCard(state, target, getTopCard(state, target), child);
+				discardCard(state, target, getTopCard(state, target), child);
+				discardCard(state, target, getTopCard(state, target), child);
 			}
 			else
 			{
-				drawCard(state, caster, guid);
-				drawCard(state, caster, guid);
+				drawCard(state, caster, child);
+				drawCard(state, caster, child);
 			}
 		}
 	},
@@ -311,11 +311,11 @@ export const CARD_DATA = Object.fromEntries(Object.entries({
 		name: "Encroaching Mist",
 		description: "Remove a card from the top of enemy deck for each of your turn's that have passed",
 		type: "Action",
-		effect: function(state, caster, guid)
+		effect: function(state, caster, child)
 		{
 			const target = state.player === caster ? state.enemy : state.player;
 			for(let i = 1; i < caster.turn_count; i++)
-				discardCard(state, target, getTopCard(state, target), guid);
+				discardCard(state, target, getTopCard(state, target), child);
 		}
 	},
 	dark_expanse: {
