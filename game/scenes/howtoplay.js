@@ -30,6 +30,7 @@ export default new Phaser.Class({
 		{
 			this.music.stop();
 			this.scene.start("main_menu");
+			this.sound.play("button-press");
 		});
 
 		// Text

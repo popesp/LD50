@@ -72,7 +72,7 @@ export default new Phaser.Class({
 		this.music.play();
 
 		// TITLE TEXT
-		const title_text = this.add.text(WIDTH_CANVAS/2, PADDING_CANVAS*6.66, "Cards of the Cosmos", {fontFamily: FONT_TITLE, color: "white", fontSize: "50px"});
+		const title_text = this.add.text(WIDTH_CANVAS/2, PADDING_CANVAS*6.66, "CARDS OF THE COSMOS", {fontFamily: FONT_TITLE, color: "white", fontSize: "50px"});
 		title_text.setOrigin(0.5);
 
 		// Start New Run Button
@@ -105,6 +105,8 @@ export default new Phaser.Class({
 				index_encounter: 0,
 				state_encounter: null
 			};
+
+			this.sound.play("button-press");
 			this.music.stop();
 			this.scene.start("encounter_scene");
 		});
@@ -137,6 +139,7 @@ export default new Phaser.Class({
 		how_to_play_container.setInteractive({useHandCursor: true});
 		how_to_play_container.on("pointerdown", () =>
 		{
+			this.sound.play("button-press");
 			this.scene.start("how_to_play");
 			this.music.stop();
 		});
