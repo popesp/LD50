@@ -81,8 +81,8 @@ export default new Phaser.Class({
 					// ...new Array(100).fill(CARD_DATA.rope_burn),
 					// ...new Array(20).fill(CARD_DATA.encroaching_mist),
 					// ...new Array(5).fill(CARD_DATA.mind_blast),
-					// ...new Array(5).fill(CARD_DATA.mind_worm),
-					// ...new Array(5).fill(CARD_DATA.infesting_maggot),
+					// ...new Array(5).fill(CARD_DATA.deep_insight),
+					// ...new Array(5).fill(CARD_DATA.mind_flood),
 					// ...new Array(5).fill(
 					...GameState.unlocks
 				],

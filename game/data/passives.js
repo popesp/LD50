@@ -3,11 +3,11 @@ import {log} from "../debug.js";
 
 
 export const PASSIVE_DATA = {
-	mind_worm: {
-		name: "Mind Worm",
+	deep_insight: {
+		name: "Deep Insight",
 		description: "Everytime your opponent draws a card, discard a card from the top of their deck",
 		type: "relic",
-		key: "mind_worm",
+		key: "deep_insight",
 		triggers: [
 			{
 				action: "draw",
@@ -25,11 +25,11 @@ export const PASSIVE_DATA = {
 			}
 		]
 	},
-	infesting_maggot: {
-		name: "Infesting Maggot",
-		description: "For the rest of the game, anytime Mind Worm would discard a card, it discards that many cards +1",
+	mind_flood: {
+		name: "Mind Flood",
+		description: "For the rest of the game, anytime Deep Insight would discard a card, it discards that many cards +1",
 		type: "relic",
-		key: "infesting_maggot",
+		key: "mind_flood",
 		triggers: [
 			{
 				action: "maggot",
@@ -47,11 +47,11 @@ export const PASSIVE_DATA = {
 			}
 		]
 	},
-	feed_the_queen: {
-		name: "Feed the Queen",
+	see_beyond: {
+		name: "See Beyond",
 		description: "For the rest of the game, when an enemy discards 2 or more cards from their deck, they also draw a card",
 		type: "relic",
-		key: "feed_the_queen",
+		key: "see_beyond",
 		triggers: [
 			{
 				action: "queen",

@@ -160,31 +160,31 @@ export const CARD_DATA = Object.fromEntries(Object.entries({
 		}
 	},
 	//Passive Cards
-	mind_worm: {
-		name: "Mind Worm",
+	deep_insight: {
+		name: "Deep Insight",
 		description: "For the rest of the game, when your opponent draws a card, discard the top card of their deck",
 		type: "Passive",
 		effect: function(state, caster, guid)
 		{
-			addPassive(state, caster, PASSIVE_DATA.mind_worm, guid);
+			addPassive(state, caster, PASSIVE_DATA.deep_insight, guid);
 		}
 	},
-	infesting_maggot: {
-		name: "Infesting Maggot",
-		description: "For the rest of the game, anytime Mind Worm would discard a card, it discards that many cards +1",
+	mind_flood: {
+		name: "Mind Flood",
+		description: "For the rest of the game, anytime Deep Insight would discard a card, it discards that many cards +1",
 		type: "Passive",
 		effect: function(state, caster, guid)
 		{
-			addPassive(state, caster, PASSIVE_DATA.infesting_maggot, guid);
+			addPassive(state, caster, PASSIVE_DATA.mind_flood, guid);
 		}
 	},
-	feed_the_queen: {
+	see_beyond: {
 		name: "Feed the Queen",
 		description: "For the rest of the game, when the enemy discards 2 or more cards from their deck, they also draw a card",
 		type: "Passive",
 		effect: function(state, caster, guid)
 		{
-			addPassive(state, caster, PASSIVE_DATA.feed_the_queen, guid);
+			addPassive(state, caster, PASSIVE_DATA.see_beyond, guid);
 		}
 	},
 	cosmic_insight: {
