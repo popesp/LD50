@@ -160,13 +160,13 @@ export const CARD_DATA = Object.fromEntries(Object.entries({
 		}
 	},
 	//Passive Cards
-	deep_insight: {
+	flawed_wisdom: {
 		name: "Deep Insight",
 		description: "For the rest of the game, when your opponent draws a card, discard the top card of their deck",
 		type: "Passive",
 		effect: function(state, caster, guid)
 		{
-			addPassive(state, caster, PASSIVE_DATA.deep_insight, guid);
+			addPassive(state, caster, PASSIVE_DATA.flawed_wisdom, guid);
 		}
 	},
 	mind_flood: {
