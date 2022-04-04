@@ -420,7 +420,7 @@ function redrawBoard(state_run, scene)
 			{
 				scene.sound.play("ticking");
 				victory_text = "Congratulations! You have delayed the inevitable...for all time...";
-				scene.cameras.main.fadeOut(2000, 0, 0, 0);
+				scene.cameras.main.fadeOut(10000, 0, 0, 0);
 			}
 
 			const game_end_text = scene.add.text(WIDTH_CANVAS/2, HEIGHT_CANVAS/2, victory_text, {fontFamily: "insert font", color: "white", fontSize: "32px", align: "center"}).setOrigin(0.5);
