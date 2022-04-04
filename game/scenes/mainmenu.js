@@ -74,15 +74,15 @@ export default new Phaser.Class({
 
 			GameState.state_run = {
 				source_deck: [
-					...new Array(5).fill(CARD_DATA.mind_blast),
-					...new Array(3).fill(CARD_DATA.self_reflection),
-					...new Array(2).fill(CARD_DATA.hysteric_whisper),
+					// ...new Array(5).fill(CARD_DATA.mind_blast),
+					// ...new Array(3).fill(CARD_DATA.self_reflection),
+					// ...new Array(2).fill(CARD_DATA.hysteric_whisper),
 					// ...new Array(50).fill(CARD_DATA.mind_blast),
 					// ...new Array(100).fill(CARD_DATA.rope_burn),
 					// ...new Array(20).fill(CARD_DATA.encroaching_mist),
-					// ...new Array(5).fill(CARD_DATA.mind_blast),
-					// ...new Array(5).fill(CARD_DATA.deep_insight),
-					// ...new Array(5).fill(CARD_DATA.mind_flood),
+					...new Array(5).fill(CARD_DATA.see_beyond),
+					...new Array(5).fill(CARD_DATA.flawed_wisdom),
+					...new Array(5).fill(CARD_DATA.mind_flood),
 					// ...new Array(5).fill(
 					...GameState.unlocks
 				],
