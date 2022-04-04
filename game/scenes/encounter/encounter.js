@@ -56,9 +56,9 @@ const ENCOUNTERS = [
 	{
 		name: "spooky",
 		source_deck: [
-			...new Array(4).fill(CARD_DATA.dark_expanse),
-			...new Array(4).fill(CARD_DATA.taste_of_flesh),
-			...new Array(2).fill(CARD_DATA.shifting_shadows)
+			...new Array(5).fill(CARD_DATA.dark_expanse),
+			...new Array(3).fill(CARD_DATA.taste_of_flesh),
+			...new Array(2).fill(CARD_DATA.submit_to_madness)
 		],
 		starting_passives: [],
 		bounty: 5

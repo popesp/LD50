@@ -358,7 +358,7 @@ export const CARD_DATA = Object.fromEntries(Object.entries({
 	},
 	dark_expanse: {
 		name: "Dark Expanse",
-		description: "Discard the top 2 cards from the enemy deck",
+		description: "Place two 'Dark Expanse' cards on the bottom of your deck",
 		type: "Action",
 		class: "Monster",
 		effect: function(state, caster)
