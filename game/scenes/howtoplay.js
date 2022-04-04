@@ -46,7 +46,7 @@ export default new Phaser.Class({
 			Gain gold by defeating opponents and spend it in the shop\n\
 			Cards purchased this way are permanently included in your deck\n\
 			The Infinite always wins... or does it?",
-			{fontFamily: FONT_DEFAULT, color: "white", fontSize: "24px", align: "center", lineSpacing: 20});
+			{fontFamily: FONT_DEFAULT, color: "white", fontSize: "24px", align: "left", lineSpacing: 20});
 		help_text.setOrigin(0.5, 0);
 	}
 });
