@@ -47,7 +47,10 @@ export function getTopCard(state, caster, child)
 		duration: DURATION_LIFT,
 		x: WIDTH_CANVAS/2,
 		y: HEIGHT_CANVAS/2
-	}]);
+	}],
+	function(){},
+	"draw_card"
+	);
 
 	return card;
 }
@@ -82,7 +85,8 @@ export function discardCard(state, caster, card, child, activate_triggers = true
 				}
 
 			state.needs_update = true;
-		});
+		},
+		"remove_card");
 	}
 }
 
@@ -192,5 +196,7 @@ export function playCard(state, caster, card, child)
 		card.effect.bind(card)(state, caster, true);
 		log(`${caster.name} played a ${card.name}`);
 		discardCard(state, caster, card, false, false);
-	});
+	},
+	"play_card"
+	);
 }

@@ -97,9 +97,9 @@ StateController.prototype.reset = function()
 	this.node_current = null;
 }
 
-StateController.prototype.wrap = function(child, tc_before = [], fn)
+StateController.prototype.wrap = function(child, tc_before = [], fn, sound)
 {
-	const node = {fn, tc_before, queue: [], parent: this.root};
+	const node = {fn, tc_before, queue: [], parent: this.root, sound};
 
 	if(child && this.node_current !== null)
 	{
@@ -147,6 +147,8 @@ StateController.prototype.process = function(parent)
 	}
 	else
 	{
+		if(controller.node_current.sound)
+			controller.scene.sound.play(controller.node_current.sound);
 		let tweens_before = controller.node_current.tc_before.map(config => controller.scene.tweens.add({
 			...config,
 			onComplete: function(tween)
@@ -380,7 +382,11 @@ function redrawBoard(state_run, scene)
 			end_turn_btn_container.on("pointerdown", function()
 			{
 				if(!state.controller.node_current)
+				{
+					scene.sound.play("button-press");
 					startTurn(state, state.enemy);
+				}
+					
 			});
 		}
 
@@ -424,6 +430,7 @@ function redrawBoard(state_run, scene)
 	if(state.caster_winner !== null)
 		if(state.caster_winner === state.player)
 		{
+			this.sound.add("defeat_boss");
 			let victory_text = "Victory! You claimed " + state.enemy.bounty + " gold.";
 			if(GameState.state_run.index_encounter === ENCOUNTERS.length-1)
 				victory_text = "Congratulations! You have delayed the inevitable...for all time...";
@@ -493,6 +500,7 @@ export default new Phaser.Class({
 		this.load.audio("draw_card", "assets/sounds/draw-card.mp3");
 		this.load.audio("play_card", "assets/sounds/play-card.mp3");
 		this.load.audio("remove_card", "assets/sounds/remove-card.mp3");
+		this.load.audio("button-press", "assets/sounds/button-press.mp3");
 
 	},
 	create: function()
@@ -506,6 +514,7 @@ export default new Phaser.Class({
 		this.sound.add("draw_card");
 		this.sound.add("play_card");
 		this.sound.add("remove_card");
+		this.sound.add("button-press");
 	},
 	update: function()
 	{
