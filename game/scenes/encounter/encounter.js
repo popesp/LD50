@@ -1,6 +1,5 @@
 import Random from "../../random.js";
 import {CARD_DATA, createCard} from "../../data/cards.js";
-import {PASSIVE_DATA} from "../../data/passives.js";
 import {WIDTH_CANVAS, HEIGHT_CANVAS, PADDING_CANVAS, WIDTH_CARD, HEIGHT_CARD} from "../../globals.js";
 import {makeCardContainer} from "../../helpers.js";
 import GameState from "../../gamestate.js";
@@ -18,6 +17,10 @@ const X_DECK_PLAYER = PADDING_CANVAS + WIDTH_CARD/2;
 const Y_DECK_PLAYER = HEIGHT_CANVAS - PADDING_CANVAS - HEIGHT_CARD/2 - 0;
 const X_DECK_ENEMY = PADDING_CANVAS + WIDTH_CARD/2;
 const Y_DECK_ENEMY = PADDING_CANVAS + HEIGHT_CARD/2;
+const X_PLAY_PLAYER = WIDTH_CANVAS/2 + 250;
+const Y_PLAY_PLAYER = Y_HAND_PLAYER - 100;
+const X_PLAY_ENEMY = WIDTH_CANVAS/2 + 250;
+const Y_PLAY_ENEMY = Y_HAND_ENEMY + 100;
 
 const OFFSET_DECKCOUNT = HEIGHT_CARD/2 + 5;
 
@@ -35,7 +38,7 @@ const ENCOUNTERS = [
 	{
 		name: "Grokthur's Demonic Embrace",
 		source_deck: [
-			...new Array(10).fill(CARD_DATA.bump_in_the_night),
+			...new Array(10).fill(CARD_DATA.bump_in_the_night)
 		],
 		starting_passives: [],
 		bounty: 2
@@ -44,7 +47,7 @@ const ENCOUNTERS = [
 		name: "Demetrion's Horrid Palace",
 		source_deck: [
 			...new Array(3).fill(CARD_DATA.taste_of_flesh),
-			...new Array(10).fill(CARD_DATA.eye_for_an_eye),
+			...new Array(10).fill(CARD_DATA.eye_for_an_eye)
 		],
 		starting_passives: [],
 		bounty: 4
@@ -52,7 +55,7 @@ const ENCOUNTERS = [
 	{
 		name: "baddie",
 		source_deck: [
-			...new Array(15).fill(CARD_DATA.shifting_shadows),
+			...new Array(15).fill(CARD_DATA.shifting_shadows)
 		],
 		starting_passives: [],
 		bounty: 8
@@ -60,18 +63,18 @@ const ENCOUNTERS = [
 	{
 		name: "spooky",
 		source_deck: [
-			...new Array(8).fill(CARD_DATA.dark_expanse),
+			...new Array(8).fill(CARD_DATA.dark_expanse)
 		],
 		starting_passives: [],
-		bounty: 16,
+		bounty: 16
 	},
 	{
 		name: "another guy",
 		source_deck: [
-			...new Array(30).fill(CARD_DATA.encroaching_mist),
+			...new Array(30).fill(CARD_DATA.encroaching_mist)
 		],
 		starting_passives: [],
-		bounty: 32,
+		bounty: 32
 	},
 	{
 		name: "The End of All Things",
@@ -85,51 +88,46 @@ function StateController(scene)
 {
 	this.scene = scene;
 	this.queue = [];
-	this.locked = false;
-	this.command_current = null;
+	this.node_current = null;
 }
 
-StateController.prototype.wrap = function(fn, tweenConfigs, guid)
+StateController.prototype.wrap = function(child, tc_before = [], tc_after = [], fn)
 {
-	const command = this.queue.find(command => command.guid === guid);
+	const node = {fn, tc_before, tc_after, queue: [], parent: null};
 
-	if(!command)
-		this.queue.push({subcommands: [{fn, tweenConfigs}], guid});
+	console.log(JSON.parse(JSON.stringify(this.queue)));
+
+	if(child && this.node_current !== null)
+	{
+		node.parent = this.node_current;
+		this.node_current.queue.push(node);
+	}
 	else
-		command.subcommands.push({fn, tweenConfigs});
+		this.queue.push(node);
 
-	if(!this.locked)
-		this.process();
+	if(this.node_current === null)
+		this.process(this.queue);
 };
 
-StateController.prototype.process = function()
+StateController.prototype.process = function(queue)
 {
 	const controller = this;
-	if(controller.queue.length === 0 && controller.command_current === null)
+
+	controller.node_current = controller.node_current ?? controller.queue.shift() ?? null;
+	if(controller.node_current === null)
 		return;
 
-	if(controller.command_current === null)
-		controller.command_current = controller.queue[0];
-
-	controller.locked = true;
-
-	const subcommand = controller.command_current.subcommands.pop();
-
-	subcommand.tweens = subcommand.tweenConfigs.map(tweenConfig => controller.scene.tweens.add({
-		...tweenConfig,
+	let tweens_before = controller.node_current.tc_before.map(config => controller.scene.tweens.add({
+		...config,
 		onComplete: function(tween)
 		{
-			subcommand.tweens = subcommand.tweens.filter(activetween => activetween !== tween);
-			if(subcommand.tweens.length === 0)
+			tweens_before = tweens_before.filter(activetween => activetween !== tween);
+			if(tweens_before.length === 0)
 			{
-				subcommand.fn();
-				if(controller.command_current.subcommands.length === 0)
-				{
-					controller.queue.shift();
-					controller.command_current = null;
-				}
+				console.log("animation done");
+				controller.node_current.fn?.();
 
-				controller.locked = false;
+				controller.node_current = null;
 				controller.process();
 			}
 		}
@@ -194,6 +192,8 @@ function startEncounter(state_run, encounter, scene)
 			Y_HAND: Y_HAND_PLAYER,
 			X_DECK: X_DECK_PLAYER,
 			Y_DECK: Y_DECK_PLAYER,
+			X_PLAY: X_PLAY_PLAYER,
+			Y_PLAY: Y_PLAY_PLAYER,
 			drawn_cards: 0
 		},
 		enemy: {
@@ -212,6 +212,8 @@ function startEncounter(state_run, encounter, scene)
 			Y_HAND: Y_HAND_ENEMY,
 			X_DECK: X_DECK_ENEMY,
 			Y_DECK: Y_DECK_ENEMY,
+			X_PLAY: X_PLAY_ENEMY,
+			Y_PLAY: Y_PLAY_ENEMY,
 			drawn_cards: 0
 		},
 		triggers: {
@@ -234,8 +236,8 @@ function startEncounter(state_run, encounter, scene)
 	// draw cards for players
 	for(let i = 0; i < DEFAULT_HANDSIZE; ++i)
 	{
-		drawCard(state, state.player);
-		drawCard(state, state.enemy);
+		drawCard(state, state.player, false);
+		drawCard(state, state.enemy, false);
 	}
 
 	for(const initial_passive of encounter.starting_passives)
@@ -268,7 +270,7 @@ function startTurn(state, caster)
 	}
 	//skip_draw is to handle electric chair, and setting it to false handles case where it is destroyed before next turn
 	if(caster.skip_draw !== true)
-		drawCard(state, caster);
+		drawCard(state, caster, false);
 	else
 		caster.skip_draw = false;
 	if(state.caster_winner !== null) // Winner has been determined

@@ -8,14 +8,11 @@ import {log} from "../debug.js";
 const WIDTH_BACK_BUTTON = 200;
 const HEIGHT_BACK_BUTTON = 100;
 
-const ITEMS_PER_ROW = 5;
+const ITEMS_PER_ROW = 7;
 const X_ITEMSPACING = 20;
 const Y_ITEMSPACING = 100;
 
 const Y_ITEMSTART = 250;
-
-const ANCHOR_X = 300;
-const ANCHOR_Y = 300;
 
 function buyItem(item)
 {
@@ -74,7 +71,7 @@ export default new Phaser.Class({
 		{
 			if(SHOP_DATA[i].bought !== SHOP_DATA[i].quantity)
 			{
-				display_shop.push(SHOP_DATA[i])
+				display_shop.push(SHOP_DATA[i]);
 			}
 		}
 		// purchasable cards
