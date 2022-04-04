@@ -344,9 +344,21 @@ export const CARD_DATA = Object.fromEntries(Object.entries({
 				discardCard(state, target, getTopCard(state, target, child), child);
 		}
 	},
+	the_inevitable: {
+		name: "The Inevitable",
+		description: "Discard the top 2 cards from the enemy deck",
+		type: "Action",
+		class: "Monster",
+		effect: function(state, caster, child)
+		{
+			const target = state.player === caster ? state.enemy : state.player;
+			discardCard(state, target, getTopCard(state, target, child), child);
+			discardCard(state, target, getTopCard(state, target, child), child);
+		}
+	},
 	dark_expanse: {
 		name: "Dark Expanse",
-		description: "Place two 'Dark Expanse' cards on the bottom of your deck",
+		description: "Discard the top 2 cards from the enemy deck",
 		type: "Action",
 		class: "Monster",
 		effect: function(state, caster)

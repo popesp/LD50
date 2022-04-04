@@ -73,7 +73,7 @@ const ENCOUNTERS = [
 	// },
 	{
 		name: "The End of All Things",
-		source_deck: [...new Array(4).fill(CARD_DATA.mind_blast)],
+		source_deck: [...new Array(4).fill(CARD_DATA.the_inevitable)],
 		starting_passives: [],
 		bounty: 1
 	}
