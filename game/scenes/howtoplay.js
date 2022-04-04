@@ -37,14 +37,16 @@ export default new Phaser.Class({
 		// "THE ELDRITCH HORRORS, WAKING FROM THEIR ETERNAL\n\
 		// SLUMBER, HAVE BEGUN THEIR ASSAULT ON YOUR \nWORLD... IT IS UP TO YOU TO FIGHT BACK AND \nTRY TO DELAY THE INEVITABLE...\n\
 		// \nGameplay:\n\
-		const help_text = this.add.text(100, 200,
+		const help_text = this.add.text(WIDTH_CANVAS/2, 200,
 			"			Click on cards in your hand to play them\n\
-			Every card cost 1 action energy to play\n\
-			Try to make your opponent run out of cards before you do\n\
-			Use STATIC cards to create persistent effects on the field\n\
-			Gain gold by deating enemies and spend it in the CARD SHOP\n\
-			But how can we defeat that which is INFINITE...",
-			{fontFamily: FONT_DEFAULT, color: "white", fontSize: "24px"});
-		help_text.setOrigin(0, 0);
+			Cards cost one energy to play\n\
+			Energy is set to one at the beginning of each turn\n\
+			If you run out of cards in your deck before your opponent, you lose\n\
+			Some cards create persistent effects on the field\n\
+			Gain gold by defeating opponents and spend it in the shop\n\
+			Cards purchased this way are permanently included in your deck\n\
+			The Infinite always wins... or does it?",
+			{fontFamily: FONT_DEFAULT, color: "white", fontSize: "24px", align: "center", lineSpacing: 20});
+		help_text.setOrigin(0.5, 0);
 	}
 });
