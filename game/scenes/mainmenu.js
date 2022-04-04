@@ -72,7 +72,7 @@ export default new Phaser.Class({
 		this.music.play();
 
 		// TITLE TEXT
-		const title_text = this.add.text(WIDTH_CANVAS/2, PADDING_CANVAS*6.66, "Cards of the Cosmos", {fontFamily: FONT_TITLE, color: "white", fontSize: "50px"});
+		const title_text = this.add.text(WIDTH_CANVAS/2, PADDING_CANVAS*6.66, "CARDS OF THE COSMOS", {fontFamily: FONT_TITLE, color: "white", fontSize: "50px"});
 		title_text.setOrigin(0.5);
 
 		// Start New Run Button

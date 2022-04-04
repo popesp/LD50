@@ -33,8 +33,3 @@ html, body
 	position: absolute;
 	-ms-interpolation-mode: nearest-neighbor;
 }
-
-@font-face {
-	font-family: PTSerif;
-	src: url('./PTSerif-Regular.ttf');
-}
