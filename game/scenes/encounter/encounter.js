@@ -24,7 +24,7 @@ const Y_PLAY_ENEMY = Y_HAND_ENEMY + 100;
 
 const OFFSET_DECKCOUNT = HEIGHT_CARD/2 + 5;
 
-const WIDTH_END_BUTTON = 100;
+const WIDTH_END_BUTTON = 200;
 const HEIGHT_END_BUTTON = 50;
 
 const DEFAULT_HANDLIMIT = 5;
@@ -376,36 +376,41 @@ function redrawBoard(state_run, scene)
 	// Energy display
 	// player
 	const player_energy_icon = scene.add.image(0, 0, "energy");
-	player_energy_icon.setDisplaySize(25, 25);
-	const player_energy_text = scene.add.text(15, 0, state.player.energy, {fontFamily: "insert font", color: "white", fontSize: "18px"});
+	player_energy_icon.setDisplaySize(75, 75);
+	const player_energy_text = scene.add.text(15, 0, state.player.energy, {fontFamily: "insert font", color: "white", fontSize: "24px"});
 	player_energy_text.setOrigin(0, 0.5);
-	const player_energy_container = scene.add.container(WIDTH_CANVAS - PADDING_CANVAS - 50, HEIGHT_CANVAS/2 + 50, [player_energy_icon, player_energy_text]);
+	const player_energy_container = scene.add.container(WIDTH_CANVAS - PADDING_CANVAS - 50, HEIGHT_CANVAS/2 + 75, [player_energy_icon, player_energy_text]);
 	gameObjects.push(player_energy_container);
 	// enemy
 	const enemy_energy_icon = scene.add.image(0, 0, "energy");
-	enemy_energy_icon.setDisplaySize(25, 25);
-	const enemy_energy_text = scene.add.text(15, 0, state.enemy.energy, {fontFamily: "insert font", fontFamily: "insert font", color: "white", fontSize: "18px"});
+	enemy_energy_icon.setDisplaySize(75, 75);
+	const enemy_energy_text = scene.add.text(15, 0, state.enemy.energy, {fontFamily: "insert font", fontFamily: "insert font", color: "white", fontSize: "24px"});
 	enemy_energy_text.setOrigin(0, 0.5);
-	const enemy_energy_container = scene.add.container(WIDTH_CANVAS - PADDING_CANVAS - 50, HEIGHT_CANVAS/2 - 50, [enemy_energy_icon, enemy_energy_text]);
+	const enemy_energy_container = scene.add.container(WIDTH_CANVAS - PADDING_CANVAS - 50, HEIGHT_CANVAS/2 - 75, [enemy_energy_icon, enemy_energy_text]);
 	gameObjects.push(enemy_energy_container);
 
 	// Passive Display
 	const player_passive_start = {
-		x: WIDTH_CANVAS/2 + 300,
-		y: HEIGHT_CANVAS/2 + 50
+		x: WIDTH_CANVAS/2 - 450,
+		y: HEIGHT_CANVAS/2 + 100
 	};
 	const enemy_passive_start = {
-		x: WIDTH_CANVAS/2 + 300,
-		y: HEIGHT_CANVAS/2 - 50
+		x: WIDTH_CANVAS/2 - 450,
+		y: HEIGHT_CANVAS/2 - 100
 	};
+	const player_passives = [];
+	const enemy_passives = [];
 	for(let index_passive = 0; index_passive < state.passives.length; ++index_passive)
 	{
 		const passive = state.passives[index_passive];
-		if(passive.owner === state.enemy)
-			gameObjects.push(scene.add.text(enemy_passive_start.x, enemy_passive_start.y + (10 * index_passive), passive.config.name, {fontFamily: "insert font", color: "white", fontSize: "12px", align: "center"}));
+		if(passive.owner === state.player)
+			player_passives.push(" " + passive.config.name);
 		else
-			gameObjects.push(scene.add.text(player_passive_start.x, player_passive_start.y + (10 * index_passive), passive.config.name, {fontFamily: "insert font", color: "white", fontSize: "12px", align: "center"}));
+			enemy_passives.push(" " + passive.config.name);
 	}
+
+	gameObjects.push(scene.add.text(enemy_passive_start.x, enemy_passive_start.y, enemy_passives.toString(), {fontFamily: "insert font", color: "white", fontSize: "18px", align: "center"}));
+	gameObjects.push(scene.add.text(player_passive_start.x, player_passive_start.y, player_passives.toString(), {fontFamily: "insert font", color: "white", fontSize: "18px", align: "center"}));
 
 	if(state.caster_winner !== null)
 		if(state.caster_winner === state.player)
