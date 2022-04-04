@@ -109,6 +109,20 @@ export default new Phaser.Class({
 			this.music.stop();
 			this.scene.start("upgrade_shop");
 		});
+
+		// How To Button
+		const how_to_play_btn = this.add.image(0, 0, "button");
+		how_to_play_btn.setDisplaySize(200, 50);
+		const how_to_play_text = this.add.text(0, 0, "HOW TO PLAY", {color: "black", fontSize: "24px"});
+		how_to_play_text.setOrigin(0.5);
+		const how_to_play_container = this.add.container(WIDTH_CANVAS/2, HEIGHT_CANVAS/2 + HEIGHT_START_BUTTON*4, [how_to_play_btn, how_to_play_text]);
+		how_to_play_container.setSize(WIDTH_UPGRADE_BUTTON, HEIGHT_UPGRADE_BUTTON);
+		how_to_play_container.setInteractive({useHandCursor: true});
+		how_to_play_container.on("pointerdown", () =>
+		{
+			this.music.stop();
+			this.scene.start("how_to_play");
+		});
 	},
 	update: function()
 	{
