@@ -3,10 +3,11 @@ import {randomCard} from "../../data/cards.js";
 import GameState from "../../gamestate.js";
 import {log} from "../../debug.js";
 
-const DURATION_DRAW = 200;
+const DURATION_DRAW = 300;
 const DURATION_LIFT = 200;
 const DURATION_DISCARD = 200;
-const DURATION_PLAY = 200;
+const DURATION_PLAY = 800;
+const DURATION_HAND = 300;
 const SCALE_PLAY = 1.5;
 
 
@@ -36,7 +37,7 @@ export function getTopCard(state, caster, child)
 		return undefined;
 	}
 
-	card.gameobj = state.controller.gameobj_card(card, caster.X_DECK, caster.Y_DECK, () => playCard(state, state.player, card), caster === state.player);
+	card.gameobj = state.controller.gameobj_card(card, caster.X_DECK, caster.Y_DECK, () => playCard(state, state.player, card, false), caster === state.player);
 
 	log(`queuing lift ${card.name} for ${caster.name}`);
 	state.controller.wrap(child, [{
@@ -62,7 +63,7 @@ export function discardCard(state, caster, card, child)
 		state.controller.wrap(child, [{
 			targets: card.gameobj,
 			ease: Phaser.Math.Easing.Cubic.InOut,
-			duration: anim_duration,
+			duration: DURATION_DISCARD,
 			x: caster.X_DISCARD,
 			y: caster.Y_DISCARD,
 			displayWidth: WIDTH_CARD,
@@ -75,7 +76,7 @@ export function discardCard(state, caster, card, child)
 			{
 				if(state.caster_winner !== null)
 					return;
-				trigger.effect(state, caster, trigger.owner);
+				trigger.effect(state, caster, trigger.owner, child);
 			}
 
 			state.needs_update = true;
@@ -94,18 +95,6 @@ export function addPassive(state, caster, passive)
 
 export function drawCard(state, caster, child)
 {
-	//rope burn replacement effect
-	if(caster.handlimit === caster.hand.length && state.triggers.hand_size_discard.length > 0)
-	{
-		for(const trigger of state.triggers.hand_size_discard)
-		{
-			if(state.caster_winner !== null)
-				return;
-			trigger.effect(state, caster, trigger.owner);
-		}
-		return;
-	}
-
 	const card = getTopCard(state, caster, child);
 	if(card === undefined) // GAME IS OVER
 		return;
@@ -129,7 +118,7 @@ export function drawCard(state, caster, child)
 		state.controller.wrap(child, [{
 			targets: card.gameobj,
 			ease: Phaser.Math.Easing.Cubic.InOut,
-			duration: 200,
+			duration: DURATION_DRAW,
 			x: min_x + caster.hand.length*(WIDTH_CARD + SPACING_CARD),
 			y: caster.Y_HAND
 		}, ...caster.hand.map(function(card, index_card)
@@ -137,14 +126,14 @@ export function drawCard(state, caster, child)
 			return {
 				targets: card.gameobj,
 				ease: Phaser.Math.Easing.Cubic.InOut,
-				duration: anim_duration,
+				duration: DURATION_HAND,
 				x: min_x + index_card*(WIDTH_CARD + SPACING_CARD),
 				y: caster.Y_HAND
 			};
 		})], [], function()
 		{
 			for(const trigger of state.triggers.draw)
-				trigger.effect(state, caster, trigger.owner);
+				trigger.effect(state, caster, trigger.owner, child);
 
 			state.needs_update = true;
 		});
@@ -171,24 +160,25 @@ export function playCard(state, caster, card, child)
 	state.controller.wrap(child, [{
 		targets: card.gameobj,
 		ease: Phaser.Math.Easing.Cubic.Out,
-		duration: anim_duration,
+		duration: DURATION_PLAY,
 		x: caster.X_PLAY,
 		y: caster.Y_PLAY,
 		displayWidth: WIDTH_CARD*SCALE_PLAY,
-		displayHeight: HEIGHT_CARD*SCALE_PLAY
+		displayHeight: HEIGHT_CARD*SCALE_PLAY,
+		depth: 1
 	}, ...caster.hand.map(function(card, index_card)
 	{
 		return {
 			targets: card.gameobj,
-			ease: Phaser.Math.Easing.Cubic.InOut,
-			duration: anim_duration,
+			ease: Phaser.Math.Easing.Cubic.In,
+			duration: DURATION_HAND,
 			x: min_x + index_card*(WIDTH_CARD + SPACING_CARD),
 			y: caster.Y_HAND
 		};
 	})], [], function()
 	{
-		card.effect.bind(card)(state, caster, child);
+		card.effect.bind(card)(state, caster, true);
 		log(`${caster.name} played a ${card.name}`);
-		discardCard(state, caster, card);
+		discardCard(state, caster, card, false);
 	});
 }
