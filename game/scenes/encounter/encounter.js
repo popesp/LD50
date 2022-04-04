@@ -460,6 +460,13 @@ export default new Phaser.Class({
 	preload: function()
 	{
 		this.load.image("energy", "assets/energy.png");
+
+		// Sounds
+		this.load.audio("defeat_boss", "assets/sounds/defeat-boss.mp3");
+		this.load.audio("draw_card", "assets/sounds/draw-card.mp3");
+		this.load.audio("play_card", "assets/sounds/play-card.mp3");
+		this.load.audio("remove_card", "assets/sounds/remove-card.mp3");
+
 	},
 	create: function()
 	{
@@ -467,6 +474,11 @@ export default new Phaser.Class({
 		this.music = this.sound.add("eldritchambience");
 		this.music.loop = true;
 		this.music.play();
+
+		this.sound.add("defeat_boss");
+		this.sound.add("draw_card");
+		this.sound.add("play_card");
+		this.sound.add("remove_card");
 	},
 	update: function()
 	{

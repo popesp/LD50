@@ -14,11 +14,12 @@ const Y_ITEMSPACING = 300;
 
 const Y_ITEMSTART = 400;
 
-function buyItem(item)
+function buyItem(item, scene)
 {
 	log(item);
 	if(item.bought < item.quantity && GameState.currency >= item.cost)
 	{
+		scene.sound.play("buy-card");
 		item.bought++;
 		GameState.currency -= item.cost;
 		GameState.unlocks.push(item.card);
@@ -40,12 +41,15 @@ export default new Phaser.Class({
 	},
 	preload: function()
 	{
+		this.load.audio("buy-card", "assets/sounds/buy-card.mp3");
 	},
 	create: function()
 	{
 		this.music = this.sound.add("thumpy");
 		this.music.loop = true;
 		this.music.play();
+
+		this.sound.add("buy-card");
 
 		// TITLE TEXT
 		const title_text = this.add.text(WIDTH_CANVAS/2, PADDING_CANVAS*2, "CARD SHOP", {color: "white", fontSize: "40px"});
@@ -59,6 +63,7 @@ export default new Phaser.Class({
 		back_btn.setInteractive({useHandCursor: true});
 		back_btn.on("pointerdown", () =>
 		{
+			this.sound.play("button-press");
 			this.music.stop();
 			this.scene.start("main_menu");
 		});
@@ -91,7 +96,7 @@ export default new Phaser.Class({
 			item.availability = this.add.text(0, HEIGHT_CARD/2 + PADDING_CARD, `${item.bought}/${item.quantity}`, {color: "white", fontSize: "20px"}).setOrigin(0.5, 0);
 			cardcontainer.add(item.availability);
 
-			cardcontainer.setInteractive({useHandCursor: true}).on("pointerdown", () => buyItem(item));
+			cardcontainer.setInteractive({useHandCursor: true}).on("pointerdown", () => buyItem(item, this));
 		}
 	}
 });
