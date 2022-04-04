@@ -23,6 +23,8 @@ export default new Phaser.Class({
 		this.load.image("back_arrow", "assets/back_arrow.png");
 		this.load.image("button", "assets/button.png");
 		this.load.image("background", "assets/main_bg.png");
+		this.load.image("menu_bg", "assets/menu_bg.png");
+		
 
 		// Music
 		this.load.audio("spook", "assets/music/spook.mp3");
@@ -70,6 +72,11 @@ export default new Phaser.Class({
 		this.music = this.sound.add("spook");
 		this.music.loop = true;
 		this.music.play();
+
+		const bg = this.add.image(0, 0, "menu_bg");
+		bg.setOrigin(0);
+		bg.setDisplaySize(WIDTH_CANVAS, HEIGHT_CANVAS);
+		bg.setPosition(0);
 
 		// TITLE TEXT
 		const title_text = this.add.text(WIDTH_CANVAS/2, PADDING_CANVAS*6.66, "CARDS OF THE COSMOS", {fontFamily: FONT_TITLE, color: "white", fontSize: "50px"});

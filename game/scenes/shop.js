@@ -1,4 +1,4 @@
-import {WIDTH_CANVAS, PADDING_CANVAS, WIDTH_CARD, HEIGHT_CARD, PADDING_CARD, FONT_DEFAULT} from "../globals.js";
+import {WIDTH_CANVAS, HEIGHT_CANVAS, PADDING_CANVAS, WIDTH_CARD, HEIGHT_CARD, PADDING_CARD, FONT_DEFAULT} from "../globals.js";
 import {makeCardContainer} from "../helpers.js";
 import {SHOP_DATA} from "../data/shop.js";
 import GameState from "../gamestate.js";
@@ -48,6 +48,11 @@ export default new Phaser.Class({
 		this.music = this.sound.add("thumpy");
 		this.music.loop = true;
 		this.music.play();
+
+		const bg = this.add.image(0, 0, "menu_bg");
+		bg.setOrigin(0);
+		bg.setDisplaySize(WIDTH_CANVAS, HEIGHT_CANVAS);
+		bg.setPosition(0);
 
 		this.sound.add("buy-card");
 
