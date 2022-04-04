@@ -47,6 +47,18 @@ export default new Phaser.Class({
 		this.load.image("card_gaze_into_abyss", "assets/card-art/gaze-into-abyss.png");
 		this.load.image("card_the_lighthouse", "assets/card-art/the-lighthouse.png");
 		this.load.image("card_the_electric_chair", "assets/card-art/the-electric-chair.png");
+		this.load.image("card_hysteric_whisper", "assets/card-art/hysteric-whisper.png");
+		this.load.image("card_spilled_beans", "assets/card-art/spilled-beans.png");
+		this.load.image("card_eye_for_an_eye", "assets/card-art/eye-for-an-eye.png");
+		this.load.image("card_shifting_shadows", "assets/card-art/shifting-shadows.png");
+		this.load.image("card_encroaching_mist", "assets/card-art/encroaching-mist.png");
+		this.load.image("card_dark_expanse", "assets/card-art/dark-expanse.png");
+		this.load.image("card_candles_flicker", "assets/card-art/candles-flicker.png");
+		this.load.image("card_rope_burn", "assets/card-art/rope-burn.png");
+		this.load.image("card_flawed_wisdom", "assets/card-art/flawed-wisdom.png");
+		this.load.image("card_see_beyond", "assets/card-art/see-beyond.png");
+		this.load.image("card_mind_flood", "assets/card-art/mind-flood.png");
+		this.load.image("i_win", "assets/card-art/i-win.png");
 	},
 	create: function()
 	{
