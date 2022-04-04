@@ -51,17 +51,17 @@ const ENCOUNTERS = [
 			...new Array(8).fill(CARD_DATA.eye_for_an_eye)
 		],
 		starting_passives: [],
-		bounty: 5
+		bounty: 3
 	},
 	{
 		name: "spooky",
 		source_deck: [
 			...new Array(4).fill(CARD_DATA.dark_expanse),
 			...new Array(4).fill(CARD_DATA.taste_of_flesh),
-			...new Array(2).fill(CARD_DATA.mind_blast)
+			...new Array(2).fill(CARD_DATA.shifting_shadows)
 		],
 		starting_passives: [],
-		bounty: 3
+		bounty: 5
 	},
 	// {
 	// 	name: "another guy",
@@ -462,7 +462,7 @@ function redrawBoard(state_run, scene)
 			const btn_menu = scene.add.image(0, 0, "button");
 			btn_menu.setDisplaySize(WIDTH_END_BUTTON*2, HEIGHT_END_BUTTON);
 
-			const text_menu = scene.add.text(0, 0, "Main Menu", {fontFamily: FONT_DEFAULT, color: "black", fontSize: "18px"});
+			const text_menu = scene.add.text(0, 0, "Card Shop", {fontFamily: FONT_DEFAULT, color: "black", fontSize: "18px"});
 			text_menu.setOrigin(0.5);
 
 			const btn_menu_container = scene.add.container(WIDTH_CANVAS/2, HEIGHT_CANVAS/2 + 50, [btn_menu, text_menu]);
@@ -471,7 +471,7 @@ function redrawBoard(state_run, scene)
 			btn_menu_container.on("pointerdown", () =>
 			{
 				scene.music.stop();
-				scene.scene.start("main_menu");
+				scene.scene.start("upgrade_shop");
 			});
 
 			gameObjects.push(btn_menu_container);

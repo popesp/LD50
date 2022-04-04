@@ -185,7 +185,7 @@ export const CARD_DATA = Object.fromEntries(Object.entries({
 	},
 	mind_flood: {
 		name: "Mind Flood",
-		description: "For the rest of the game, if your enemy discards a card, they discard an additional card",
+		description: "For the rest of the game, if your enemy discards a card from their deck, they discard an additional card",
 		type: "Passive",
 		class: "Player",
 		effect: function(state, caster, child)
