@@ -8,7 +8,7 @@ import {log} from "../debug.js";
 const WIDTH_BACK_BUTTON = 200;
 const HEIGHT_BACK_BUTTON = 50;
 
-const ITEMS_PER_ROW = 5;
+const ITEMS_PER_ROW = 3;
 const X_ITEMSPACING = 100;
 const Y_ITEMSPACING = 100;
 

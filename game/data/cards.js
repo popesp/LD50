@@ -346,12 +346,12 @@ export const CARD_DATA = Object.fromEntries(Object.entries({
 	},
 	dark_expanse: {
 		name: "Dark Expanse",
-		description: "Place three 'Dark Expanse' cards on the bottom of your deck",
+		description: "Place two 'Dark Expanse' cards on the bottom of your deck",
 		type: "Action",
 		class: "Monster",
 		effect: function(state, caster)
 		{
-			caster.deck.unshift(createCard(CARD_DATA.dark_expanse), createCard(CARD_DATA.dark_expanse), createCard(CARD_DATA.dark_expanse));
+			caster.deck.unshift(createCard(CARD_DATA.dark_expanse), createCard(CARD_DATA.dark_expanse));
 		}
 	}
 }).map(([key, cardconfig]) => ([key, {...cardconfig, key}])));

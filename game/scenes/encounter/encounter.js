@@ -43,31 +43,26 @@ const ENCOUNTERS = [
 		starting_passives: [],
 		bounty: 2
 	},
-	// {
-	// 	name: "Demetrion's Horrid Palace",
-	// 	source_deck: [
-	// 		...new Array(2).fill(CARD_DATA.taste_of_flesh),
-	// 		...new Array(12).fill(CARD_DATA.eye_for_an_eye)
-	// 	],
-	// 	starting_passives: [],
-	// 	bounty: 4
-	// },
-	// {
-	// 	name: "baddie",
-	// 	source_deck: [
-	// 		...new Array(15).fill(CARD_DATA.shifting_shadows)
-	// 	],
-	// 	starting_passives: [],
-	// 	bounty: 8
-	// },
-	// {
-	// 	name: "spooky",
-	// 	source_deck: [
-	// 		...new Array(8).fill(CARD_DATA.dark_expanse)
-	// 	],
-	// 	starting_passives: [],
-	// 	bounty: 16
-	// },
+	{
+		name: "Demetrion's Horrid Palace",
+		source_deck: [
+			...new Array(2).fill(CARD_DATA.taste_of_flesh),
+			...new Array(2).fill(CARD_DATA.bump_in_the_night),
+			...new Array(8).fill(CARD_DATA.eye_for_an_eye)
+		],
+		starting_passives: [],
+		bounty: 5
+	},
+	{
+		name: "spooky",
+		source_deck: [
+			...new Array(4).fill(CARD_DATA.dark_expanse),
+			...new Array(4).fill(CARD_DATA.taste_of_flesh),
+			...new Array(2).fill(CARD_DATA.mind_blast)
+		],
+		starting_passives: [],
+		bounty: 3
+	},
 	// {
 	// 	name: "another guy",
 	// 	source_deck: [
@@ -180,7 +175,16 @@ function enemyTurnLogic(state)
 	if(!state.controller.node_current && state.caster_winner === null)
 	{
 		if(state.enemy.energy > 0 && state.enemy.hand.length > 0)
-			playCard(state, state.enemy, state.enemy.hand[Random.int(0, state.enemy.hand.length)]);
+		{
+			let card;
+			if(state.enemy.deck < 2)
+				card = state.enemy.hand.find((card) => card.name !== 'Taste of Flesh');
+			
+			if(card === undefined)
+				card = state.enemy.hand[Random.int(0, state.enemy.hand.length)];
+
+			playCard(state, state.enemy, card);
+		}
 		else
 			startTurn(state, state.player);
 	}
@@ -450,7 +454,7 @@ function redrawBoard(state_run, scene)
 		}
 		else
 		{
-			const lose_text = state.enemy.isFinalBoss ? `You lost...but perhaps there is still hope. You gained ${state.enemy.bounty} gold.` : "You Lose";
+			const lose_text = state.enemy.isFinalBoss ? `You lost...but perhaps there is still hope.` : "You Lose";
 			state.player.currency += state.enemy.bounty;
 			const game_end_text = scene.add.text(WIDTH_CANVAS/2, HEIGHT_CANVAS/2, lose_text, {fontFamily: "insert font", color: "white", fontSize: "32px", align: "center"}).setOrigin(0.5);
 			gameObjects.push(game_end_text);
@@ -501,7 +505,7 @@ export default new Phaser.Class({
 		bg.setDisplaySize(WIDTH_CANVAS, HEIGHT_CANVAS);
 		bg.setPosition(0);
 		GameState.state_run.state_encounter = startEncounter(GameState.state_run, ENCOUNTERS[GameState.state_run.index_encounter], this);
-		this.music = this.sound.add("eldritchambience");
+		this.music = this.sound.add("eldritchambience", {volume: 0.75});
 		this.music.loop = true;
 		this.music.play();
 		this.cameras.main.setBackgroundColor("#421278");
