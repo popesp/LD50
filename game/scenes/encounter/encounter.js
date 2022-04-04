@@ -339,6 +339,7 @@ function redrawBoard(state_run, scene)
 		const player_discarded_card = state.player.discard_pile[state.player.discard_pile.length - 1];
 		const cardcontainer = makeCardContainer(scene, player_discarded_card, X_DISCARD_PLAYER, Y_DISCARD_PLAYER);
 		gameObjects.push(cardcontainer);
+		cardcontainer.setDepth(1);
 	}
 
 	// enemy discard
@@ -347,6 +348,7 @@ function redrawBoard(state_run, scene)
 		const enemy_discarded_card = state.enemy.discard_pile[state.enemy.discard_pile.length - 1];
 		const cardcontainer = makeCardContainer(scene, enemy_discarded_card, WIDTH_CANVAS - WIDTH_CARD/2 - PADDING_CANVAS, HEIGHT_CARD/2 + PADDING_CANVAS);
 		gameObjects.push(cardcontainer);
+		cardcontainer.setDepth(1);
 	}
 
 	// End Turn button
