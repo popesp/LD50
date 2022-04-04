@@ -179,7 +179,7 @@ export const CARD_DATA = Object.fromEntries(Object.entries({
 		}
 	},
 	see_beyond: {
-		name: "Feed the Queen",
+		name: "See Beyond",
 		description: "For the rest of the game, when the enemy discards 2 or more cards from their deck, they also draw a card",
 		type: "Passive",
 		effect: function(state, caster, guid)
