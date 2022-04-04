@@ -95,13 +95,13 @@ StateController.prototype.wrap = function(child, tc_before = [], tc_after = [], 
 {
 	const node = {fn, tc_before, tc_after, queue: [], parent: null};
 
-	log(JSON.parse(JSON.stringify(this.queue)));
-
 	if(child && this.node_current !== null)
 	{
 		node.parent = this.node_current;
 		this.node_current.queue.push(node);
 	}
+	else if(this.node_current.parent !== null)
+		this.node_current.parent.queue.push(node);
 	else
 		this.queue.push(node);
 
@@ -113,9 +113,18 @@ StateController.prototype.process = function(queue)
 {
 	const controller = this;
 
-	controller.node_current = controller.node_current ?? queue.shift() ?? null;
+	controller.node_current = queue.shift() ?? null;
 	if(controller.node_current === null)
-		return;
+	{
+		if(controller.node_current.parent !== null)
+		{
+			controller.node_current = parent;
+			queue = controller.node_current.parent?.queue ?? controller.queue;
+			controller.process(queue);
+
+			return;
+		}
+	}
 
 	let tweens_before = controller.node_current.tc_before.map(config => controller.scene.tweens.add({
 		...config,
