@@ -91,15 +91,9 @@ function StateController(scene)
 	this.root = {parent: null, queue: []};
 }
 
-StateController.prototype.reset = function()
+StateController.prototype.wrap = function(child, tweenConfigs = [], fn, sound)
 {
-	this.root.queue = [];
-	this.node_current = null;
-}
-
-StateController.prototype.wrap = function(child, tc_before = [], fn, sound)
-{
-	const node = {fn, tc_before, queue: [], parent: this.root, sound};
+	const node = {fn, tweenConfigs, queue: [], parent: this.root, sound};
 
 	if(child && this.node_current !== null)
 	{
@@ -123,10 +117,10 @@ StateController.prototype.process = function(parent)
 	{
 		if(parent.parent !== null)
 			controller.process(parent.parent);
-		
+
 		return;
 	}
-	if(controller.node_current.tc_before.length === 0)
+	if(controller.node_current.tweenConfigs.length === 0)
 	{
 		log("no animations");
 		controller.node_current.fn?.();
@@ -141,7 +135,7 @@ StateController.prototype.process = function(parent)
 	{
 		if(controller.node_current.sound)
 			controller.scene.sound.play(controller.node_current.sound);
-		let tweens_before = controller.node_current.tc_before.map(config => controller.scene.tweens.add({
+		let tweens_before = controller.node_current.tweenConfigs.map(config => controller.scene.tweens.add({
 			...config,
 			onComplete: function(tween)
 			{
@@ -150,10 +144,10 @@ StateController.prototype.process = function(parent)
 				{
 					log("animation done");
 					controller.node_current.fn?.();
-	
+
 					if(controller.node_current.queue.length > 0)
 						parent = controller.node_current;
-	
+
 					controller.node_current = null;
 					controller.process(parent);
 				}
@@ -377,7 +371,6 @@ function redrawBoard(state_run, scene)
 					scene.sound.play("button-press");
 					startTurn(state, state.enemy);
 				}
-					
 			});
 		}
 
@@ -421,7 +414,7 @@ function redrawBoard(state_run, scene)
 	if(state.caster_winner !== null)
 		if(state.caster_winner === state.player)
 		{
-			this.sound.add("defeat_boss");
+			scene.sound.add("defeat_boss");
 			let victory_text = "Victory! You claimed " + state.enemy.bounty + " gold.";
 			if(GameState.state_run.index_encounter === ENCOUNTERS.length-1)
 				victory_text = "Congratulations! You have delayed the inevitable...for all time...";
@@ -500,12 +493,6 @@ export default new Phaser.Class({
 		this.music = this.sound.add("eldritchambience");
 		this.music.loop = true;
 		this.music.play();
-
-		this.sound.add("defeat_boss");
-		this.sound.add("draw_card");
-		this.sound.add("play_card");
-		this.sound.add("remove_card");
-		this.sound.add("button-press");
 	},
 	update: function()
 	{
