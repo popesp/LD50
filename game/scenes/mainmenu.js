@@ -24,7 +24,6 @@ export default new Phaser.Class({
 		this.load.image("button", "assets/button.png");
 		this.load.image("background", "assets/main_bg.png");
 		this.load.image("menu_bg", "assets/menu_bg.png");
-		
 
 		// Music
 		this.load.audio("spook", "assets/music/spook.mp3");
