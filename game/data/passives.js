@@ -1,5 +1,4 @@
 import {discardCard, getTopCard, drawCard} from "../scenes/encounter/functions.js";
-import {log} from "../debug.js";
 
 
 export const PASSIVE_DATA = Object.fromEntries(Object.entries({

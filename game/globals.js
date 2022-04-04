@@ -9,3 +9,6 @@ export const SPACING_CARD = 10;
 export const OFFSET_CARDIMAGE = -41;
 export const WIDTH_CARDIMAGE = 141;
 export const HEIGHT_CARDIMAGE = 85;
+
+export const FONT_TITLE = "PTSerif";
+export const FONT_DEFAULT = "PTSerif";

@@ -1,4 +1,4 @@
-import {WIDTH_CANVAS, HEIGHT_CANVAS, PADDING_CANVAS} from "../globals.js";
+import {WIDTH_CANVAS, HEIGHT_CANVAS, PADDING_CANVAS, FONT_DEFAULT, FONT_TITLE} from "../globals.js";
 import {CARD_DATA} from "../data/cards.js";
 import GameState from "../gamestate.js";
 
@@ -72,13 +72,13 @@ export default new Phaser.Class({
 		this.music.play();
 
 		// TITLE TEXT
-		const title_text = this.add.text(WIDTH_CANVAS/2, PADDING_CANVAS*6.66, "INFINITE RISING", {fontFamily: "insert font", color: "white", fontSize: "50px"});
+		const title_text = this.add.text(WIDTH_CANVAS/2, PADDING_CANVAS*6.66, "Cards of the Cosmos", {fontFamily: FONT_TITLE, color: "white", fontSize: "50px"});
 		title_text.setOrigin(0.5);
 
 		// Start New Run Button
 		const start_game_btn = this.add.image(0, 0, "button");
 		start_game_btn.setDisplaySize(200, 50);
-		const start_game_text = this.add.text(0, 0, "START NEW RUN", {fontFamily: "insert font", color: "black", fontSize: "24px"});
+		const start_game_text = this.add.text(0, 0, "Start New Run", {fontFamily: FONT_DEFAULT, color: "black", fontSize: "24px"});
 		start_game_text.setOrigin(0.5);
 		const start_game_container = this.add.container(WIDTH_CANVAS/2, HEIGHT_CANVAS/2+Y_START_BUTTON, [start_game_btn, start_game_text]);
 		start_game_container.setSize(WIDTH_START_BUTTON, HEIGHT_START_BUTTON);
@@ -115,7 +115,7 @@ export default new Phaser.Class({
 		// Upgrade Shop Button
 		const upgrade_shop_btn = this.add.image(0, 0, "button");
 		upgrade_shop_btn.setDisplaySize(200, 50);
-		const upgrade_shop_text = this.add.text(0, 0, "CARD SHOP", {fontFamily: "insert font", color: "black", fontSize: "24px"});
+		const upgrade_shop_text = this.add.text(0, 0, "Card Shop", {fontFamily: FONT_DEFAULT, color: "black", fontSize: "24px"});
 		upgrade_shop_text.setOrigin(0.5);
 		const upgrade_shop_container = this.add.container(WIDTH_CANVAS/2, HEIGHT_CANVAS/2 + HEIGHT_START_BUTTON*2+Y_START_BUTTON, [upgrade_shop_btn, upgrade_shop_text]);
 		upgrade_shop_container.setSize(WIDTH_UPGRADE_BUTTON, HEIGHT_UPGRADE_BUTTON);
@@ -130,7 +130,7 @@ export default new Phaser.Class({
 		// How To Button
 		const how_to_play_btn = this.add.image(0, 0, "button");
 		how_to_play_btn.setDisplaySize(200, 50);
-		const how_to_play_text = this.add.text(0, 0, "HOW TO PLAY", {fontFamily: "insert font", color: "black", fontSize: "24px"});
+		const how_to_play_text = this.add.text(0, 0, "How To Play", {fontFamily: FONT_DEFAULT, color: "black", fontSize: "24px"});
 		how_to_play_text.setOrigin(0.5);
 		const how_to_play_container = this.add.container(WIDTH_CANVAS/2, HEIGHT_CANVAS/2 + HEIGHT_START_BUTTON*4+Y_START_BUTTON, [how_to_play_btn, how_to_play_text]);
 		how_to_play_container.setSize(WIDTH_UPGRADE_BUTTON, HEIGHT_UPGRADE_BUTTON);
@@ -141,7 +141,7 @@ export default new Phaser.Class({
 			this.music.stop();
 		});
 
-		const credit_text = this.add.text(WIDTH_CANVAS/2, 650, "BY: DAN, MATT, STEPHEN, SHAWN & VNU", {fontFamily: "insert font", color: "white", fontSize: "20px"});
+		const credit_text = this.add.text(WIDTH_CANVAS/2, 650, "BY: DAN, MATT, STEPHEN, SHAWN & VNU", {fontFamily: FONT_DEFAULT, color: "white", fontSize: "20px"});
 		credit_text.setOrigin(0.5);
 	}
 });

@@ -55,7 +55,7 @@ export const SHOP_DATA = [
 		cost: 2,
 		quantity: 5,
 		bought: 0
-	},
+	}
 	// {
 	// 	card: CARD_DATA.self_reflection,
 	// 	cost: 1,

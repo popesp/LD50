@@ -1,4 +1,4 @@
-import {WIDTH_CANVAS, PADDING_CANVAS, WIDTH_CARD, HEIGHT_CARD, PADDING_CARD} from "../globals.js";
+import {WIDTH_CANVAS, PADDING_CANVAS, WIDTH_CARD, HEIGHT_CARD, PADDING_CARD, FONT_DEFAULT} from "../globals.js";
 import {makeCardContainer} from "../helpers.js";
 import {SHOP_DATA} from "../data/shop.js";
 import GameState from "../gamestate.js";
@@ -52,7 +52,7 @@ export default new Phaser.Class({
 		this.sound.add("buy-card");
 
 		// TITLE TEXT
-		const title_text = this.add.text(WIDTH_CANVAS/2, PADDING_CANVAS*2, "CARD SHOP", {fontFamily: "insert font", color: "white", fontSize: "40px"});
+		const title_text = this.add.text(WIDTH_CANVAS/2, PADDING_CANVAS*2, "CARD SHOP", {fontFamily: FONT_DEFAULT, color: "white", fontSize: "40px"});
 		title_text.setOrigin(0.5, 0);
 
 		// Back Button
@@ -69,7 +69,7 @@ export default new Phaser.Class({
 		});
 
 		// gold amount
-		text_gold = this.add.text(WIDTH_CANVAS - PADDING_CANVAS*2, PADDING_CANVAS*2, "Gold: " + GameState.currency, {fontFamily: "insert font", color: "white", fontSize: "40px"}).setOrigin(1, 0);
+		text_gold = this.add.text(WIDTH_CANVAS - PADDING_CANVAS*2, PADDING_CANVAS*2, "Gold: " + GameState.currency, {fontFamily: FONT_DEFAULT, color: "white", fontSize: "40px"}).setOrigin(1, 0);
 
 		const display_shop = [];
 		for(let i = 0; i < SHOP_DATA.length; ++i)
@@ -79,7 +79,7 @@ export default new Phaser.Class({
 				display_shop.push(SHOP_DATA[i]);
 			}
 		}
-		console.log(display_shop);
+		log(display_shop);
 		// purchasable cards
 		const X_ITEMSTART = WIDTH_CANVAS/2 - (ITEMS_PER_ROW - 1)*(WIDTH_CARD + X_ITEMSPACING)/2;
 		for(let index_item = 0; index_item < display_shop.length; ++index_item)
@@ -93,8 +93,8 @@ export default new Phaser.Class({
 
 			const cardcontainer = makeCardContainer(this, item.card, ITEM_X, ITEM_Y);
 
-			cardcontainer.add(this.add.text(0, -(HEIGHT_CARD/2 + PADDING_CARD), `Cost: ${item.cost}`, {fontFamily: "insert font", color: "white", fontSize: "20px"}).setOrigin(0.5, 1));
-			item.availability = this.add.text(0, HEIGHT_CARD/2 + PADDING_CARD, `${item.bought}/${item.quantity}`, {fontFamily: "insert font", color: "white", fontSize: "20px"}).setOrigin(0.5, 0);
+			cardcontainer.add(this.add.text(0, -(HEIGHT_CARD/2 + PADDING_CARD), `Cost: ${item.cost}`, {fontFamily: FONT_DEFAULT, color: "white", fontSize: "20px"}).setOrigin(0.5, 1));
+			item.availability = this.add.text(0, HEIGHT_CARD/2 + PADDING_CARD, `${item.bought}/${item.quantity}`, {fontFamily: FONT_DEFAULT, color: "white", fontSize: "20px"}).setOrigin(0.5, 0);
 			cardcontainer.add(item.availability);
 
 			cardcontainer.setInteractive({useHandCursor: true}).on("pointerdown", () => buyItem(item, this));

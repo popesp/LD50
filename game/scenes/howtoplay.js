@@ -1,4 +1,4 @@
-import {WIDTH_CANVAS, PADDING_CANVAS} from "../globals.js";
+import {WIDTH_CANVAS, PADDING_CANVAS, FONT_DEFAULT} from "../globals.js";
 
 
 const WIDTH_BACK_BUTTON = 200;
@@ -17,7 +17,7 @@ export default new Phaser.Class({
 		this.music.play();
 
 		// TITLE TEXT
-		const title_text = this.add.text(WIDTH_CANVAS/2, PADDING_CANVAS*2, "HOW TO PLAY", {fontFamily: "insert font", color: "white", fontSize: "40px"});
+		const title_text = this.add.text(WIDTH_CANVAS/2, PADDING_CANVAS*2, "HOW TO PLAY", {fontFamily: FONT_DEFAULT, color: "white", fontSize: "40px"});
 		title_text.setOrigin(0.5, 0);
 
 		// Back Button
@@ -34,15 +34,15 @@ export default new Phaser.Class({
 
 		// Text
 		// "THE ELDRITCH HORRORS, WAKING FROM THEIR ETERNAL\n\
-			// SLUMBER, HAVE BEGUN THEIR ASSAULT ON YOUR \nWORLD... IT IS UP TO YOU TO FIGHT BACK AND \nTRY TO DELAY THE INEVITABLE...\n\
-			// \nGameplay:\n\
+		// SLUMBER, HAVE BEGUN THEIR ASSAULT ON YOUR \nWORLD... IT IS UP TO YOU TO FIGHT BACK AND \nTRY TO DELAY THE INEVITABLE...\n\
+		// \nGameplay:\n\
 		const help_text = this.add.text(100, 200,
-		"	> Click on cards in your hand to play them\n\
-			> Try to make your opponent run out of cards before you do\n\
-			> Use STATIC cards to create persistent effects on the field\n\
-			> Gain gold by deating enemies and spend it in the CARD SHOP\n\
-			> But how can we defeat that which is INFINITE...",
-			{fontFamily: "insert font", color: "white", fontSize: "24px"});
+			"			Click on cards in your hand to play them\n\
+			Try to make your opponent run out of cards before you do\n\
+			Use STATIC cards to create persistent effects on the field\n\
+			Gain gold by deating enemies and spend it in the CARD SHOP\n\
+			But how can we defeat that which is INFINITE...",
+			{fontFamily: FONT_DEFAULT, color: "white", fontSize: "24px"});
 		help_text.setOrigin(0, 0);
 	}
 });
