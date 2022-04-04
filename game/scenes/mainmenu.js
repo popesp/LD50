@@ -40,13 +40,25 @@ export default new Phaser.Class({
 		this.load.image("card_submit_to_madness", "assets/card-art/submit-to-madness.png");
 		this.load.image("card_mind_worm", "assets/card-art/mind-worm.png");
 		this.load.image("card_cosmic_insight", "assets/card-art/cosmic-insight.png");
-		this.load.image("card_blank", "assets/card-art/a_blank.png");
+		this.load.image("card_blank", "assets/card-art/a-blank.png");
 		this.load.image("card_bump_in_the_night", "assets/card-art/bump-in-the-night.png");
 		this.load.image("card_deja_vu", "assets/card-art/deja-vu.png");
 		this.load.image("card_point_of_grace", "assets/card-art/point-of-grace.png");
 		this.load.image("card_gaze_into_abyss", "assets/card-art/gaze-into-abyss.png");
 		this.load.image("card_the_lighthouse", "assets/card-art/the-lighthouse.png");
 		this.load.image("card_the_electric_chair", "assets/card-art/the-electric-chair.png");
+		this.load.image("card_hysteric_whisper", "assets/card-art/hysteric-whisper.png");
+		this.load.image("card_spilled_beans", "assets/card-art/spilled-beans.png");
+		this.load.image("card_eye_for_an_eye", "assets/card-art/eye-for-an-eye.png");
+		this.load.image("card_shifting_shadows", "assets/card-art/shifting-shadows.png");
+		this.load.image("card_encroaching_mist", "assets/card-art/encroaching-mist.png");
+		this.load.image("card_dark_expanse", "assets/card-art/dark-expanse.png");
+		this.load.image("card_candles_flicker", "assets/card-art/candles-flicker.png");
+		this.load.image("card_rope_burn", "assets/card-art/rope-burn.png");
+		this.load.image("card_flawed_wisdom", "assets/card-art/flawed-wisdom.png");
+		this.load.image("card_see_beyond", "assets/card-art/see-beyond.png");
+		this.load.image("card_mind_flood", "assets/card-art/mind-flood.png");
+		this.load.image("card_i_win", "assets/card-art/i-win.png");
 	},
 	create: function()
 	{
@@ -74,15 +86,15 @@ export default new Phaser.Class({
 
 			GameState.state_run = {
 				source_deck: [
-					...new Array(5).fill(CARD_DATA.mind_blast),
-					...new Array(3).fill(CARD_DATA.self_reflection),
-					...new Array(2).fill(CARD_DATA.hysteric_whisper),
+					// ...new Array(5).fill(CARD_DATA.mind_blast),
+					// ...new Array(3).fill(CARD_DATA.self_reflection),
+					// ...new Array(2).fill(CARD_DATA.hysteric_whisper),
 					// ...new Array(50).fill(CARD_DATA.mind_blast),
 					// ...new Array(100).fill(CARD_DATA.rope_burn),
 					// ...new Array(20).fill(CARD_DATA.encroaching_mist),
-					// ...new Array(5).fill(CARD_DATA.mind_blast),
-					// ...new Array(5).fill(CARD_DATA.deep_insight),
-					// ...new Array(5).fill(CARD_DATA.mind_flood),
+					...new Array(5).fill(CARD_DATA.see_beyond),
+					...new Array(5).fill(CARD_DATA.i_win),
+					...new Array(5).fill(CARD_DATA.mind_flood),
 					// ...new Array(5).fill(
 					...GameState.unlocks
 				],
