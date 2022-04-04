@@ -35,23 +35,23 @@ const DEFAULT_ENERGY = 1;
 let gameObjects = [];
 
 const ENCOUNTERS = [
-	{
-		name: "Grokthur's Demonic Embrace",
-		source_deck: [
-			...new Array(10).fill(CARD_DATA.bump_in_the_night)
-		],
-		starting_passives: [],
-		bounty: 2
-	},
-	{
-		name: "Demetrion's Horrid Palace",
-		source_deck: [
-			...new Array(2).fill(CARD_DATA.taste_of_flesh),
-			...new Array(12).fill(CARD_DATA.eye_for_an_eye)
-		],
-		starting_passives: [],
-		bounty: 4
-	},
+	// {
+	// 	name: "Grokthur's Demonic Embrace",
+	// 	source_deck: [
+	// 		...new Array(10).fill(CARD_DATA.bump_in_the_night)
+	// 	],
+	// 	starting_passives: [],
+	// 	bounty: 2
+	// },
+	// {
+	// 	name: "Demetrion's Horrid Palace",
+	// 	source_deck: [
+	// 		...new Array(2).fill(CARD_DATA.taste_of_flesh),
+	// 		...new Array(12).fill(CARD_DATA.eye_for_an_eye)
+	// 	],
+	// 	starting_passives: [],
+	// 	bounty: 4
+	// },
 	// {
 	// 	name: "baddie",
 	// 	source_deck: [
@@ -91,9 +91,15 @@ function StateController(scene)
 	this.root = {parent: null, queue: []};
 }
 
-StateController.prototype.wrap = function(child, tc_before = [], tc_after = [], fn)
+StateController.prototype.reset = function()
 {
-	const node = {fn, tc_before, tc_after, queue: [], parent: this.root};
+	this.root.queue = [];
+	this.node_current = null;
+}
+
+StateController.prototype.wrap = function(child, tc_before = [], fn)
+{
+	const node = {fn, tc_before, queue: [], parent: this.root};
 
 	if(child && this.node_current !== null)
 	{
@@ -111,6 +117,14 @@ StateController.prototype.wrap = function(child, tc_before = [], tc_after = [], 
 
 StateController.prototype.process = function(parent)
 {
+	// let parent_length = 0;
+	// let current_shit = parent;
+	// while(current_shit)
+	// {
+	// 	current_shit = parent.parent;
+	// 	parent_length++;
+	// }
+	// console.log(parent_length)
 	const controller = this;
 	controller.node_current = parent.queue.shift() ?? null;
 	if(controller.node_current === null)
@@ -120,25 +134,38 @@ StateController.prototype.process = function(parent)
 		
 		return;
 	}
+	if(controller.node_current.tc_before.length === 0)
+	{
+		log("no animations");
+		controller.node_current.fn?.();
 
-	let tweens_before = controller.node_current.tc_before.map(config => controller.scene.tweens.add({
-		...config,
-		onComplete: function(tween)
-		{
-			tweens_before = tweens_before.filter(activetween => activetween !== tween);
-			if(tweens_before.length === 0)
+		if(controller.node_current.queue.length > 0)
+			parent = controller.node_current;
+
+		controller.node_current = null;
+		controller.process(parent);
+	}
+	else
+	{
+		let tweens_before = controller.node_current.tc_before.map(config => controller.scene.tweens.add({
+			...config,
+			onComplete: function(tween)
 			{
-				log("animation done");
-				controller.node_current.fn?.();
-
-				if(controller.node_current.queue.length > 0)
-					parent = controller.node_current;
-
-				controller.node_current = null;
-				controller.process(parent);
+				tweens_before = tweens_before.filter(activetween => activetween !== tween);
+				if(tweens_before.length === 0)
+				{
+					log("animation done");
+					controller.node_current.fn?.();
+	
+					if(controller.node_current.queue.length > 0)
+						parent = controller.node_current;
+	
+					controller.node_current = null;
+					controller.process(parent);
+				}
 			}
-		}
-	}));
+		}));
+	}
 };
 
 StateController.prototype.gameobj_card = function(card, x, y, pointerCallback, faceup = true)
@@ -162,9 +189,9 @@ StateController.prototype.gameobj_card = function(card, x, y, pointerCallback, f
 
 function enemyTurnLogic(state)
 {
-	if(!state.controller.node_current)
+	if(!state.controller.node_current && state.caster_winner === null)
 	{
-		if(state.enemy.energy > 0 && state.enemy.hand.length > 0 && state.caster_winner === null)
+		if(state.enemy.energy > 0 && state.enemy.hand.length > 0)
 			playCard(state, state.enemy, state.enemy.hand[Random.int(0, state.enemy.hand.length)]);
 		else
 			startTurn(state, state.player);
@@ -225,7 +252,7 @@ function startEncounter(state_run, encounter, scene)
 		},
 		triggers: {
 			draw: [],
-			flawed_wisdom: [],
+			mind_flood: [],
 			see_beyond: [],
 			discard: [],
 			hand_size_discard: [],

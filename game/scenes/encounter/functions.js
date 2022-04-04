@@ -1,6 +1,7 @@
 import {WIDTH_CANVAS, HEIGHT_CANVAS, WIDTH_CARD, HEIGHT_CARD, SPACING_CARD} from "../../globals.js";
-import {randomCard} from "../../data/cards.js";
+import Random from "../../random.js";
 import GameState from "../../gamestate.js";
+import {createCard} from "../../data/cards.js";
 import {log} from "../../debug.js";
 
 const DURATION_DRAW = 300;
@@ -29,7 +30,7 @@ function determineWinner(state, caster)
 export function getTopCard(state, caster, child)
 {
 	// Generate "infinite" deck for final boss
-	const card = caster.isFinalBoss ? randomCard() : caster.deck.pop();
+	const card = caster.isFinalBoss ?  createCard(caster.deck[Random.int(0, caster.deck.length)]) : caster.deck.pop();
 	if(card === undefined)
 	{
 		if(state.caster_winner === null)
@@ -68,7 +69,7 @@ export function discardCard(state, caster, card, child, activate_triggers = true
 			y: caster.Y_DISCARD,
 			displayWidth: WIDTH_CARD,
 			displayHeight: HEIGHT_CARD
-		}], [], function()
+		}], function()
 		{
 			caster.discard_pile.push(card);
 
@@ -109,7 +110,17 @@ export function drawCard(state, caster, child)
 	const anim_duration = caster.drawn_cards > 10 ? DURATION_DRAW / (caster.drawn_cards-10) : DURATION_DRAW;
 
 	if(caster.handlimit === caster.hand.length)
+	{
 		discardCard(state, caster, card, child, false);
+		state.controller.wrap(child, [], function()
+		{
+
+			for(const trigger of state.triggers.draw)
+				trigger.effect(state, caster, trigger.owner, child);
+
+			state.needs_update = true;
+		});
+	}
 	else
 	{
 		const min_x = WIDTH_CANVAS/2 - caster.hand.length*(WIDTH_CARD/2 + SPACING_CARD/2);
@@ -131,7 +142,7 @@ export function drawCard(state, caster, child)
 				x: min_x + index_card*(WIDTH_CARD + SPACING_CARD),
 				y: caster.Y_HAND
 			};
-		})], [], function()
+		})], function()
 		{
 			for(const trigger of state.triggers.draw)
 				trigger.effect(state, caster, trigger.owner, child);
@@ -176,7 +187,7 @@ export function playCard(state, caster, card, child)
 			x: min_x + index_card*(WIDTH_CARD + SPACING_CARD),
 			y: caster.Y_HAND
 		};
-	})], [], function()
+	})], function()
 	{
 		card.effect.bind(card)(state, caster, true);
 		log(`${caster.name} played a ${card.name}`);

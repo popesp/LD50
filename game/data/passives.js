@@ -34,7 +34,7 @@ export const PASSIVE_DATA = {
 					if(caster !== owner)
 					{
 						discardCard(state, caster, getTopCard(state, caster, child), child);
-						for(const trigger of state.triggers.flawed_wisdom)
+						for(const trigger of state.triggers.mind_flood)
 						{
 							trigger.effect(state, caster, trigger.owner);
 						}
@@ -50,7 +50,7 @@ export const PASSIVE_DATA = {
 		key: "mind_flood",
 		triggers: [
 			{
-				action: "flawed_wisdom",
+				action: "mind_flood",
 				effect: function(state, caster, owner, child)
 				{
 					if(caster !== owner)

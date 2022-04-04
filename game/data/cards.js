@@ -3,12 +3,6 @@ import {discardCard, getTopCard, addPassive, drawCard, playCard} from "../scenes
 import Random from "../random.js";
 
 
-export function randomCard()
-{
-	const cards = Object.values(CARD_DATA);
-	return createCard(cards[Random.int(0, cards.length)]);
-}
-
 export function createCard(config)
 {
 	return {...config};
