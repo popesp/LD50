@@ -67,7 +67,7 @@ export const PASSIVE_DATA = {
 	},
 	see_beyond: {
 		name: "See Beyond",
-		description: "For the rest of the game, anytime your opponent discards from 'Mind Flood', they draw a card",
+		description: "For the rest of the game, when 'Mind Flood' would discard a card from your opponents deck, they also draw a card",
 		type: "relic",
 		key: "see_beyond",
 		triggers: [

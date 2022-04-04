@@ -13,6 +13,7 @@ export const CARD_DATA = Object.fromEntries(Object.entries({
 		name: "I Win Button",
 		description: "Devs hold all the power",
 		type: "Action",
+		class: "Player",
 		effect: function(state, caster, child)
 		{
 			const target = state.player === caster ? state.enemy : state.player;
@@ -33,6 +34,7 @@ export const CARD_DATA = Object.fromEntries(Object.entries({
 		name: "Restore Sanity",
 		description: "Place 2 'Self Reflection' cards on the bottom of your deck",
 		type: "Action",
+		class: "Player",
 		effect: function(state, caster)
 		{
 			// TODO(shawn): animate this
@@ -43,6 +45,7 @@ export const CARD_DATA = Object.fromEntries(Object.entries({
 		name: "Self Reflection",
 		description: "Gain 1 energy and place a 'Blank' on the top of your deck",
 		type: "Action",
+		class: "Player",
 		effect: function(state, caster)
 		{
 			// TODO(shawn): animate this
@@ -54,6 +57,7 @@ export const CARD_DATA = Object.fromEntries(Object.entries({
 		name: "Blank",
 		description: "[This card has no effect]",
 		type: "Action",
+		class: "Player",
 		effect: function()
 		{
 		}
@@ -73,6 +77,7 @@ export const CARD_DATA = Object.fromEntries(Object.entries({
 		name: "Submit to Madness",
 		description: "Discard the top card of your deck and gain 2 energy",
 		type: "Action",
+		class: "Player",
 		effect: function(state, caster, child)
 		{
 			discardCard(state, caster, getTopCard(state, caster, child), child);
@@ -83,6 +88,7 @@ export const CARD_DATA = Object.fromEntries(Object.entries({
 		name: "Deja Vu",
 		description: "Place the top card of your discard pile on the top of your deck",
 		type: "Action",
+		class: "Player",
 		effect: function(state, caster)
 		{
 			// TODO(shawn): animate
@@ -94,6 +100,7 @@ export const CARD_DATA = Object.fromEntries(Object.entries({
 		name: "Gaze into Abyss",
 		description: "Play the top card of the enemy deck",
 		type: "Action",
+		class: "Player",
 		effect: function(state, caster, child)
 		{
 			const target = state.player === caster ? state.enemy : state.player;
@@ -107,6 +114,7 @@ export const CARD_DATA = Object.fromEntries(Object.entries({
 		name: "Point of Grace",
 		description: "Add a random passive card from your deck to your hand",
 		type: "Action",
+		class: "Player",
 		effect: function(state, caster)
 		{
 			for(let i = 0; i < caster.deck.length; ++i)
@@ -126,6 +134,7 @@ export const CARD_DATA = Object.fromEntries(Object.entries({
 		name: "Spilled Beans",
 		description: "Discard cards from the enemy deck equal to your hand size, then put your hand on the bottom of your deck",
 		type: "Action",
+		class: "Player",
 		effect: function(state, caster, child)
 		{
 			const target = state.player === caster ? state.enemy : state.player;
@@ -141,6 +150,7 @@ export const CARD_DATA = Object.fromEntries(Object.entries({
 		name: "Hysteric Whisper",
 		description: "Each player discards a random card from their hand, then you draw a card",
 		type: "Action",
+		class: "Player",
 		effect: function(state, caster, child)
 		{
 			if(caster.hand.length > 0)
@@ -156,8 +166,9 @@ export const CARD_DATA = Object.fromEntries(Object.entries({
 	//Passive Cards
 	fuck_yo_deck: {
 		name: "Git Fuk",
-		description: "When opponent discards, draw a card",
+		description: "When enemy discards, draw a card",
 		type: "Passive",
+		class: "Player",
 		effect: function(state, caster, child)
 		{
 			addPassive(state, caster, PASSIVE_DATA.fuck_yo_deck, child);
@@ -165,8 +176,9 @@ export const CARD_DATA = Object.fromEntries(Object.entries({
 	},
 	flawed_wisdom: {
 		name: "Flawed Wisdom",
-		description: "For the rest of the game, when your opponent draws a card, discard the top card of their deck",
+		description: "Everytime your enemy draws a card, discard a card from the top of their deck",
 		type: "Passive",
+		class: "Player",
 		effect: function(state, caster, child)
 		{
 			addPassive(state, caster, PASSIVE_DATA.flawed_wisdom, child);
@@ -174,8 +186,9 @@ export const CARD_DATA = Object.fromEntries(Object.entries({
 	},
 	mind_flood: {
 		name: "Mind Flood",
-		description: "For the rest of the game, anytime Flawed Wisdom would discard a card, it discards that many cards +1",
+		description: "For the rest of the game, if your enemy discards a card, they discard an additional card",
 		type: "Passive",
+		class: "Player",
 		effect: function(state, caster, child)
 		{
 			addPassive(state, caster, PASSIVE_DATA.mind_flood, child);
@@ -183,8 +196,9 @@ export const CARD_DATA = Object.fromEntries(Object.entries({
 	},
 	see_beyond: {
 		name: "See Beyond",
-		description: "For the rest of the game, when the enemy discards 2 or more cards from their deck, they also draw a card",
+		description: "For the rest of the game, when 'Mind Flood' would discard a card from your enemy's deck, they also draw a card",
 		type: "Passive",
+		class: "Player",
 		effect: function(state, caster, child)
 		{
 			addPassive(state, caster, PASSIVE_DATA.see_beyond, child);
@@ -194,6 +208,7 @@ export const CARD_DATA = Object.fromEntries(Object.entries({
 		name: "Cosmic Insight",
 		description: "For the rest of the game, each player draws an extra card at the start of their turn",
 		type: "Passive",
+		class: "Player",
 		effect: function(state, caster, child)
 		{
 			addPassive(state, caster, PASSIVE_DATA.cosmic_insight, child);
@@ -203,6 +218,7 @@ export const CARD_DATA = Object.fromEntries(Object.entries({
 		name: "The Lighthouse",
 		description: "For the rest of the game, gain 1 energy at the start of each turn",
 		type: "Passive",
+		class: "Player",
 		effect: function(state, caster, child)
 		{
 			addPassive(state, caster, PASSIVE_DATA.the_lighthouse, child);
@@ -212,6 +228,7 @@ export const CARD_DATA = Object.fromEntries(Object.entries({
 		name: "The Electric Chair",
 		description: "For the rest of the game, at the start of your turn gain 2 extra actions, but you no longer draw a card for your turn",
 		type: "Passive",
+		class: "Player",
 		effect: function(state, caster, child)
 		{
 			addPassive(state, caster, PASSIVE_DATA.the_electric_chair, child);
@@ -220,8 +237,9 @@ export const CARD_DATA = Object.fromEntries(Object.entries({
 	candles_flicker: {
 		//needs discard funtion rework to discard from hand
 		name: "Candle's Flicker",
-		description: "For the rest of the game, when your opponent would discard 1 or more cards from their deck, you draw a card",
+		description: "For the rest of the game, when your enemy would discard 1 or more cards from their deck, you draw a card",
 		type: "Passive",
+		class: "Player",
 		effect: function(state, caster, child)
 		{
 			addPassive(state, caster, PASSIVE_DATA.candles_flicker, child);
@@ -229,8 +247,9 @@ export const CARD_DATA = Object.fromEntries(Object.entries({
 	},
 	rope_burn: {
 		name: "Rope Burn",
-		description: "For the rest of the game, if you would draw a card while your hand is full, discard a card from the enemy deck instead",
+		description: "For the rest of the game, if you would draw a card while your hand is full, discard a card from your enemy's deck instead",
 		type: "Passive",
+		class: "Player",
 		effect: function(state, caster, child)
 		{
 			addPassive(state, caster, PASSIVE_DATA.rope_burn, child);
@@ -242,6 +261,7 @@ export const CARD_DATA = Object.fromEntries(Object.entries({
 		name: "Bump in the Night",
 		description: "Discard the top card from the enemy deck",
 		type: "Action",
+		class: "Monster",
 		effect: function(state, caster, child)
 		{
 			const target = state.player === caster ? state.enemy : state.player;
@@ -252,6 +272,7 @@ export const CARD_DATA = Object.fromEntries(Object.entries({
 		name: "Taste of Flesh",
 		description: "Draw 2 cards and gain 1 energy",
 		type: "Action",
+		class: "Monster",
 		effect: function(state, caster, child)
 		{
 			drawCard(state, caster, child);
@@ -263,6 +284,7 @@ export const CARD_DATA = Object.fromEntries(Object.entries({
 		name: "Eye for an Eye",
 		description: "Each player discards the top 3 cards of their deck",
 		type: "Action",
+		class: "Monster",
 		effect: function(state, caster, child)
 		{
 			const target = state.player === caster ? state.enemy : state.player;
@@ -277,8 +299,9 @@ export const CARD_DATA = Object.fromEntries(Object.entries({
 	},
 	shifting_shadows: {
 		name: "Shifting Shadows",
-		description: "If you have less cards in your deck than your enemy discard the top 3 cards of their deck, otherwise draw 2.",
+		description: "If you have less cards in your deck than your enemy, discard the top 3 cards of their deck, otherwise draw 2.",
 		type: "Action",
+		class: "Monster",
 		effect: function(state, caster, child)
 		{
 			if(state.caster_current.name === "Player")
@@ -312,8 +335,9 @@ export const CARD_DATA = Object.fromEntries(Object.entries({
 	},
 	encroaching_mist: {
 		name: "Encroaching Mist",
-		description: "Remove a card from the top of enemy deck for each of your turn's that have passed",
+		description: "Remove a card from the top of your enemy's deck for each of your turns that have passed",
 		type: "Action",
+		class: "Monster",
 		effect: function(state, caster, child)
 		{
 			const target = state.player === caster ? state.enemy : state.player;
@@ -325,6 +349,7 @@ export const CARD_DATA = Object.fromEntries(Object.entries({
 		name: "Dark Expanse",
 		description: "Place three 'Dark Expanse' cards on the bottom of your deck",
 		type: "Action",
+		class: "Monster",
 		effect: function(state, caster)
 		{
 			caster.deck.unshift(createCard(CARD_DATA.dark_expanse), createCard(CARD_DATA.dark_expanse), createCard(CARD_DATA.dark_expanse));
