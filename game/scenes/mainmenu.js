@@ -3,11 +3,51 @@ import {CARD_DATA} from "../data/cards.js";
 import GameState from "../gamestate.js";
 
 
-const WIDTH_START_BUTTON = 200;
-const HEIGHT_START_BUTTON = 50;
+const WIDTH_BUTTON = 200;
+const HEIGHT_BUTTON = 50;
 
-const WIDTH_UPGRADE_BUTTON = 200;
-const HEIGHT_UPGRADE_BUTTON = 50;
+
+const BUTTONS = [
+	{
+		label: "START NEW RUN",
+		action: function(scene)
+		{
+			GameState.state_run = {
+				source_deck: [
+					// ...new Array(6).fill(CARD_DATA.mind_blast),
+					// ...new Array(3).fill(CARD_DATA.self_reflection),
+					// ...new Array(1).fill(CARD_DATA.hysteric_whisper),
+
+					// ...new Array(50).fill(CARD_DATA.mind_blast),
+					// ...new Array(100).fill(CARD_DATA.rope_burn),
+					// ...new Array(20).fill(CARD_DATA.encroaching_mist),
+					...new Array(5).fill(CARD_DATA.see_beyond),
+					...new Array(5).fill(CARD_DATA.mind_flood),
+					...new Array(5).fill(CARD_DATA.flawed_wisdom)
+					// ...new Array(5).fill(
+				],
+				index_encounter: 0,
+				state_encounter: null
+			};
+
+			scene.scene.start("encounter_scene");
+		}
+	},
+	{
+		label: "CARD SHOP",
+		action: function(scene)
+		{
+			scene.scene.start("upgrade_shop");
+		}
+	},
+	{
+		label: "HOW TO PLAY",
+		action: function(scene)
+		{
+			scene.scene.start("how_to_play");
+		}
+	}
+];
 
 
 export default new Phaser.Class({
@@ -68,76 +108,29 @@ export default new Phaser.Class({
 		this.music = this.sound.add("spook");
 		this.music.loop = true;
 		this.music.play();
-		this.add.image(WIDTH_CANVAS/2, HEIGHT_CANVAS/2, "background");
 
-		// TITLE TEXT
-		const title_text = this.add.text(WIDTH_CANVAS/2, PADDING_CANVAS*6.66, "INFINITE RISING", {color: "white", fontSize: "40px"});
-		title_text.setOrigin(0.5);
+		this.add.image(WIDTH_CANVAS/2, HEIGHT_CANVAS/2, "background").displayWidth = WIDTH_CANVAS;
+		this.add.text(WIDTH_CANVAS/2, PADDING_CANVAS*6.66, "INFINITE RISING", {color: "white", fontSize: "40px"}).setOrigin(0.5);
 
-		// Start New Run Button
-		const start_game_btn = this.add.image(0, 0, "button");
-		start_game_btn.setDisplaySize(200, 50);
-		const start_game_text = this.add.text(0, 0, "START NEW RUN", {color: "black", fontSize: "24px"});
-		start_game_text.setOrigin(0.5);
-		const start_game_container = this.add.container(WIDTH_CANVAS/2, HEIGHT_CANVAS/2, [start_game_btn, start_game_text]);
-		start_game_container.setSize(WIDTH_START_BUTTON, HEIGHT_START_BUTTON);
-		start_game_container.setInteractive({useHandCursor: true});
-
-		start_game_container.on("pointerdown", () =>
+		// main menu buttons
+		for(let index_button = 0; index_button < BUTTONS.length; ++index_button)
 		{
-			this.sound.play("button-press");
-			GameState.state_run = {
-				source_deck: [
-					// ...new Array(6).fill(CARD_DATA.mind_blast),
-					// ...new Array(3).fill(CARD_DATA.self_reflection),
-					// ...new Array(1).fill(CARD_DATA.hysteric_whisper),
+			const button = BUTTONS[index_button];
 
-					// ...new Array(50).fill(CARD_DATA.mind_blast),
-					// ...new Array(100).fill(CARD_DATA.rope_burn),
-					// ...new Array(20).fill(CARD_DATA.encroaching_mist),
-					...new Array(5).fill(CARD_DATA.see_beyond),
-					...new Array(5).fill(CARD_DATA.mind_flood),
-					...new Array(5).fill(CARD_DATA.flawed_wisdom),
-					// ...new Array(5).fill(
-					...GameState.unlocks
-				],
-				index_encounter: 0,
-				state_encounter: null
-			};
-			this.music.stop();
-			this.scene.start("encounter_scene");
-		});
+			const container = this.add.container(WIDTH_CANVAS/2, HEIGHT_CANVAS/2 + HEIGHT_BUTTON*2*index_button, [
+				this.add.image(0, 0, "button").setDisplaySize(WIDTH_BUTTON, HEIGHT_BUTTON),
+				this.add.text(0, 0, button.label, {color: "black", fontSize: "24px"}).setOrigin(0.5)
+			]);
 
-		// gameObjects.push(button_container);
+			container.setSize(WIDTH_BUTTON, HEIGHT_BUTTON);
+			container.setInteractive({useHandCursor: true});
+			container.on("pointerdown", () =>
+			{
+				this.sound.play("button-press");
+				this.music.stop();
 
-
-		// Upgrade Shop Button
-		const upgrade_shop_btn = this.add.image(0, 0, "button");
-		upgrade_shop_btn.setDisplaySize(200, 50);
-		const upgrade_shop_text = this.add.text(0, 0, "CARD SHOP", {color: "black", fontSize: "24px"});
-		upgrade_shop_text.setOrigin(0.5);
-		const upgrade_shop_container = this.add.container(WIDTH_CANVAS/2, HEIGHT_CANVAS/2 + HEIGHT_START_BUTTON*2, [upgrade_shop_btn, upgrade_shop_text]);
-		upgrade_shop_container.setSize(WIDTH_UPGRADE_BUTTON, HEIGHT_UPGRADE_BUTTON);
-		upgrade_shop_container.setInteractive({useHandCursor: true});
-		upgrade_shop_container.on("pointerdown", () =>
-		{
-			this.sound.play("button-press");
-			this.music.stop();
-			this.scene.start("upgrade_shop");
-		});
-
-		// How To Button
-		const how_to_play_btn = this.add.image(0, 0, "button");
-		how_to_play_btn.setDisplaySize(200, 50);
-		const how_to_play_text = this.add.text(0, 0, "HOW TO PLAY", {color: "black", fontSize: "24px"});
-		how_to_play_text.setOrigin(0.5);
-		const how_to_play_container = this.add.container(WIDTH_CANVAS/2, HEIGHT_CANVAS/2 + HEIGHT_START_BUTTON*4, [how_to_play_btn, how_to_play_text]);
-		how_to_play_container.setSize(WIDTH_UPGRADE_BUTTON, HEIGHT_UPGRADE_BUTTON);
-		how_to_play_container.setInteractive({useHandCursor: true});
-		how_to_play_container.on("pointerdown", () =>
-		{
-			this.scene.start("how_to_play");
-			this.music.stop();
-		});
+				button.action(this);
+			});
+		}
 	}
 });
