@@ -221,8 +221,8 @@ function startEncounter(state_run, encounter, scene)
 		},
 		triggers: {
 			draw: [],
-			maggot: [],
-			queen: [],
+			flawed_wisdom: [],
+			see_beyond: [],
 			discard: [],
 			hand_size_discard: [],
 			start_turn: []

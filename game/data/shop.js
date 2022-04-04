@@ -15,13 +15,13 @@ export const SHOP_DATA = [
 		bought: 0
 	},
 	{
-		card: CARD_DATA.mind_worm,
+		card: CARD_DATA.flawed_wisdom,
 		cost: 2,
 		quantity: 10,
 		bought: 0
 	},
 	{
-		card: CARD_DATA.infesting_maggot,
+		card: CARD_DATA.mind_flood,
 		cost: 3,
 		quantity: 10,
 		bought: 0
@@ -45,7 +45,7 @@ export const SHOP_DATA = [
 		bought: 0
 	},
 	{
-		card: CARD_DATA.feed_the_queen,
+		card: CARD_DATA.see_beyond,
 		cost: 2,
 		quantity: 5,
 		bought: 0

@@ -3,11 +3,11 @@ import {log} from "../debug.js";
 
 
 export const PASSIVE_DATA = {
-	deep_insight: {
-		name: "Deep Insight",
+	flawed_wisdom: {
+		name: "Flawed Wisdom",
 		description: "Everytime your opponent draws a card, discard a card from the top of their deck",
 		type: "relic",
-		key: "deep_insight",
+		key: "flawed_wisdom",
 		triggers: [
 			{
 				action: "draw",
@@ -16,7 +16,7 @@ export const PASSIVE_DATA = {
 					if(caster !== owner)
 					{
 						discardCard(state, caster, getTopCard(state, caster, child), child);
-						for(const trigger of state.triggers.maggot)
+						for(const trigger of state.triggers.flawed_wisdom)
 						{
 							trigger.effect(state, caster, trigger.owner);
 						}
@@ -27,18 +27,18 @@ export const PASSIVE_DATA = {
 	},
 	mind_flood: {
 		name: "Mind Flood",
-		description: "For the rest of the game, anytime Deep Insight would discard a card, it discards that many cards +1",
+		description: "For the rest of the game, anytime Flawed Wisdom would discard a card, it discards that many cards +1",
 		type: "relic",
 		key: "mind_flood",
 		triggers: [
 			{
-				action: "maggot",
+				action: "flawed_wisdom",
 				effect: function(state, caster, owner, child)
 				{
 					if(caster !== owner)
 					{
 						discardCard(state, caster, getTopCard(state, caster, child), child);
-						for(const trigger of state.triggers.queen)
+						for(const trigger of state.triggers.see_beyond)
 						{
 							trigger.effect(state, caster, trigger.owner);
 						}
@@ -54,7 +54,7 @@ export const PASSIVE_DATA = {
 		key: "see_beyond",
 		triggers: [
 			{
-				action: "queen",
+				action: "see_beyond",
 				effect: function(state, caster, owner, child)
 				{
 					if(caster !== owner)
