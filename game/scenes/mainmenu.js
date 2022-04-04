@@ -120,8 +120,8 @@ export default new Phaser.Class({
 		how_to_play_container.setInteractive({useHandCursor: true});
 		how_to_play_container.on("pointerdown", () =>
 		{
-			this.music.stop();
 			this.scene.start("how_to_play");
+			this.music.stop();
 		});
 	},
 	update: function()
