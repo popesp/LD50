@@ -414,7 +414,6 @@ function redrawBoard(state_run, scene)
 	if(state.caster_winner !== null)
 		if(state.caster_winner === state.player)
 		{
-			scene.sound.add("defeat_boss");
 			let victory_text = "Victory! You claimed " + state.enemy.bounty + " gold.";
 			
 			if(GameState.state_run.index_encounter === ENCOUNTERS.length-1)
@@ -429,6 +428,7 @@ function redrawBoard(state_run, scene)
 
 			if(GameState.state_run.index_encounter !== ENCOUNTERS.length-1)
 			{
+				scene.sound.play("defeat_boss");
 				const btn_next = scene.add.image(0, 0, "button");
 				btn_next.setDisplaySize(WIDTH_END_BUTTON, HEIGHT_END_BUTTON);
 
@@ -440,6 +440,7 @@ function redrawBoard(state_run, scene)
 				btn_next_container.setInteractive({useHandCursor: true});
 				btn_next_container.on("pointerdown", function()
 				{
+					scene.sound.play("pass_turn");
 					state_run.index_encounter++;
 					GameState.state_run.state_encounter = startEncounter(state_run, ENCOUNTERS[state_run.index_encounter], scene);
 				});
