@@ -58,7 +58,7 @@ export default new Phaser.Class({
 		this.load.image("card_flawed_wisdom", "assets/card-art/flawed-wisdom.png");
 		this.load.image("card_see_beyond", "assets/card-art/see-beyond.png");
 		this.load.image("card_mind_flood", "assets/card-art/mind-flood.png");
-		this.load.image("i_win", "assets/card-art/i-win.png");
+		this.load.image("card_i_win", "assets/card-art/i-win.png");
 	},
 	create: function()
 	{
@@ -93,7 +93,7 @@ export default new Phaser.Class({
 					// ...new Array(100).fill(CARD_DATA.rope_burn),
 					// ...new Array(20).fill(CARD_DATA.encroaching_mist),
 					...new Array(5).fill(CARD_DATA.see_beyond),
-					...new Array(5).fill(CARD_DATA.flawed_wisdom),
+					...new Array(5).fill(CARD_DATA.i_win),
 					...new Array(5).fill(CARD_DATA.mind_flood),
 					// ...new Array(5).fill(
 					...GameState.unlocks
