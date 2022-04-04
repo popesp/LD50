@@ -5,7 +5,7 @@ import {log} from "../debug.js";
 export const PASSIVE_DATA = {
 	fuck_yo_deck: {
 		name: "Git Fuk",
-		description: "When opponent discards, draw a card",
+		description: "When your opponent discards, draw a card",
 		type: "relic",
 		key: "fuck_yo_deck",
 		triggers: [
@@ -45,17 +45,17 @@ export const PASSIVE_DATA = {
 	},
 	mind_flood: {
 		name: "Mind Flood",
-		description: "For the rest of the game, anytime Flawed Wisdom would discard a card, it discards that many cards +1",
+		description: "For the rest of the game, if your opponent discards a card, they discard an additional card",
 		type: "relic",
 		key: "mind_flood",
 		triggers: [
 			{
-				action: "mind_flood",
+				action: "discard",
 				effect: function(state, caster, owner, child)
 				{
 					if(caster !== owner)
 					{
-						discardCard(state, caster, getTopCard(state, caster, child), child);
+						discardCard(state, caster, getTopCard(state, caster, child), child, false);
 						for(const trigger of state.triggers.see_beyond)
 						{
 							trigger.effect(state, caster, trigger.owner);
@@ -67,7 +67,7 @@ export const PASSIVE_DATA = {
 	},
 	see_beyond: {
 		name: "See Beyond",
-		description: "For the rest of the game, when an enemy discards 2 or more cards from their deck, they also draw a card",
+		description: "For the rest of the game, anytime your opponent discards from 'Mind Flood', they draw a card",
 		type: "relic",
 		key: "see_beyond",
 		triggers: [

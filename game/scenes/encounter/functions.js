@@ -11,6 +11,22 @@ const DURATION_PLAY = 800;
 const DURATION_HAND = 300;
 const SCALE_PLAY = 1.5;
 
+const MAX_ACTION_SPEED_COUNT = 30;
+const MIN_ACTION_SPEED_COUNT = 10;
+const MAX_DURATION_MULTIPLIER = .2;
+
+const MAX_ACTION_COUNT = 50;
+
+
+function calculate_animation_duration(base_duration, num_actions)
+{
+	if(num_actions < MAX_ACTION_SPEED_COUNT && num_actions > MIN_ACTION_SPEED_COUNT)
+		return base_duration * (1 - (((num_actions - MIN_ACTION_SPEED_COUNT)/(MAX_ACTION_SPEED_COUNT - MIN_ACTION_SPEED_COUNT)) * (1 - MAX_DURATION_MULTIPLIER)));
+	else if(num_actions >= MAX_ACTION_SPEED_COUNT)
+		return base_duration * MAX_DURATION_MULTIPLIER;
+
+	return base_duration
+}
 
 function determineWinner(state, caster)
 {
@@ -44,7 +60,7 @@ export function getTopCard(state, caster, child)
 	state.controller.wrap(child, [{
 		targets: card.gameobj,
 		ease: Phaser.Math.Easing.Cubic.Out,
-		duration: DURATION_LIFT,
+		duration: calculate_animation_duration(DURATION_LIFT, state.turn_actions),
 		x: WIDTH_CANVAS/2,
 		y: HEIGHT_CANVAS/2
 	}]);
@@ -54,7 +70,7 @@ export function getTopCard(state, caster, child)
 
 export function discardCard(state, caster, card, child, activate_triggers = true)
 {
-	const anim_duration = caster.drawn_cards > 10 ? DURATION_DISCARD*5 / (caster.drawn_cards-10) : DURATION_DISCARD*5;
+	state.turn_actions++;
 
 	if(card !== undefined)
 	{
@@ -64,7 +80,7 @@ export function discardCard(state, caster, card, child, activate_triggers = true
 		state.controller.wrap(child, [{
 			targets: card.gameobj,
 			ease: Phaser.Math.Easing.Cubic.InOut,
-			duration: DURATION_DISCARD,
+			duration: calculate_animation_duration(DURATION_DISCARD, state.turn_actions),
 			x: caster.X_DISCARD,
 			y: caster.Y_DISCARD,
 			displayWidth: WIDTH_CARD,
@@ -97,17 +113,17 @@ export function addPassive(state, caster, passive)
 
 export function drawCard(state, caster, child)
 {
+	state.turn_actions++;
+
 	const card = getTopCard(state, caster, child);
 	if(card === undefined) // GAME IS OVER
 		return;
 
-	caster.drawn_cards++;
-	if(caster === state.enemy && caster.drawn_cards > 100) // Assume infinite loop is completed
+	if(caster === state.enemy && state.turn_actions > MAX_ACTION_COUNT) // Assume infinite loop is completed
 	{
 		state.caster_winner = state.player;
 		return;
 	}
-	const anim_duration = caster.drawn_cards > 10 ? DURATION_DRAW / (caster.drawn_cards-10) : DURATION_DRAW;
 
 	if(caster.handlimit === caster.hand.length)
 	{
@@ -130,7 +146,7 @@ export function drawCard(state, caster, child)
 		state.controller.wrap(child, [{
 			targets: card.gameobj,
 			ease: Phaser.Math.Easing.Cubic.InOut,
-			duration: DURATION_DRAW,
+			duration: calculate_animation_duration(DURATION_DRAW, state.turn_actions),
 			x: min_x + caster.hand.length*(WIDTH_CARD + SPACING_CARD),
 			y: caster.Y_HAND
 		}, ...caster.hand.map(function(card, index_card)
@@ -138,7 +154,7 @@ export function drawCard(state, caster, child)
 			return {
 				targets: card.gameobj,
 				ease: Phaser.Math.Easing.Cubic.InOut,
-				duration: DURATION_HAND,
+				duration: calculate_animation_duration(DURATION_HAND, state.turn_actions),
 				x: min_x + index_card*(WIDTH_CARD + SPACING_CARD),
 				y: caster.Y_HAND
 			};
@@ -154,6 +170,7 @@ export function drawCard(state, caster, child)
 
 export function playCard(state, caster, card, child)
 {
+	state.turn_actions++;
 	if(caster.energy === 0 || state.caster_current !== caster || state.caster_winner !== null)
 		return;
 
@@ -166,13 +183,11 @@ export function playCard(state, caster, card, child)
 	caster.energy--;
 	caster.hand = caster.hand.filter(handcard => handcard !== card);
 
-	const anim_duration = caster.drawn_cards > 10 ? DURATION_PLAY / (caster.drawn_cards-10) : DURATION_PLAY;
-
 	const min_x = WIDTH_CANVAS/2 - (caster.hand.length - 1)*(WIDTH_CARD/2 + SPACING_CARD/2);
 	state.controller.wrap(child, [{
 		targets: card.gameobj,
 		ease: Phaser.Math.Easing.Cubic.Out,
-		duration: DURATION_PLAY,
+		duration: calculate_animation_duration(DURATION_PLAY, state.turn_actions),
 		x: caster.X_PLAY,
 		y: caster.Y_PLAY,
 		displayWidth: WIDTH_CARD*SCALE_PLAY,
@@ -183,7 +198,7 @@ export function playCard(state, caster, card, child)
 		return {
 			targets: card.gameobj,
 			ease: Phaser.Math.Easing.Cubic.In,
-			duration: DURATION_HAND,
+			duration: calculate_animation_duration(DURATION_HAND, state.turn_actions),
 			x: min_x + index_card*(WIDTH_CARD + SPACING_CARD),
 			y: caster.Y_HAND
 		};
