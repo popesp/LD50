@@ -175,7 +175,7 @@ export const CARD_DATA = Object.fromEntries(Object.entries({
 	},
 	flawed_wisdom: {
 		name: "Flawed Wisdom",
-		description: "Everytime your enemy draws a card, discard a card from the top of their deck",
+		description: "PASSIVE\nWhen your enemy draws a card, discard a card from the top of their deck",
 		type: "Passive",
 		class: "Player",
 		effect: function(state, caster, child)
@@ -185,7 +185,7 @@ export const CARD_DATA = Object.fromEntries(Object.entries({
 	},
 	mind_flood: {
 		name: "Mind Flood",
-		description: "For the rest of the game, if your enemy discards a card from their deck, they discard an additional card",
+		description: "PASSIVE\nWhen your enemy discards a card from their deck, they discard an additional card",
 		type: "Passive",
 		class: "Player",
 		effect: function(state, caster, child)
@@ -195,7 +195,7 @@ export const CARD_DATA = Object.fromEntries(Object.entries({
 	},
 	see_beyond: {
 		name: "See Beyond",
-		description: "For the rest of the game, when 'Mind Flood' would discard a card from your enemy's deck, they also draw a card",
+		description: "PASSIVE\nWhen 'Mind Flood' would discard a card from your enemy's deck, they also draw a card",
 		type: "Passive",
 		class: "Player",
 		effect: function(state, caster, child)

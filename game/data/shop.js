@@ -35,13 +35,13 @@ export const SHOP_DATA = [
 	{
 		card: CARD_DATA.submit_to_madness,
 		cost: 2,
-		quantity: 5,
+		quantity: 2,
 		bought: 0
 	},
 	{
 		card: CARD_DATA.gaze_into_abyss,
 		cost: 2,
-		quantity: 5,
+		quantity: 2,
 		bought: 0
 	},
 	{
@@ -53,7 +53,7 @@ export const SHOP_DATA = [
 	{
 		card: CARD_DATA.hysteric_whisper,
 		cost: 2,
-		quantity: 5,
+		quantity: 2,
 		bought: 0
 	}
 	// {

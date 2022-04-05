@@ -51,7 +51,7 @@ const ENCOUNTERS = [
 			...new Array(8).fill(CARD_DATA.eye_for_an_eye)
 		],
 		starting_passives: [],
-		bounty: 3
+		bounty: 4
 	},
 	{
 		name: "spooky",
@@ -61,7 +61,7 @@ const ENCOUNTERS = [
 			...new Array(2).fill(CARD_DATA.submit_to_madness)
 		],
 		starting_passives: [],
-		bounty: 5
+		bounty: 8
 	},
 	// {
 	// 	name: "another guy",
