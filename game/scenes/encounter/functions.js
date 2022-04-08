@@ -176,10 +176,7 @@ export function playCard(state, caster, card, child)
 	{
 		//please make this sound play shawn
 		log("fuck this :'(");
-		state.controller.wrap(child, [], 
-		function()
-		{
-		}, "invalid_action");
+		state.controller.wrap(child, [], null, "invalid_action");
 		return;
 	}
 
@@ -187,7 +184,6 @@ export function playCard(state, caster, card, child)
 	{
 		return;
 	}
-		
 
 	if(caster === state.enemy)
 	{

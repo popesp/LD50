@@ -77,7 +77,7 @@ export default new Phaser.Class({
 		bg.setDisplaySize(WIDTH_CANVAS, HEIGHT_CANVAS);
 		bg.setPosition(0);
 
-		const title_box = this.add.rectangle(WIDTH_CANVAS/2, PADDING_CANVAS*6.66, 800, 100, '0x000000');
+		this.add.rectangle(WIDTH_CANVAS/2, PADDING_CANVAS*6.66, 800, 100, "0x000000");
 
 		// TITLE TEXT
 		const title_text = this.add.text(WIDTH_CANVAS/2, PADDING_CANVAS*6.66, "CARDS OF THE COSMOS", {fontFamily: FONT_TITLE, color: "white", fontSize: "60px"});

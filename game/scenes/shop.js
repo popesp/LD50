@@ -1,4 +1,4 @@
-import {WIDTH_CANVAS, HEIGHT_CANVAS, PADDING_CANVAS, WIDTH_CARD, HEIGHT_CARD, PADDING_CARD, FONT_DEFAULT} from "../globals.js";
+import {WIDTH_CANVAS, PADDING_CANVAS, WIDTH_CARD, HEIGHT_CARD, PADDING_CARD, FONT_DEFAULT} from "../globals.js";
 import {makeCardContainer} from "../helpers.js";
 import {SHOP_DATA} from "../data/shop.js";
 import GameState from "../gamestate.js";

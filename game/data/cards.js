@@ -292,7 +292,7 @@ export const CARD_DATA = Object.fromEntries(Object.entries({
 			discardCard(state, caster, getTopCard(state, caster, child), child);
 			discardCard(state, target, getTopCard(state, target, child), child);
 			discardCard(state, caster, getTopCard(state, caster, child), child);
-			discardCard(state, target, getTopCard(state, target, child), child);	
+			discardCard(state, target, getTopCard(state, target, child), child);
 		}
 	},
 	shifting_shadows: {
