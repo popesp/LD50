@@ -1,10 +1,12 @@
-import {WIDTH_CANVAS, HEIGHT_CANVAS, PADDING_CANVAS} from "../globals.js";
+import {WIDTH_CANVAS, HEIGHT_CANVAS, PADDING_CANVAS, FONT_DEFAULT, FONT_TITLE} from "../globals.js";
 import {CARD_DATA} from "../data/cards.js";
 import GameState from "../gamestate.js";
 
 
 const WIDTH_BUTTON = 200;
 const HEIGHT_BUTTON = 50;
+const Y_SPACING_BUTTONS = 100;
+const Y_OFFSET_BUTTONS = -70;
 
 
 const BUTTONS = [
@@ -61,7 +63,8 @@ export default new Phaser.Class({
 		// UI
 		this.load.image("back_arrow", "assets/back_arrow.png");
 		this.load.image("button", "assets/button.png");
-		this.load.image("background", "assets/cthulhu.png");
+		this.load.image("background", "assets/main_bg.png");
+		this.load.image("menu_bg", "assets/menu_bg.png");
 
 		// Music
 		this.load.audio("spook", "assets/music/spook.mp3");
@@ -69,7 +72,8 @@ export default new Phaser.Class({
 		this.load.audio("eldritchambience", "assets/music/eldritchambience.mp3");
 
 		// Sounds
-		this.load.audio("button-press", "assets/sounds/button-press.mp3");
+		this.load.audio("button-press", "assets/sounds/invalid-action.mp3");
+		this.load.audio("pass_turn", "assets/sounds/button-press.mp3");
 
 		// Cards
 		this.load.image("card", "assets/card_front.png");
@@ -94,7 +98,7 @@ export default new Phaser.Class({
 		this.load.image("card_spilled_beans", "assets/card-art/spilled-beans.png");
 		this.load.image("card_eye_for_an_eye", "assets/card-art/eye-for-an-eye.png");
 		this.load.image("card_shifting_shadows", "assets/card-art/shifting-shadows.png");
-		this.load.image("card_encroaching_mist", "assets/card-art/encroaching-mist.png");
+		this.load.image("card_the_inevitable", "assets/card-art/encroaching-mist.png");
 		this.load.image("card_dark_expanse", "assets/card-art/dark-expanse.png");
 		this.load.image("card_candles_flicker", "assets/card-art/candles-flicker.png");
 		this.load.image("card_rope_burn", "assets/card-art/rope-burn.png");
@@ -109,17 +113,18 @@ export default new Phaser.Class({
 		this.music.loop = true;
 		this.music.play();
 
-		this.add.image(WIDTH_CANVAS/2, HEIGHT_CANVAS/2, "background").displayWidth = WIDTH_CANVAS;
-		this.add.text(WIDTH_CANVAS/2, PADDING_CANVAS*6.66, "INFINITE RISING", {color: "white", fontSize: "40px"}).setOrigin(0.5);
+		this.add.image(0, 0, "background").setOrigin(0).setDisplaySize(WIDTH_CANVAS, HEIGHT_CANVAS);
+		this.add.text(WIDTH_CANVAS/2, PADDING_CANVAS, "CARDS OF THE COSMOS", {color: "white", fontFamily: FONT_TITLE, fontSize: "60px"}).setOrigin(0.5, 0);
+		this.add.text(WIDTH_CANVAS/2, HEIGHT_CANVAS - PADDING_CANVAS, "BY: DAN, MATT, STEPHEN, SHAWN & VNU", {fontFamily: FONT_DEFAULT, color: "white", fontSize: "20px"}).setOrigin(0.5, 1);
 
 		// main menu buttons
 		for(let index_button = 0; index_button < BUTTONS.length; ++index_button)
 		{
 			const button = BUTTONS[index_button];
 
-			const container = this.add.container(WIDTH_CANVAS/2, HEIGHT_CANVAS/2 + HEIGHT_BUTTON*2*index_button, [
+			const container = this.add.container(WIDTH_CANVAS/2, HEIGHT_CANVAS/2 + Y_OFFSET_BUTTONS + Y_SPACING_BUTTONS*index_button, [
 				this.add.image(0, 0, "button").setDisplaySize(WIDTH_BUTTON, HEIGHT_BUTTON),
-				this.add.text(0, 0, button.label, {color: "black", fontSize: "24px"}).setOrigin(0.5)
+				this.add.text(0, 0, button.label, {color: "black", fontSize: "24px", fontFamily: FONT_DEFAULT}).setOrigin(0.5)
 			]);
 
 			container.setSize(WIDTH_BUTTON, HEIGHT_BUTTON);

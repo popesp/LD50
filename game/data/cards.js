@@ -175,7 +175,7 @@ export const CARD_DATA = Object.fromEntries(Object.entries({
 	},
 	flawed_wisdom: {
 		name: "Flawed Wisdom",
-		description: "Everytime your enemy draws a card, discard a card from the top of their deck",
+		description: "PASSIVE\nWhen your enemy draws a card, discard a card from the top of their deck",
 		type: "Passive",
 		class: "Player",
 		effect: function(state, caster, child)
@@ -185,7 +185,7 @@ export const CARD_DATA = Object.fromEntries(Object.entries({
 	},
 	mind_flood: {
 		name: "Mind Flood",
-		description: "For the rest of the game, if your enemy discards a card, they discard an additional card",
+		description: "PASSIVE\nWhen your enemy discards a card from their deck, they discard an additional card",
 		type: "Passive",
 		class: "Player",
 		effect: function(state, caster, child)
@@ -195,7 +195,7 @@ export const CARD_DATA = Object.fromEntries(Object.entries({
 	},
 	see_beyond: {
 		name: "See Beyond",
-		description: "For the rest of the game, when 'Mind Flood' would discard a card from your enemy's deck, they also draw a card",
+		description: "PASSIVE\nWhen 'Mind Flood' would discard a card from your enemy's deck, they also draw a card",
 		type: "Passive",
 		class: "Player",
 		effect: function(state, caster, child)
@@ -225,7 +225,7 @@ export const CARD_DATA = Object.fromEntries(Object.entries({
 	},
 	the_electric_chair: {
 		name: "The Electric Chair",
-		description: "For the rest of the game, at the start of your turn gain 2 extra actions, but you no longer draw a card for your turn",
+		description: "For the rest of the game, at the start of your turn gain 2 extra energy, but you no longer draw a card for your turn",
 		type: "Passive",
 		class: "Player",
 		effect: function(state, caster, child)
@@ -287,49 +287,24 @@ export const CARD_DATA = Object.fromEntries(Object.entries({
 		effect: function(state, caster, child)
 		{
 			const target = state.player === caster ? state.enemy : state.player;
-			discardCard(state, target, getTopCard(state, target, child), child);
-			discardCard(state, target, getTopCard(state, target, child), child);
-			discardCard(state, target, getTopCard(state, target, child), child);
-
 			discardCard(state, caster, getTopCard(state, caster, child), child);
+			discardCard(state, target, getTopCard(state, target, child), child);
 			discardCard(state, caster, getTopCard(state, caster, child), child);
+			discardCard(state, target, getTopCard(state, target, child), child);
 			discardCard(state, caster, getTopCard(state, caster, child), child);
+			discardCard(state, target, getTopCard(state, target, child), child);	
 		}
 	},
 	shifting_shadows: {
 		name: "Shifting Shadows",
-		description: "If you have less cards in your deck than your enemy, discard the top 3 cards of their deck, otherwise draw 2.",
+		description: "Each player draws a card",
 		type: "Action",
 		class: "Monster",
 		effect: function(state, caster, child)
 		{
-			if(state.caster_current.name === "Player")
-			{
-				if(state.player.deck.length < state.enemy.deck.length)
-				{
-					const target = state.player === caster ? state.enemy : state.player;
-					discardCard(state, target, getTopCard(state, target, child), child);
-					discardCard(state, target, getTopCard(state, target, child), child);
-					discardCard(state, target, getTopCard(state, target, child), child);
-				}
-				else
-				{
-					drawCard(state, caster, child);
-					drawCard(state, caster, child);
-				}
-			}
-			else if(state.enemy.deck.length < state.player.deck.length)
-			{
-				const target = state.player === caster ? state.enemy : state.player;
-				discardCard(state, target, getTopCard(state, target, child), child);
-				discardCard(state, target, getTopCard(state, target, child), child);
-				discardCard(state, target, getTopCard(state, target, child), child);
-			}
-			else
-			{
-				drawCard(state, caster, child);
-				drawCard(state, caster, child);
-			}
+			drawCard(state, caster, child);
+			const target = state.player === caster ? state.enemy : state.player;
+			drawCard(state, target, child);
 		}
 	},
 	encroaching_mist: {
@@ -344,14 +319,27 @@ export const CARD_DATA = Object.fromEntries(Object.entries({
 				discardCard(state, target, getTopCard(state, target, child), child);
 		}
 	},
+	the_inevitable: {
+		name: "The Inevitable",
+		description: "Discard the top 2 cards from the enemy deck, and then draw a card",
+		type: "Action",
+		class: "Monster",
+		effect: function(state, caster, child)
+		{
+			const target = state.player === caster ? state.enemy : state.player;
+			discardCard(state, target, getTopCard(state, target, child), child);
+			discardCard(state, target, getTopCard(state, target, child), child);
+			drawCard(state, caster, child);
+		}
+	},
 	dark_expanse: {
 		name: "Dark Expanse",
-		description: "Place three 'Dark Expanse' cards on the bottom of your deck",
+		description: "Place two 'Dark Expanse' cards on the bottom of your deck",
 		type: "Action",
 		class: "Monster",
 		effect: function(state, caster)
 		{
-			caster.deck.unshift(createCard(CARD_DATA.dark_expanse), createCard(CARD_DATA.dark_expanse), createCard(CARD_DATA.dark_expanse));
+			caster.deck.unshift(createCard(CARD_DATA.dark_expanse), createCard(CARD_DATA.dark_expanse));
 		}
 	}
 }).map(([key, cardconfig]) => ([key, {...cardconfig, key}])));

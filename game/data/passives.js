@@ -1,5 +1,4 @@
 import {discardCard, getTopCard, drawCard} from "../scenes/encounter/functions.js";
-import {log} from "../debug.js";
 
 
 export const PASSIVE_DATA = Object.fromEntries(Object.entries({
@@ -43,7 +42,7 @@ export const PASSIVE_DATA = Object.fromEntries(Object.entries({
 	},
 	mind_flood: {
 		name: "Mind Flood",
-		description: "For the rest of the game, if your opponent discards a card, they discard an additional card",
+		description: "For the rest of the game, if your opponent discards a card from their deck, they discard an additional card",
 		type: "relic",
 		triggers: [
 			{
@@ -154,7 +153,6 @@ export const PASSIVE_DATA = Object.fromEntries(Object.entries({
 				action: "hand_size_discard",
 				effect: function(state, caster, owner, child)
 				{
-					log("in here!!!");
 					if(caster !== owner)
 					{
 						discardCard(state, caster, getTopCard(state, caster, child), child);

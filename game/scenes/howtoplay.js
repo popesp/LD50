@@ -1,8 +1,8 @@
-import {WIDTH_CANVAS, PADDING_CANVAS} from "../globals.js";
+import {WIDTH_CANVAS, PADDING_CANVAS, FONT_DEFAULT} from "../globals.js";
 
 
 const WIDTH_BACK_BUTTON = 200;
-const HEIGHT_BACK_BUTTON = 100;
+const HEIGHT_BACK_BUTTON = 50;
 
 export default new Phaser.Class({
 	Extends: Phaser.Scene,
@@ -17,7 +17,7 @@ export default new Phaser.Class({
 		this.music.play();
 
 		// TITLE TEXT
-		const title_text = this.add.text(WIDTH_CANVAS/2, PADDING_CANVAS*2, "HOW TO PLAY", {color: "white", fontSize: "40px"});
+		const title_text = this.add.text(WIDTH_CANVAS/2, PADDING_CANVAS*2, "HOW TO PLAY", {fontFamily: FONT_DEFAULT, color: "white", fontSize: "40px"});
 		title_text.setOrigin(0.5, 0);
 
 		// Back Button
@@ -30,18 +30,23 @@ export default new Phaser.Class({
 		{
 			this.music.stop();
 			this.scene.start("main_menu");
+			this.sound.play("button-press");
 		});
 
 		// Text
-		const help_text = this.add.text(100, 200,
-			"THE ELDRITCH HORRORS, WAKING FROM THEIR ETERNAL\n\
-			SLUMBER, HAVE BEGUN THEIR ASSAULT ON YOUR \nWORLD... IT IS UP TO YOU TO FIGHT BACK AND \nTRY TO DELAY THE INEVITABLE...\n\
-			\nGameplay:\n\
-			1. Try to make your opponent run out of cards before you do\n\
-			2. Use STATIC cards to create persistent effects on the field\n\
-			3. Gain gold by deating enemies and spend it in the CARD SHOP\n\
-			4. Find a way to defeat THE END OF ALL THINGS with his INFINITE deck...",
-			{color: "white", fontSize: "24px"});
-		help_text.setOrigin(0, 0);
+		// "THE ELDRITCH HORRORS, WAKING FROM THEIR ETERNAL\n\
+		// SLUMBER, HAVE BEGUN THEIR ASSAULT ON YOUR \nWORLD... IT IS UP TO YOU TO FIGHT BACK AND \nTRY TO DELAY THE INEVITABLE...\n\
+		// \nGameplay:\n\
+		const help_text = this.add.text(WIDTH_CANVAS/2, 200,
+			"			Click on cards in your hand to play them\n\
+			Cards cost one energy to play\n\
+			Energy is set to one at the beginning of each turn\n\
+			If you run out of cards in your deck before your opponent, you lose\n\
+			Some cards create persistent effects on the field\n\
+			Gain gold by defeating opponents and spend it in the shop\n\
+			Cards purchased this way are permanently included in your deck\n\
+			The Infinite always wins... or does it?",
+			{fontFamily: FONT_DEFAULT, color: "white", fontSize: "24px", align: "left", lineSpacing: 20});
+		help_text.setOrigin(0.5, 0);
 	}
 });

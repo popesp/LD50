@@ -1,6 +1,6 @@
 import Random from "../../random.js";
 import {CARD_DATA, createCard} from "../../data/cards.js";
-import {WIDTH_CANVAS, HEIGHT_CANVAS, PADDING_CANVAS, WIDTH_CARD, HEIGHT_CARD} from "../../globals.js";
+import {WIDTH_CANVAS, HEIGHT_CANVAS, PADDING_CANVAS, WIDTH_CARD, HEIGHT_CARD, FONT_DEFAULT} from "../../globals.js";
 import {makeCardContainer} from "../../helpers.js";
 import GameState from "../../gamestate.js";
 import {drawCard, playCard, addPassive} from "./functions.js";
@@ -24,7 +24,7 @@ const Y_PLAY_ENEMY = Y_HAND_ENEMY + 100;
 
 const OFFSET_DECKCOUNT = HEIGHT_CARD/2 + 5;
 
-const WIDTH_END_BUTTON = 100;
+const WIDTH_END_BUTTON = 200;
 const HEIGHT_END_BUTTON = 50;
 
 const DEFAULT_HANDLIMIT = 5;
@@ -47,38 +47,36 @@ const ENCOUNTERS = [
 		name: "Demetrion's Horrid Palace",
 		source_deck: [
 			...new Array(2).fill(CARD_DATA.taste_of_flesh),
-			...new Array(12).fill(CARD_DATA.eye_for_an_eye)
+			...new Array(2).fill(CARD_DATA.bump_in_the_night),
+			...new Array(8).fill(CARD_DATA.eye_for_an_eye)
 		],
 		starting_passives: [],
 		bounty: 4
 	},
 	{
-		name: "baddie",
+		name: "spooky",
 		source_deck: [
-			...new Array(15).fill(CARD_DATA.shifting_shadows)
+			...new Array(5).fill(CARD_DATA.dark_expanse),
+			...new Array(3).fill(CARD_DATA.taste_of_flesh),
+			...new Array(2).fill(CARD_DATA.submit_to_madness)
 		],
 		starting_passives: [],
 		bounty: 8
 	},
-	{
-		name: "spooky",
-		source_deck: [
-			...new Array(8).fill(CARD_DATA.dark_expanse)
-		],
-		starting_passives: [],
-		bounty: 16
-	},
-	{
-		name: "another guy",
-		source_deck: [
-			...new Array(30).fill(CARD_DATA.encroaching_mist)
-		],
-		starting_passives: [],
-		bounty: 32
-	},
+	// {
+	// 	name: "another guy",
+	// 	source_deck: [
+	// 		...new Array(30).fill(CARD_DATA.encroaching_mist)
+	// 	],
+	// 	starting_passives: [],
+	// 	bounty: 32
+	// },
 	{
 		name: "The End of All Things",
-		source_deck: [...new Array(4).fill(CARD_DATA.mind_blast)],
+		source_deck: [
+			...new Array(4).fill(CARD_DATA.the_inevitable),
+			...new Array(2).fill(CARD_DATA.shifting_shadows)
+		],
 		starting_passives: [],
 		bounty: 1
 	}
@@ -180,7 +178,16 @@ function enemyTurnLogic(state)
 	if(!state.controller.node_current && state.caster_winner === null)
 	{
 		if(state.enemy.energy > 0 && state.enemy.hand.length > 0)
-			playCard(state, state.enemy, state.enemy.hand[Random.int(0, state.enemy.hand.length)]);
+		{
+			let card;
+			if(state.enemy.deck < 2)
+				card = state.enemy.hand.find((card) => card.name !== "Taste of Flesh");
+
+			if(card === undefined)
+				card = state.enemy.hand[Random.int(0, state.enemy.hand.length)];
+
+			playCard(state, state.enemy, card);
+		}
 		else
 			startTurn(state, state.player);
 	}
@@ -308,15 +315,11 @@ function redrawBoard(state_run, scene)
 		obj.destroy();
 	gameObjects = [];
 
-	// bounty text
-	const bounty_text = scene.add.text(0, HEIGHT_CANVAS/2, `Gold Bounty: ${state.enemy.bounty}`, {color: "white", fontSize: "18px"});
-	gameObjects.push(bounty_text);
-
 	// player deck
 	const player_deck_container = scene.add.container(
 		PADDING_CANVAS + WIDTH_CARD/2,
 		HEIGHT_CANVAS - PADDING_CANVAS - HEIGHT_CARD/2 - 0,
-		[scene.add.text(0, -OFFSET_DECKCOUNT, state.player.deck.length, {color: "white", fontSize: "24px"}).setOrigin(0.5, 1)]
+		[scene.add.text(0, -OFFSET_DECKCOUNT, state.player.deck.length, {fontFamily: FONT_DEFAULT, color: "#8c5114", fontSize: "72px"}).setOrigin(0.5, 1)]
 	);
 	if(state.player.deck.length > 0)
 		player_deck_container.add(scene.add.image(0, 0, "player_back").setDisplaySize(WIDTH_CARD, HEIGHT_CARD));
@@ -324,11 +327,10 @@ function redrawBoard(state_run, scene)
 
 	// enemy deck
 	const length_text = state.enemy.isFinalBoss ? "∞" : state.enemy.deck.length;
-	const font_size = state.enemy.isFinalBoss ? "40px" : "24px";
 	const enemy_deck_container = scene.add.container(
 		PADDING_CANVAS + WIDTH_CARD/2,
 		PADDING_CANVAS + HEIGHT_CARD/2,
-		[scene.add.text(0, OFFSET_DECKCOUNT, length_text, {color: "white", fontSize: font_size}).setOrigin(0.5, 0)]
+		[scene.add.text(0, OFFSET_DECKCOUNT, length_text, {fontFamily: FONT_DEFAULT, color: "#8c5114", fontSize: "72px"}).setOrigin(0.5, 0)]
 	);
 	if(state.enemy.deck.length > 0)
 		enemy_deck_container.add(scene.add.image(0, 0, "enemy_back").setDisplaySize(WIDTH_CARD, HEIGHT_CARD));
@@ -340,6 +342,7 @@ function redrawBoard(state_run, scene)
 		const player_discarded_card = state.player.discard_pile[state.player.discard_pile.length - 1];
 		const cardcontainer = makeCardContainer(scene, player_discarded_card, X_DISCARD_PLAYER, Y_DISCARD_PLAYER);
 		gameObjects.push(cardcontainer);
+		cardcontainer.setDepth(1);
 	}
 
 	// enemy discard
@@ -348,6 +351,7 @@ function redrawBoard(state_run, scene)
 		const enemy_discarded_card = state.enemy.discard_pile[state.enemy.discard_pile.length - 1];
 		const cardcontainer = makeCardContainer(scene, enemy_discarded_card, WIDTH_CANVAS - WIDTH_CARD/2 - PADDING_CANVAS, HEIGHT_CARD/2 + PADDING_CANVAS);
 		gameObjects.push(cardcontainer);
+		cardcontainer.setDepth(1);
 	}
 
 	// End Turn button
@@ -356,7 +360,7 @@ function redrawBoard(state_run, scene)
 		const button = scene.add.image(0, 0, "button");
 		button.setDisplaySize(WIDTH_END_BUTTON, HEIGHT_END_BUTTON);
 
-		const end_text = scene.add.text(0, 0, "END TURN", {color: "black", fontSize: "18px"});
+		const end_text = scene.add.text(0, 0, "END TURN", {fontFamily: FONT_DEFAULT, color: "black", fontSize: "18px"});
 		end_text.setOrigin(0.5);
 
 		const end_turn_btn_container = scene.add.container(WIDTH_CANVAS - PADDING_CANVAS - WIDTH_END_BUTTON/2, HEIGHT_CANVAS/2, [button, end_text]);
@@ -368,7 +372,7 @@ function redrawBoard(state_run, scene)
 			{
 				if(!state.controller.node_current)
 				{
-					scene.sound.play("button-press");
+					scene.sound.play("pass_turn");
 					startTurn(state, state.enemy);
 				}
 			});
@@ -380,54 +384,64 @@ function redrawBoard(state_run, scene)
 	// Energy display
 	// player
 	const player_energy_icon = scene.add.image(0, 0, "energy");
-	player_energy_icon.setDisplaySize(25, 25);
-	const player_energy_text = scene.add.text(15, 0, state.player.energy, {color: "white", fontSize: "18px"});
+	player_energy_icon.setDisplaySize(75, 75);
+	const player_energy_text = scene.add.text(15, 0, state.player.energy, {fontFamily: FONT_DEFAULT, color: "white", fontSize: "24px"});
 	player_energy_text.setOrigin(0, 0.5);
-	const player_energy_container = scene.add.container(WIDTH_CANVAS - PADDING_CANVAS - 50, HEIGHT_CANVAS/2 + 50, [player_energy_icon, player_energy_text]);
+	const player_energy_container = scene.add.container(WIDTH_CANVAS - PADDING_CANVAS - 50, HEIGHT_CANVAS/2 + 75, [player_energy_icon, player_energy_text]);
 	gameObjects.push(player_energy_container);
 	// enemy
 	const enemy_energy_icon = scene.add.image(0, 0, "energy");
-	enemy_energy_icon.setDisplaySize(25, 25);
-	const enemy_energy_text = scene.add.text(15, 0, state.enemy.energy, {color: "white", fontSize: "18px"});
+	enemy_energy_icon.setDisplaySize(75, 75);
+	const enemy_energy_text = scene.add.text(15, 0, state.enemy.energy, {fontFamily: FONT_DEFAULT, color: "white", fontSize: "24px"});
 	enemy_energy_text.setOrigin(0, 0.5);
-	const enemy_energy_container = scene.add.container(WIDTH_CANVAS - PADDING_CANVAS - 50, HEIGHT_CANVAS/2 - 50, [enemy_energy_icon, enemy_energy_text]);
+	const enemy_energy_container = scene.add.container(WIDTH_CANVAS - PADDING_CANVAS - 50, HEIGHT_CANVAS/2 - 75, [enemy_energy_icon, enemy_energy_text]);
 	gameObjects.push(enemy_energy_container);
 
 	// Passive Display
 	const player_passive_start = {
-		x: WIDTH_CANVAS/2 + 300,
-		y: HEIGHT_CANVAS/2 + 50
+		x: WIDTH_CANVAS/2,
+		y: HEIGHT_CANVAS/2 + 100
 	};
 	const enemy_passive_start = {
-		x: WIDTH_CANVAS/2 + 300,
-		y: HEIGHT_CANVAS/2 - 50
+		x: WIDTH_CANVAS/2,
+		y: HEIGHT_CANVAS/2 - 100
 	};
+	const player_passives = [];
+	const enemy_passives = [];
 	for(let index_passive = 0; index_passive < state.passives.length; ++index_passive)
 	{
 		const passive = state.passives[index_passive];
-		if(passive.owner === state.enemy)
-			gameObjects.push(scene.add.text(enemy_passive_start.x, enemy_passive_start.y + (10 * index_passive), passive.config.name, {color: "white", fontSize: "12px", align: "center"}));
+		if(passive.owner === state.player)
+			player_passives.push(" " + passive.config.name);
 		else
-			gameObjects.push(scene.add.text(player_passive_start.x, player_passive_start.y + (10 * index_passive), passive.config.name, {color: "white", fontSize: "12px", align: "center"}));
+			enemy_passives.push(" " + passive.config.name);
 	}
+
+	gameObjects.push(scene.add.text(enemy_passive_start.x, enemy_passive_start.y, enemy_passives.toString(), {fontFamily: FONT_DEFAULT, color: "white", fontSize: "18px", align: "center"}).setOrigin(0.5));
+	gameObjects.push(scene.add.text(player_passive_start.x, player_passive_start.y, player_passives.toString(), {fontFamily: FONT_DEFAULT, color: "white", fontSize: "18px", align: "center"}).setOrigin(0.5));
 
 	if(state.caster_winner !== null)
 		if(state.caster_winner === state.player)
 		{
-			scene.sound.add("defeat_boss");
 			let victory_text = "Victory! You claimed " + state.enemy.bounty + " gold.";
-			if(GameState.state_run.index_encounter === ENCOUNTERS.length-1)
-				victory_text = "Congratulations! You have delayed the inevitable...for all time...";
 
-			const game_end_text = scene.add.text(WIDTH_CANVAS/2, HEIGHT_CANVAS/2, victory_text, {color: "white", fontSize: "32px", align: "center"}).setOrigin(0.5);
+			if(GameState.state_run.index_encounter === ENCOUNTERS.length-1)
+			{
+				scene.sound.play("ticking");
+				victory_text = "Congratulations! You have delayed the inevitable...for all time...";
+				scene.cameras.main.fadeOut(10000, 0, 0, 0);
+			}
+
+			const game_end_text = scene.add.text(WIDTH_CANVAS/2, HEIGHT_CANVAS/2, victory_text, {fontFamily: FONT_DEFAULT, color: "white", fontSize: "32px", align: "center"}).setOrigin(0.5);
 			gameObjects.push(game_end_text);
 
 			if(GameState.state_run.index_encounter !== ENCOUNTERS.length-1)
 			{
+				scene.sound.play("defeat_boss");
 				const btn_next = scene.add.image(0, 0, "button");
 				btn_next.setDisplaySize(WIDTH_END_BUTTON, HEIGHT_END_BUTTON);
 
-				const text_next = scene.add.text(0, 0, "Next", {color: "black", fontSize: "18px"});
+				const text_next = scene.add.text(0, 0, "Next", {fontFamily: FONT_DEFAULT, color: "black", fontSize: "18px"});
 				text_next.setOrigin(0.5);
 
 				const btn_next_container = scene.add.container(WIDTH_CANVAS/2, HEIGHT_CANVAS/2 + 50, [btn_next, text_next]);
@@ -435,6 +449,7 @@ function redrawBoard(state_run, scene)
 				btn_next_container.setInteractive({useHandCursor: true});
 				btn_next_container.on("pointerdown", function()
 				{
+					scene.sound.play("pass_turn");
 					state_run.index_encounter++;
 					GameState.state_run.state_encounter = startEncounter(state_run, ENCOUNTERS[state_run.index_encounter], scene);
 				});
@@ -444,15 +459,15 @@ function redrawBoard(state_run, scene)
 		}
 		else
 		{
-			const lose_text = state.enemy.isFinalBoss ? `You lost...but perhaps there is still hope. You gained ${state.enemy.bounty} gold.` : "You Lose";
+			const lose_text = state.enemy.isFinalBoss ? `You lost...but perhaps there is still hope.` : "You Lose";
 			state.player.currency += state.enemy.bounty;
-			const game_end_text = scene.add.text(WIDTH_CANVAS/2, HEIGHT_CANVAS/2, lose_text, {color: "white", fontSize: "32px", align: "center"}).setOrigin(0.5);
+			const game_end_text = scene.add.text(WIDTH_CANVAS/2, HEIGHT_CANVAS/2, lose_text, {fontFamily: FONT_DEFAULT, color: "white", fontSize: "32px", align: "center"}).setOrigin(0.5);
 			gameObjects.push(game_end_text);
 
 			const btn_menu = scene.add.image(0, 0, "button");
 			btn_menu.setDisplaySize(WIDTH_END_BUTTON*2, HEIGHT_END_BUTTON);
 
-			const text_menu = scene.add.text(0, 0, "Main Menu", {color: "black", fontSize: "18px"});
+			const text_menu = scene.add.text(0, 0, "Card Shop", {fontFamily: FONT_DEFAULT, color: "black", fontSize: "18px"});
 			text_menu.setOrigin(0.5);
 
 			const btn_menu_container = scene.add.container(WIDTH_CANVAS/2, HEIGHT_CANVAS/2 + 50, [btn_menu, text_menu]);
@@ -461,7 +476,7 @@ function redrawBoard(state_run, scene)
 			btn_menu_container.on("pointerdown", () =>
 			{
 				scene.music.stop();
-				scene.scene.start("main_menu");
+				scene.scene.start("upgrade_shop");
 			});
 
 			gameObjects.push(btn_menu_container);
@@ -484,14 +499,20 @@ export default new Phaser.Class({
 		this.load.audio("draw_card", "assets/sounds/draw-card.mp3");
 		this.load.audio("play_card", "assets/sounds/play-card.mp3");
 		this.load.audio("remove_card", "assets/sounds/remove-card.mp3");
-		this.load.audio("button-press", "assets/sounds/button-press.mp3");
+		this.load.audio("invalid_action", "assets/sounds/invalid-action.mp3");
+		this.load.audio("ticking", "assets/sounds/ticking.mp3");
 	},
 	create: function()
 	{
+		const bg = this.add.image(0, 0, "background");
+		bg.setOrigin(0);
+		bg.setDisplaySize(WIDTH_CANVAS, HEIGHT_CANVAS);
+		bg.setPosition(0);
 		GameState.state_run.state_encounter = startEncounter(GameState.state_run, ENCOUNTERS[GameState.state_run.index_encounter], this);
-		this.music = this.sound.add("eldritchambience");
+		this.music = this.sound.add("eldritchambience", {volume: 0.75});
 		this.music.loop = true;
 		this.music.play();
+		this.cameras.main.setBackgroundColor("#421278");
 	},
 	update: function()
 	{
