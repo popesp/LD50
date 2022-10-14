@@ -5,6 +5,7 @@ import {makeCardContainer} from "../../helpers.js";
 import GameState from "../../gamestate.js";
 import {drawCard, playCard, addPassive} from "./functions.js";
 import {log} from "../../debug.js";
+import Phaser from "phaser";
 
 
 const X_DISCARD_PLAYER = WIDTH_CANVAS - WIDTH_CARD/2 - PADDING_CANVAS;
@@ -492,15 +493,15 @@ export default new Phaser.Class({
 	},
 	preload: function()
 	{
-		this.load.image("energy", "assets/energy.png");
+		this.load.image("energy", require("../../assets/energy.png").default);
 
 		// Sounds
-		this.load.audio("defeat_boss", "assets/sounds/defeat-boss.mp3");
-		this.load.audio("draw_card", "assets/sounds/draw-card.mp3");
-		this.load.audio("play_card", "assets/sounds/play-card.mp3");
-		this.load.audio("remove_card", "assets/sounds/remove-card.mp3");
-		this.load.audio("invalid_action", "assets/sounds/invalid-action.mp3");
-		this.load.audio("ticking", "assets/sounds/ticking.mp3");
+		this.load.audio("defeat_boss", require("../../assets/sounds/defeat-boss.mp3").default);
+		this.load.audio("draw_card", require("../../assets/sounds/draw-card.mp3").default);
+		this.load.audio("play_card", require("../../assets/sounds/play-card.mp3").default);
+		this.load.audio("remove_card", require("../../assets/sounds/remove-card.mp3").default);
+		this.load.audio("invalid_action", require("../../assets/sounds/invalid-action.mp3").default);
+		this.load.audio("ticking", require("../../assets/sounds/ticking.mp3").default);
 	},
 	create: function()
 	{

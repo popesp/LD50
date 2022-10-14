@@ -3,6 +3,7 @@ import Random from "../../random.js";
 import GameState from "../../gamestate.js";
 import {createCard} from "../../data/cards.js";
 import {log} from "../../debug.js";
+import Phaser from "phaser";
 
 const DURATION_DRAW = 300;
 const DURATION_LIFT = 200;

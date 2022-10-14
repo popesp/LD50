@@ -1,4 +1,5 @@
 import {WIDTH_CANVAS, PADDING_CANVAS, FONT_DEFAULT} from "../globals.js";
+import Phaser from "phaser";
 
 
 const WIDTH_BACK_BUTTON = 200;

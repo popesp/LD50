@@ -3,11 +3,14 @@ import scene_encounter from "./scenes/encounter/encounter.js";
 import scene_shop from "./scenes/shop.js";
 import scene_howtoplay from "./scenes/howtoplay.js";
 import {WIDTH_CANVAS, HEIGHT_CANVAS} from "./globals.js";
+import Phaser from "phaser";
 
 
 document.addEventListener("DOMContentLoaded", function()
 {
-	const dom_container = document.getElementById("container");
+	const dom_container = document.createElement("div");
+	dom_container.id = "container";
+	document.body.appendChild(dom_container);
 
 	const game = new Phaser.Game({
 		type: Phaser.AUTO,

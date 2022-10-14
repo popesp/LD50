@@ -3,6 +3,7 @@ import {makeCardContainer} from "../helpers.js";
 import {SHOP_DATA} from "../data/shop.js";
 import GameState from "../gamestate.js";
 import {log} from "../debug.js";
+import Phaser from "phaser";
 
 
 const WIDTH_BACK_BUTTON = 200;
@@ -41,7 +42,7 @@ export default new Phaser.Class({
 	},
 	preload: function()
 	{
-		this.load.audio("buy-card", "assets/sounds/buy-card.mp3");
+		this.load.audio("buy-card", require("../assets/sounds/buy-card.mp3").default);
 	},
 	create: function()
 	{

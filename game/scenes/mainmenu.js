@@ -1,6 +1,7 @@
 import {WIDTH_CANVAS, HEIGHT_CANVAS, PADDING_CANVAS, FONT_DEFAULT, FONT_TITLE} from "../globals.js";
 import {CARD_DATA} from "../data/cards.js";
 import GameState from "../gamestate.js";
+import Phaser from "phaser";
 
 
 const WIDTH_START_BUTTON = 200;
@@ -20,51 +21,27 @@ export default new Phaser.Class({
 	preload: function()
 	{
 		// UI
-		this.load.image("back_arrow", "assets/back_arrow.png");
-		this.load.image("button", "assets/button.png");
-		this.load.image("background", "assets/main_bg.png");
-		this.load.image("menu_bg", "assets/menu_bg.png");
+		this.load.image("back_arrow", require("../assets/back_arrow.png").default);
+		this.load.image("button", require("../assets/button.png").default);
+		this.load.image("background", require("../assets/main_bg.png").default);
+		this.load.image("menu_bg", require("../assets/menu_bg.png").default);
 
 		// Music
-		this.load.audio("spook", "assets/music/spook.mp3");
-		this.load.audio("thumpy", "assets/music/thumpy.mp3");
-		this.load.audio("eldritchambience", "assets/music/eldritchambience.mp3");
+		this.load.audio("spook", require("../assets/music/spook.mp3").default);
+		this.load.audio("thumpy", require("../assets/music/thumpy.mp3").default);
+		this.load.audio("eldritchambience", require("../assets/music/eldritchambience.mp3").default);
 
 		// Sounds
-		this.load.audio("button-press", "assets/sounds/invalid-action.mp3");
-		this.load.audio("pass_turn", "assets/sounds/button-press.mp3");
+		this.load.audio("button-press", require("../assets/sounds/invalid-action.mp3").default);
+		this.load.audio("pass_turn", require("../assets/sounds/button-press.mp3").default);
 
 		// Cards
-		this.load.image("card", "assets/card_front.png");
-		this.load.image("player_back", "assets/player_back.png");
-		this.load.image("enemy_back", "assets/enemy_back.png");
+		this.load.image("card", require("../assets/card_front.png").default);
+		this.load.image("player_back", require("../assets/player_back.png").default);
+		this.load.image("enemy_back", require("../assets/enemy_back.png").default);
 
-		this.load.image("card_mind_blast", "assets/card-art/mind-blast.png");
-		this.load.image("card_restore_sanity", "assets/card-art/restore-sanity.png");
-		this.load.image("card_self_reflection", "assets/card-art/self-reflection.png");
-		this.load.image("card_taste_of_flesh", "assets/card-art/taste-of-flesh.png");
-		this.load.image("card_submit_to_madness", "assets/card-art/submit-to-madness.png");
-		this.load.image("card_mind_worm", "assets/card-art/mind-worm.png");
-		this.load.image("card_cosmic_insight", "assets/card-art/cosmic-insight.png");
-		this.load.image("card_blank", "assets/card-art/a-blank.png");
-		this.load.image("card_bump_in_the_night", "assets/card-art/bump-in-the-night.png");
-		this.load.image("card_deja_vu", "assets/card-art/deja-vu.png");
-		this.load.image("card_point_of_grace", "assets/card-art/point-of-grace.png");
-		this.load.image("card_gaze_into_abyss", "assets/card-art/gaze-into-abyss.png");
-		this.load.image("card_the_lighthouse", "assets/card-art/the-lighthouse.png");
-		this.load.image("card_the_electric_chair", "assets/card-art/the-electric-chair.png");
-		this.load.image("card_hysteric_whisper", "assets/card-art/hysteric-whisper.png");
-		this.load.image("card_spilled_beans", "assets/card-art/spilled-beans.png");
-		this.load.image("card_eye_for_an_eye", "assets/card-art/eye-for-an-eye.png");
-		this.load.image("card_shifting_shadows", "assets/card-art/shifting-shadows.png");
-		this.load.image("card_the_inevitable", "assets/card-art/encroaching-mist.png");
-		this.load.image("card_dark_expanse", "assets/card-art/dark-expanse.png");
-		this.load.image("card_candles_flicker", "assets/card-art/candles-flicker.png");
-		this.load.image("card_rope_burn", "assets/card-art/rope-burn.png");
-		this.load.image("card_flawed_wisdom", "assets/card-art/flawed-wisdom.png");
-		this.load.image("card_see_beyond", "assets/card-art/see-beyond.png");
-		this.load.image("card_mind_flood", "assets/card-art/mind-flood.png");
-		this.load.image("card_i_win", "assets/card-art/i-win.png");
+		for(const key of Object.keys(CARD_DATA))
+			this.load.image(`card_${key}`, require(`../assets/card-art/${key}.png`).default);
 	},
 	create: function()
 	{

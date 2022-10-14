@@ -163,16 +163,6 @@ export const CARD_DATA = Object.fromEntries(Object.entries({
 		}
 	},
 	//Passive Cards
-	fuck_yo_deck: {
-		name: "Git Fuk",
-		description: "When enemy discards, draw a card",
-		type: "Passive",
-		class: "Player",
-		effect: function(state, caster, child)
-		{
-			addPassive(state, caster, PASSIVE_DATA.fuck_yo_deck, child);
-		}
-	},
 	flawed_wisdom: {
 		name: "Flawed Wisdom",
 		description: "PASSIVE\nWhen your enemy draws a card, discard a card from the top of their deck",
